@@ -1,6 +1,8 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+#!/usr/bin/env sh
 
+# Lint + format frontend (TypeScript)
 npm --prefix frontend run lint
 npm --prefix frontend run format
+
+# Format backend (C#)
 dotnet format backend/FloppySchnauzer.Api

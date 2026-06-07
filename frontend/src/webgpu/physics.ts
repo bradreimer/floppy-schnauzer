@@ -47,7 +47,7 @@ export function updateGame(state: GameState, dt: number): GameState {
   birdVelY += GRAVITY * dt;
   birdY += birdVelY * dt;
 
-  pipes = pipes.map((p) => ({ ...p, x: p.x - PIPE_SPEED * dt }));
+  pipes = pipes.map(p => ({ ...p, x: p.x - PIPE_SPEED * dt }));
 
   if (pipes[0].x + 70 < 0) {
     pipes.shift();
@@ -80,10 +80,5 @@ export function updateGame(state: GameState, dt: number): GameState {
 }
 
 function intersect(a: any, b: any) {
-  return !(
-    a.x + a.w < b.x ||
-    a.x > b.x + b.w ||
-    a.y + a.h < b.y ||
-    a.y > b.y + b.h
-  );
+  return !(a.x + a.w < b.x || a.x > b.x + b.w || a.y + a.h < b.y || a.y > b.y + b.h);
 }

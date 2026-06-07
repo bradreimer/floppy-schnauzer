@@ -1,5 +1,5 @@
-import { Sprite } from "./sprites";
 import { GameState } from "./physics";
+import { Sprite } from "./sprites";
 
 let scrollSky = 0;
 let scrollClouds = 0;
@@ -67,13 +67,7 @@ export function buildFrameSprites(
   return sprites;
 }
 
-function pushTiled(
-  sprites: Sprite[],
-  texture: string,
-  scroll: number,
-  y: number,
-  h: number
-) {
+function pushTiled(sprites: Sprite[], texture: string, scroll: number, y: number, h: number) {
   const w = 1024;
   const offset = -(scroll % w);
 

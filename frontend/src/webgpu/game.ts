@@ -1,9 +1,9 @@
-import { createSpritePipeline, SpritePipeline } from "./sprites";
-import { loadTextures } from "./textures";
 import { AudioSystem } from "./audio";
 import { setupInput } from "./input";
-import { updateGame, GameState, createInitialState } from "./physics";
 import { buildFrameSprites } from "./parallax";
+import { updateGame, GameState, createInitialState } from "./physics";
+import { createSpritePipeline, SpritePipeline } from "./sprites";
+import { loadTextures } from "./textures";
 
 export class Game {
   private device: GPUDevice;
@@ -66,11 +66,9 @@ export class Game {
         if (this.state.gameOver && this.running) {
           this.running = false;
           this.audio.play("hit");
-          this.overlay.textContent =
-            `Game Over – Score: ${this.state.score} (best: ${this.state.bestScore}) – Tap to restart`;
+          this.overlay.textContent = `Game Over – Score: ${this.state.score} (best: ${this.state.bestScore}) – Tap to restart`;
         } else {
-          this.overlay.textContent =
-            `Score: ${this.state.score} (best: ${this.state.bestScore})`;
+          this.overlay.textContent = `Score: ${this.state.score} (best: ${this.state.bestScore})`;
         }
       }
 

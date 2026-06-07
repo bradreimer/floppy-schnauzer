@@ -106,12 +106,30 @@ export async function createSpritePipeline(
         });
 
         const verts = new Float32Array([
-          sprite.x, sprite.y, sprite.u0, sprite.v0,
-          sprite.x + sprite.w, sprite.y, sprite.u1, sprite.v0,
-          sprite.x + sprite.w, sprite.y + sprite.h, sprite.u1, sprite.v1,
-          sprite.x, sprite.y, sprite.u0, sprite.v0,
-          sprite.x + sprite.w, sprite.y + sprite.h, sprite.u1, sprite.v1,
-          sprite.x, sprite.y + sprite.h, sprite.u0, sprite.v1
+          sprite.x,
+          sprite.y,
+          sprite.u0,
+          sprite.v0,
+          sprite.x + sprite.w,
+          sprite.y,
+          sprite.u1,
+          sprite.v0,
+          sprite.x + sprite.w,
+          sprite.y + sprite.h,
+          sprite.u1,
+          sprite.v1,
+          sprite.x,
+          sprite.y,
+          sprite.u0,
+          sprite.v0,
+          sprite.x + sprite.w,
+          sprite.y + sprite.h,
+          sprite.u1,
+          sprite.v1,
+          sprite.x,
+          sprite.y + sprite.h,
+          sprite.u0,
+          sprite.v1
         ]);
 
         const buffer = device.createBuffer({

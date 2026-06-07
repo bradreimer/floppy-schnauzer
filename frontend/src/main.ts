@@ -1,5 +1,5 @@
-import { initWebGPU } from "./webgpu/renderer";
 import { Game } from "./webgpu/game";
+import { initWebGPU } from "./webgpu/renderer";
 
 async function start() {
   const canvas = document.getElementById("game") as HTMLCanvasElement | null;

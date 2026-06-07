@@ -14,11 +14,10 @@ export async function loadTextures(device: GPUDevice) {
         GPUTextureUsage.RENDER_ATTACHMENT
     });
 
-    device.queue.copyExternalImageToTexture(
-      { source: bmp },
-      { texture: tex },
-      [bmp.width, bmp.height]
-    );
+    device.queue.copyExternalImageToTexture({ source: bmp }, { texture: tex }, [
+      bmp.width,
+      bmp.height
+    ]);
 
     return tex;
   }
