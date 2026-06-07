@@ -1,0 +1,13 @@
+{
+  "name": "firefly-mcp",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "src/server.mjs",
+  "scripts": {
+    "start": "node src/server.mjs"
+  },
+  "dependencies": {
+    "node-fetch": "^3.3.2",
+    "uuid": "^9.0.1"
+  }
+}
