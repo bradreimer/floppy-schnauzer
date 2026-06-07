@@ -3,9 +3,9 @@ WORKDIR /app
 EXPOSE 8080
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
-WORKDIR /src
-COPY ./src/FloppySchnauzer.Api ./FloppySchnauzer.Api
-WORKDIR /src/FloppySchnauzer.Api
+WORKDIR /backend
+COPY ./backend/FloppySchnauzer.Api ./FloppySchnauzer.Api
+WORKDIR /backend/FloppySchnauzer.Api
 RUN dotnet publish -c Release -o /app/publish
 
 FROM base AS final

@@ -1,6 +1,11 @@
 import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 import { v4 as uuidv4 } from "uuid";
 import { generateImage } from "./fireflyClient.mjs";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const stdin = process.stdin;
 const stdout = process.stdout;
@@ -16,7 +21,8 @@ function describeTools() {
     tools: [
       {
         name: "generateFireflyImage",
-        description: "Generate an image using Adobe Firefly and save it to disk",
+        description:
+          "Generate an image using Adobe Firefly and save it to disk",
         input_schema: {
           type: "object",
           properties: {
@@ -36,21 +42,27 @@ async function handleToolCall(id, name, args) {
   try {
     if (name === "generateFireflyImage") {
       const { prompt, width, height, outputPath } = args;
+
       const imgBuffer = await generateImage({ prompt, width, height });
 
       const finalPath = outputPath.includes("{id}")
         ? outputPath.replace("{id}", uuidv4())
         : outputPath;
 
-      await fs.promises.mkdir(require("path").dirname(finalPath), { recursive: true });
-      await fs.promises.writeFile(finalPath, imgBuffer);
+      const absPath = path.isAbsolute(finalPath)
+        ? finalPath
+        : path.join(process.cwd(), finalPath);
+
+      const dir = path.dirname(absPath);
+      await fs.promises.mkdir(dir, { recursive: true });
+      await fs.promises.writeFile(absPath, imgBuffer);
 
       send({
         id,
         type: "tool_result",
         result: {
           success: true,
-          path: finalPath
+          path: absPath
         }
       });
     } else {
@@ -92,5 +104,4 @@ stdin.on("data", async (chunk) => {
   }
 });
 
-// Optional: announce ready
 send({ type: "ready" });
