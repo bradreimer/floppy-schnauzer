@@ -1,0 +1,6 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+npm --prefix frontend run lint
+npm --prefix frontend run format
+dotnet format backend/FloppySchnauzer.Api

@@ -1,0 +1,9 @@
+{
+  "settings": {
+    "documentationRules": {
+      "companyName": "Floppy Schnauzer Studios",
+      "documentExposedElements": true,
+      "documentInternalElements": false
+    }
+  }
+}

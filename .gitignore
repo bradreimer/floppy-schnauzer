@@ -1,8 +1,39 @@
-node_modules/
+# VS Code workspace settinghs
 .vscode/
-*.user
-*.suo
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Vite build output
+frontend/dist/
+backend/FloppySchnauzer.Api/wwwroot/dist/
+
+# TypeScript
+*.tsbuildinfo
+
+# ASP.NET / .NET
 bin/
 obj/
 **/bin/
 **/obj/
+*.user
+*.suo
+*.cache
+*.db
+*.log
+
+# MCP servers
+tools/firefly-mcp/node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Environment / secrets
+.env
+.env.*

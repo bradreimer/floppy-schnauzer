@@ -1,20 +1,22 @@
 {
-  "name": "floppy-schnauzer",
-  "private": true,
+  "name": "floppy-schnauzer-frontend",
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "build:frontend": "tsc -p tsconfig.json",
-    "typecheck": "tsc -p tsconfig.json --noEmit",
-    "lint": "eslint src/FloppySchnauzer.Api/wwwroot/floppy-schnauzer.ts",
-    "format": "prettier --write \"src/FloppySchnauzer.Api/wwwroot/**/*.{ts,js,html,css}\"",
-    "format:check": "prettier --check \"src/FloppySchnauzer.Api/wwwroot/**/*.{ts,js,html,css}\""
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write ."
   },
   "devDependencies": {
-    "@webgpu/types": "^0.1.64",
-    "eslint": "^9.4.0",
-    "prettier": "^3.3.3",
-    "typescript": "^5.9.2",
-    "typescript-eslint": "^8.44.0"
+    "@typescript-eslint/eslint-plugin": "^8.60.1",
+    "@typescript-eslint/parser": "^8.60.1",
+    "eslint": "^9.39.4",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "prettier": "^3.8.3",
+    "typescript": "^5.6.0",
+    "vite": "^5.0.0"
   }
 }

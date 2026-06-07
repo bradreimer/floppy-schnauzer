@@ -1,3 +1,5 @@
+// Copyright (c) 2026 Brad Reimer. All rights reserved.
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddRouting();

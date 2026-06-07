@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  backend:
+    image: mcr.microsoft.com/dotnet/sdk:10.0
+    container_name: floppy-backend-dev
+    working_dir: /workspace/backend/FloppySchnauzer.Api
+    volumes:
+      - ..:/workspace:cached
+    command: dotnet watch run
+    ports:
+      - "8080:8080"
+
+  frontend:
+    image: node:20
+    container_name: floppy-frontend-dev
+    working_dir: /workspace/frontend
+    volumes:
+      - ..:/workspace:cached
+    command: npm run dev
+    ports:
+      - "5173:5173"

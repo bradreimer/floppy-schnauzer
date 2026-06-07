@@ -1,0 +1,18 @@
+{
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.cs": [
+      "dotnet format"
+    ]
+  },
+  "scripts": {
+    "prepare": "husky"
+  }
+}

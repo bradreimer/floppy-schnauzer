@@ -1,18 +1,16 @@
 # Floppy Schnauzer
 
-A WebGPU + ASP.NET Core game starring a caped, goofy schnauzer, plus a Firefly MCP server for asset generation.
+Caped, goofy schnauzer WebGPU game with:
 
-## Structure
+- Frontend: TypeScript + WebGPU (Vite)
+- Backend: ASP.NET (.NET 10)
+- Tools: Firefly MCP server for asset generation
 
-- `src/FloppySchnauzer.Api` — ASP.NET Core app serving the game
-- `src/FloppySchnauzer.Api/wwwroot` — WebGPU client + assets
-- `firefly-mcp` — Node-based MCP server wrapping Adobe Firefly
-
-## Running the game
+## Frontend
 
 ```bash
-cd src/FloppySchnauzer.Api
-dotnet run
-# or with Docker:
-# docker build -t floppy-schnauzer .
-# docker run --rm -p 8080:8080 floppy-schnauzer
+cd frontend
+npm install
+npm run dev      # dev server
+npm run build    # outputs to ../backend/FloppySchnauzer.Api/wwwroot/dist
+```

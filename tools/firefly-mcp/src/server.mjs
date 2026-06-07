@@ -53,8 +53,7 @@ async function handleToolCall(id, name, args) {
         ? finalPath
         : path.join(process.cwd(), finalPath);
 
-      const dir = path.dirname(absPath);
-      await fs.promises.mkdir(dir, { recursive: true });
+      await fs.promises.mkdir(path.dirname(absPath), { recursive: true });
       await fs.promises.writeFile(absPath, imgBuffer);
 
       send({
