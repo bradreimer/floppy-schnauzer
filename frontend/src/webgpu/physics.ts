@@ -8,18 +8,19 @@ import {
   VIRTUAL_WIDTH
 } from "./config";
 
-// Game state interface
+export interface Pipe {
+  x: number;
+  top: number;
+  bottom: number;
+  scored?: boolean;
+}
+
 export interface GameState {
   birdX: number;
   birdY: number;
   birdVelY: number;
 
-  pipes: {
-    x: number;
-    top: number;
-    bottom: number;
-    scored?: boolean;
-  }[];
+  pipes: Pipe[];
 
   timeSinceLastPipe: number;
 
@@ -32,7 +33,7 @@ export interface GameState {
 // ------------------------------------------------------------
 // Initial game state
 // ------------------------------------------------------------
-export function createInitialState() {
+export function createInitialState(): GameState {
   return {
     birdX: 100,
     birdY: VIRTUAL_HEIGHT / 2,
@@ -51,8 +52,17 @@ export function createInitialState() {
 // ------------------------------------------------------------
 // Main physics update
 // ------------------------------------------------------------
-export function updatePhysics(state, dt) {
-  let { birdX, birdY, birdVelY, pipes, timeSinceLastPipe, score, bestScore, gameOver } = state;
+export function updatePhysics(state: GameState, dt: number): GameState {
+  let {
+    birdX,
+    birdY,
+    birdVelY,
+    pipes,
+    timeSinceLastPipe,
+    score,
+    bestScore,
+    gameOver
+  } = state;
 
   if (gameOver) {
     return state;
@@ -72,14 +82,17 @@ export function updatePhysics(state, dt) {
   // ------------------------------------------------------------
   // Pipe movement
   // ------------------------------------------------------------
-  pipes = pipes.map(p => ({
+  pipes = pipes.map((p: Pipe): Pipe => ({
     ...p,
     x: p.x - PIPE_SPEED * dt
   }));
 
   // Remove off-screen pipes
-  if (pipes.length > 0 && pipes[0].x + 70 < 0) {
-    pipes.shift();
+  if (pipes.length > 0) {
+    const first = pipes[0];
+    if (first && first.x + 70 < 0) {
+      pipes.shift();
+    }
   }
 
   // ------------------------------------------------------------
@@ -90,9 +103,11 @@ export function updatePhysics(state, dt) {
   if (timeSinceLastPipe > PIPE_SPAWN_INTERVAL) {
     timeSinceLastPipe = 0;
 
-    const lastX = pipes.length > 0 ? pipes[pipes.length - 1].x : VIRTUAL_WIDTH + 50;
+    const lastPipe = pipes[pipes.length - 1];
+    const lastX = lastPipe?.x ?? VIRTUAL_WIDTH + 50;
 
-    const topHeight = Math.random() * (VIRTUAL_HEIGHT - PIPE_GAP - 200) + 50;
+    const topHeight =
+      Math.random() * (VIRTUAL_HEIGHT - PIPE_GAP - 200) + 50;
 
     pipes.push({
       x: lastX + 220,
@@ -105,7 +120,7 @@ export function updatePhysics(state, dt) {
   // ------------------------------------------------------------
   // Scoring
   // ------------------------------------------------------------
-  for (const p of pipes) {
+  for (const p of pipes as Pipe[]) {
     if (!p.scored && p.x + 70 < birdX) {
       score += 1;
       p.scored = true;

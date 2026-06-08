@@ -111,6 +111,8 @@ export async function createSpritePipeline(
 
       for (const sprite of sprites) {
         const tex = textures[sprite.texture];
+        if (!tex)
+          continue; // skip missing textures
 
         const bindGroup = device.createBindGroup({
           layout: pipeline.getBindGroupLayout(0),

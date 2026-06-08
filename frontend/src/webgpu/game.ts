@@ -1,43 +1,53 @@
 import { AudioSystem } from "./audio";
 import { setupInput } from "./input";
 import { buildFrameSprites } from "./parallax";
-import { createInitialState, updatePhysics } from "./physics";
-import { createSpritePipeline } from "./sprites";
+import { createInitialState, updatePhysics, GameState } from "./physics";
+import { createSpritePipeline, SpritePipeline } from "./sprites";
 import { loadTextures } from "./textures";
 import { JUMP_VELOCITY } from "./config";
 
 export class Game {
-  state;
-  device;
-  context;
-  format;
-  canvas;
-  overlay;
-  pipeline;
-  audio;
-  textures;
-  lastTime = null;
+  state: GameState;
+  device: GPUDevice;
+  context: GPUCanvasContext;
+  format: GPUTextureFormat;
+  canvas: HTMLCanvasElement;
+  overlay: HTMLDivElement;
+
+  pipeline!: SpritePipeline;
+  audio!: AudioSystem;
+  textures!: Record<string, GPUTexture>;
+
+  lastTime: number | null = null;
   running = false;
 
-  constructor(device, context, format, canvas, overlay) {
+  constructor(
+    device: GPUDevice,
+    context: GPUCanvasContext,
+    format: GPUTextureFormat,
+    canvas: HTMLCanvasElement,
+    overlay: HTMLDivElement
+  ) {
     this.device = device;
     this.context = context;
     this.format = format;
     this.canvas = canvas;
     this.overlay = overlay;
 
-    // Add bestScore tracking
     this.state = { ...createInitialState(), bestScore: 0 };
   }
 
-  async init() {
+  async init(): Promise<void> {
     this.pipeline = await createSpritePipeline(this.device, this.format);
     this.textures = await loadTextures(this.device);
     this.audio = new AudioSystem();
 
     setupInput(this.canvas, () => {
       if (!this.running) {
-        this.state = { ...createInitialState(), bestScore: this.state.bestScore };
+        this.state = {
+          ...createInitialState(),
+          bestScore: this.state.bestScore
+        };
         this.running = true;
       }
 
@@ -48,14 +58,13 @@ export class Game {
     this.overlay.textContent = "Tap to start / jump";
   }
 
-  update(dt) {
+  update(dt: number): void {
     if (!this.running) return;
 
     const prevScore = this.state.score;
 
     this.state = updatePhysics(this.state, dt);
 
-    // Update best score
     if (this.state.score > this.state.bestScore) {
       this.state.bestScore = this.state.score;
     }
@@ -73,7 +82,7 @@ export class Game {
     }
   }
 
-  render() {
+  render(): void {
     const sprites = buildFrameSprites(this.state);
     this.pipeline.renderFrame(this.context, sprites, this.textures);
   }
