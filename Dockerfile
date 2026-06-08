@@ -1,34 +1,34 @@
 # ============================
-# 1. Build Frontend (Vite + TS)
+# 1. Build Frontend (Vite)
 # ============================
 FROM node:20 AS frontend-build
-WORKDIR /app/frontend
+WORKDIR /app
 
-# Install dependencies
-COPY frontend/package.json frontend/package-lock.json* ./
+# Copy frontend
+COPY frontend ./frontend
+
+# Copy backend so Vite can write into backend/wwwroot
+COPY backend ./backend
+
+# Install frontend deps
+WORKDIR /app/frontend
 RUN npm ci
 
-# Copy source
-COPY frontend/ ./
-
-# Build to /app/frontend/dist
+# Build — Vite writes directly into ../backend/FloppySchnauzer.Api/wwwroot
 RUN npm run build
 
 
 # ============================
-# 2. Build Backend (.NET 10)
+# 2. Build Backend (.NET)
 # ============================
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS backend-build
 WORKDIR /src
 
-# Copy backend project
-COPY backend/FloppySchnauzer.Api ./FloppySchnauzer.Api
-
-# Copy frontend build output into backend's wwwroot/dist
-COPY --from=frontend-build /app/frontend/dist ./FloppySchnauzer.Api/wwwroot/dist
+# Copy backend including the Vite-built wwwroot
+COPY --from=frontend-build /app/backend ./backend
 
 # Publish backend
-WORKDIR /src/FloppySchnauzer.Api
+WORKDIR /src/backend/FloppySchnauzer.Api
 RUN dotnet publish -c Release -o /app/publish
 
 
