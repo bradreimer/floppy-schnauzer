@@ -52,16 +52,7 @@ export function createInitialState() {
 // Main physics update
 // ------------------------------------------------------------
 export function updatePhysics(state, dt) {
-  let {
-    birdX,
-    birdY,
-    birdVelY,
-    pipes,
-    timeSinceLastPipe,
-    score,
-    bestScore,
-    gameOver
-  } = state;
+  let { birdX, birdY, birdVelY, pipes, timeSinceLastPipe, score, bestScore, gameOver } = state;
 
   if (gameOver) {
     return state;
@@ -99,12 +90,9 @@ export function updatePhysics(state, dt) {
   if (timeSinceLastPipe > PIPE_SPAWN_INTERVAL) {
     timeSinceLastPipe = 0;
 
-    const lastX = pipes.length > 0
-      ? pipes[pipes.length - 1].x
-      : VIRTUAL_WIDTH + 50;
+    const lastX = pipes.length > 0 ? pipes[pipes.length - 1].x : VIRTUAL_WIDTH + 50;
 
-    const topHeight =
-      Math.random() * (VIRTUAL_HEIGHT - PIPE_GAP - 200) + 50;
+    const topHeight = Math.random() * (VIRTUAL_HEIGHT - PIPE_GAP - 200) + 50;
 
     pipes.push({
       x: lastX + 220,
@@ -142,7 +130,7 @@ export function updatePhysics(state, dt) {
     // Horizontal overlap
     if (birdRight > pipeLeft && birdLeft < pipeRight) {
       // Vertical collision (outside the gap)
-      if (birdY < p.top || (birdY + birdHeight) > p.bottom) {
+      if (birdY < p.top || birdY + birdHeight > p.bottom) {
         console.log("COLLISION TRIGGERED");
         gameOver = true;
       }

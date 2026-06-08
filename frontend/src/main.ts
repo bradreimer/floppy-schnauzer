@@ -43,7 +43,6 @@ async function start() {
     }
 
     requestAnimationFrame(frame);
-
   } catch (err) {
     console.error(err);
     overlay.textContent = "WebGPU not supported on this device/browser.";
