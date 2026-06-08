@@ -1,12 +1,12 @@
+version: "3.9"
+
 services:
-  floppy-schnauzer:
+  api:
     build:
-      context: .
+      context: ./docker/prod
       dockerfile: Dockerfile
-    image: floppy-schnauzer:latest
-    container_name: floppy-schnauzer
     ports:
       - "8080:8080"
     environment:
-      ASPNETCORE_ENVIRONMENT: "Production"
-    restart: unless-stopped
+      ASPNETCORE_ENVIRONMENT: Production
+    restart: always

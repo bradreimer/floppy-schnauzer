@@ -55,8 +55,8 @@ jobs:
       - name: Build and push production image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./docker/prod
+          file: ./docker/prod/Dockerfile
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -80,8 +80,8 @@ jobs:
       - name: Build development image (for testing)
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile.dev
+          context: ./docker/dev
+          file: ./docker/dev/dockerfile.dev
           push: false
           cache-from: type=gha
           cache-to: type=gha,mode=max
