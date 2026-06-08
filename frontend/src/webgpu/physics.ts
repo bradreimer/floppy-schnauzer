@@ -1,3 +1,5 @@
+import { VIRTUAL_WIDTH, GRAVITY, PIPE_SPEED, PIPE_GAP, VIRTUAL_HEIGHT } from "./config";
+
 export interface GameState {
   birdX: number;
   birdY: number;
@@ -20,13 +22,9 @@ export function createInitialState(): GameState {
   };
 }
 
-const GRAVITY = 1500;
-const PIPE_SPEED = 180;
-const PIPE_GAP = 170;
-
 function spawnInitialPipes() {
   const arr = [];
-  let x = 400;
+  let x = VIRTUAL_WIDTH + 50; // just off the right edge of the world
   for (let i = 0; i < 4; i++) {
     arr.push({ x, top: randomTop() });
     x += 220;
@@ -43,24 +41,32 @@ export function updateGame(state: GameState, dt: number): GameState {
 
   let { birdY, birdVelY, pipes, score, bestScore } = state;
 
-  birdVelY += GRAVITY * dt;
-  birdY += birdVelY * dt;
+  birdVelY += GRAVITY * dt
+  birdY += birdVelY * dt
 
+  // Move pipes to the left
   pipes = pipes.map(p => ({ ...p, x: p.x - PIPE_SPEED * dt }));
 
+  // Recycle pipes that have gone off screen and update score
   if (pipes[0].x + 70 < 0) {
     pipes.shift();
-    pipes.push({ x: pipes[pipes.length - 1].x + 220, top: randomTop() });
+    pipes.push({
+      x: pipes[pipes.length - 1].x + 220,
+      top: randomTop()
+    });
     score++;
     bestScore = Math.max(bestScore, score);
   }
 
-  if (birdY > 660 || birdY < 0) {
+  // Check for collisions with ground/ceiling
+  if (birdY > VIRTUAL_HEIGHT - 40 || birdY < 0) {
     return { ...state, birdY, birdVelY, pipes, score, bestScore, gameOver: true };
   }
 
+  // Check for collisions with pipes
   const birdRect = { x: state.birdX - 20, y: birdY - 20, w: 40, h: 40 };
 
+  // Note: this is AABB collision which isn't pixel-perfect, but it's good enough for a simple game like this
   for (const p of pipes) {
     const topRect = { x: p.x, y: 0, w: 70, h: p.top };
     const bottomRect = {

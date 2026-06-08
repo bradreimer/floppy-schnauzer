@@ -4,6 +4,8 @@ export interface WebGPUInitResult {
   format: GPUTextureFormat;
 }
 
+import { VIRTUAL_WIDTH, VIRTUAL_HEIGHT, ASPECT_RATIO } from "./config";
+
 export async function initWebGPU(canvas: HTMLCanvasElement): Promise<WebGPUInitResult> {
   if (!("gpu" in navigator)) {
     throw new Error("WebGPU not supported");
@@ -16,19 +18,67 @@ export async function initWebGPU(canvas: HTMLCanvasElement): Promise<WebGPUInitR
   const context = canvas.getContext("webgpu") as GPUCanvasContext;
   const format = navigator.gpu.getPreferredCanvasFormat();
 
+  const uiCanvas = document.getElementById("ui") as HTMLCanvasElement | null;
+  if (!uiCanvas) {
+    console.warn("UI canvas (#ui) not found — UI overlay will not render");
+  }
+
   const resize = () => {
-    const dpr = window.devicePixelRatio || 1;
-    const max = device.limits.maxTextureDimension2D;
+    //
+    // 1. Internal resolution stays fixed (virtual resolution)
+    //
+    canvas.width = VIRTUAL_WIDTH;
+    canvas.height = VIRTUAL_HEIGHT;
 
-    const targetWidth = Math.floor(window.innerWidth * dpr);
-    const targetHeight = Math.floor(window.innerHeight * dpr);
+    if (uiCanvas) {
+      uiCanvas.width = VIRTUAL_WIDTH;
+      uiCanvas.height = VIRTUAL_HEIGHT;
+    }
 
-    canvas.width = Math.min(targetWidth, max);
-    canvas.height = Math.min(targetHeight, max);
+    //
+    // 2. Maintain 4:7 aspect ratio when scaling to window size
+    //
+    const windowRatio = window.innerWidth / window.innerHeight;
+    const targetRatio = ASPECT_RATIO;
 
-    canvas.style.width = `${window.innerWidth}px`;
-    canvas.style.height = `${window.innerHeight}px`;
+    let displayWidth: number;
+    let displayHeight: number;
 
+    if (windowRatio > targetRatio) {
+      // Window is too wide → pillarbox
+      displayHeight = window.innerHeight;
+      displayWidth = displayHeight * targetRatio;
+    } else {
+      // Window is too tall → letterbox
+      displayWidth = window.innerWidth;
+      displayHeight = displayWidth / targetRatio;
+    }
+
+    //
+    // 3. Apply CSS scaling to both canvases
+    //
+    canvas.style.width = `${displayWidth}px`;
+    canvas.style.height = `${displayHeight}px`;
+    canvas.style.marginLeft = `${(window.innerWidth - displayWidth) / 2}px`;
+    canvas.style.marginTop = `${(window.innerHeight - displayHeight) / 2}px`;
+    canvas.style.position = "absolute";
+    canvas.style.left = "0";
+    canvas.style.top = "0";
+
+    if (uiCanvas) {
+      uiCanvas.style.width = canvas.style.width;
+      uiCanvas.style.height = canvas.style.height;
+      uiCanvas.style.marginLeft = canvas.style.marginLeft;
+      uiCanvas.style.marginTop = canvas.style.marginTop;
+      uiCanvas.style.position = "absolute";
+      uiCanvas.style.left = "0";
+      uiCanvas.style.top = "0";
+      uiCanvas.style.pointerEvents = "none"; // UI should not block input
+    }
+
+    //
+    // 4. Configure WebGPU context
+    //
     context.configure({
       device,
       format,

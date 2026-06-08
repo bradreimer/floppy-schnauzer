@@ -6,6 +6,8 @@ import { createSpritePipeline, SpritePipeline } from "./sprites";
 import { loadTextures } from "./textures";
 
 export class Game {
+  public state: GameState;
+
   private device: GPUDevice;
   private context: GPUCanvasContext;
   private format: GPUTextureFormat;
@@ -15,7 +17,6 @@ export class Game {
   private pipeline!: SpritePipeline;
   private audio!: AudioSystem;
   private textures!: Awaited<ReturnType<typeof loadTextures>>;
-  private state: GameState;
   private lastTime: number | null = null;
   private running = false;
 
@@ -51,34 +52,27 @@ export class Game {
     this.overlay.textContent = "Tap to start / jump";
   }
 
-  start() {
-    const loop = (time: number) => {
-      if (this.lastTime == null) this.lastTime = time;
-      const dt = Math.min((time - this.lastTime) / 1000, 0.033);
-      this.lastTime = time;
+  update(dt: number) {
+    if (!this.running) return;
 
-      if (this.running) {
-        const prevScore = this.state.score;
-        this.state = updateGame(this.state, dt);
-        if (this.state.score > prevScore) {
-          this.audio.play("score");
-        }
-        if (this.state.gameOver && this.running) {
-          this.running = false;
-          this.audio.play("hit");
-          this.overlay.textContent = `Game Over – Score: ${this.state.score} (best: ${this.state.bestScore}) – Tap to restart`;
-        } else {
-          this.overlay.textContent = `Score: ${this.state.score} (best: ${this.state.bestScore})`;
-        }
-      }
+    const prevScore = this.state.score;
+    this.state = updateGame(this.state, dt);
 
-      const sprites = buildFrameSprites(this.state);
-      this.pipeline.renderFrame(this.context, sprites, this.textures);
+    if (this.state.score > prevScore) {
+      this.audio.play("score");
+    }
 
-      //console.log(`Frame time: ${dt.toFixed(3)}s, Score: ${this.state.score}`);
-      requestAnimationFrame(loop);
-    };
+    if (this.state.gameOver && this.running) {
+      this.running = false;
+      this.audio.play("hit");
+      this.overlay.textContent = `Game Over – Score: ${this.state.score} (best: ${this.state.bestScore}) – Tap to restart`;
+    } else {
+      this.overlay.textContent = `Score: ${this.state.score} (best: ${this.state.bestScore})`;
+    }
+  }
 
-    requestAnimationFrame(loop);
+  render() {
+    const sprites = buildFrameSprites(this.state);
+    this.pipeline.renderFrame(this.context, sprites, this.textures);
   }
 }

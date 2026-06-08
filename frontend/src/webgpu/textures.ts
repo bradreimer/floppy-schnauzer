@@ -42,16 +42,14 @@ async function loadTexture(device: GPUDevice, url: string, fallback: string) {
 
 export async function loadTextures(device: GPUDevice) {
   return {
-    sky: await loadTexture(device, "/assets/backgrounds/sky.png", skyPlaceholder),
-    clouds: await loadTexture(device, "/assets/backgrounds/clouds.png", cloudsPlaceholder),
-    hills: await loadTexture(device, "/assets/backgrounds/hills.png", hillsPlaceholder),
-    ground: await loadTexture(device, "/assets/backgrounds/ground.png", groundPlaceholder),
-    pipeTop: await loadTexture(device, "/assets/pipes/pipe_top.png", pipeTopPlaceholder),
-    pipeBottom: await loadTexture(device, "/assets/pipes/pipe_bottom.png", pipeBottomPlaceholder),
-    schnauzer: await loadTexture(
-      device,
-      "/assets/schnauzer/floppy_schnauzer_sheet.png",
-      schnauzerPlaceholder
-    )
+    sky: await loadTexture(device, "/assets/bg-layer-1.png", skyPlaceholder),
+    clouds: await loadTexture(device, "/assets/bg-layer-2.png", cloudsPlaceholder),
+    hills: await loadTexture(device, "/assets/bg-layer-2.png", hillsPlaceholder),
+    ground: await loadTexture(device, "/assets/ground.png", groundPlaceholder),
+
+    pipeTop: await loadTexture(device, "/assets/pipe-top.png", pipeTopPlaceholder),
+    pipeBottom: await loadTexture(device, "/assets/pipe-bottom.png", pipeBottomPlaceholder),
+
+    schnauzer: await loadTexture(device, "/assets/schnauzer-idle.png", schnauzerPlaceholder)
   };
 }

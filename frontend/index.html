@@ -1,14 +1,61 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
-    <script type="module" src="/@vite/client"></script>
     <meta charset="utf-8" />
     <title>Floppy Schnauzer Dev</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        background: #000;
+        height: 100%;
+        width: 100%;
+      }
+
+      /* Game canvas (bottom layer) */
+      #game {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 1;
+      }
+
+      /* UI canvas (middle layer) */
+      #ui {
+        position: absolute;
+        left: 0;
+        top: 0;
+        pointer-events: none;
+        z-index: 2;
+      }
+
+      /* Overlay text (top layer) */
+      #overlay {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        text-align: center;
+        color: white;
+        font-family: sans-serif;
+        font-size: 28px;
+        font-weight: bold;
+        text-shadow: 2px 2px 4px black;
+        z-index: 3; /* <-- always on top */
+        pointer-events: none; /* overlay shouldn't block taps */
+        margin-top: 20px;
+      }
+    </style>
   </head>
+
   <body>
     <canvas id="game"></canvas>
+    <canvas id="ui"></canvas>
     <div id="overlay"></div>
+
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

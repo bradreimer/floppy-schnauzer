@@ -1,3 +1,5 @@
+import { VIRTUAL_WIDTH, VIRTUAL_HEIGHT } from "./config";
+
 export interface Sprite {
   texture: string;
   x: number;
@@ -8,6 +10,7 @@ export interface Sprite {
   v0: number;
   u1: number;
   v1: number;
+  z?: number;
 }
 
 export interface SpritePipeline {
@@ -81,6 +84,15 @@ export async function createSpritePipeline(
     primitive: { topology: "triangle-list" }
   });
 
+  // Pixel → clip-space conversion
+  function toClipX(px: number) {
+    return (px / VIRTUAL_WIDTH) * 2 - 1;
+  }
+
+  function toClipY(py: number) {
+    return 1 - (py / VIRTUAL_HEIGHT) * 2;
+  }
+
   return {
     renderFrame(context, sprites, textures) {
       const encoder = device.createCommandEncoder();
@@ -88,15 +100,19 @@ export async function createSpritePipeline(
         colorAttachments: [
           {
             view: context.getCurrentTexture().createView(),
-            clearValue: { r: 0, g: 0, b: 0, a: 1 },
+            clearValue: { r: 0.4, g: 0.7, b: 1.0, a: 1 }, // sky blue
             loadOp: "clear",
             storeOp: "store"
           }
         ]
       });
 
+      // Depth sort
+      sprites.sort((a, b) => (a.z ?? 0) - (b.z ?? 0));
+
       for (const sprite of sprites) {
         const tex = textures[sprite.texture];
+
         const bindGroup = device.createBindGroup({
           layout: pipeline.getBindGroupLayout(0),
           entries: [
@@ -105,53 +121,25 @@ export async function createSpritePipeline(
           ]
         });
 
-        const cw = canvas.width;
-        const ch = canvas.height;
-
-        function toClipX(px: number) {
-          return (px / cw) * 2 - 1;
-        }
-
-        function toClipY(py: number) {
-          return 1 - (py / ch) * 2;
-        }
-
         const x0 = toClipX(sprite.x);
         const y0 = toClipY(sprite.y);
         const x1 = toClipX(sprite.x + sprite.w);
         const y1 = toClipY(sprite.y + sprite.h);
 
         const verts = new Float32Array([
-          x0,
-          y0,
-          sprite.u0,
-          sprite.v0,
-          x1,
-          y0,
-          sprite.u1,
-          sprite.v0,
-          x1,
-          y1,
-          sprite.u1,
-          sprite.v1,
-          x0,
-          y0,
-          sprite.u0,
-          sprite.v0,
-          x1,
-          y1,
-          sprite.u1,
-          sprite.v1,
-          x0,
-          y1,
-          sprite.u0,
-          sprite.v1
+          x0, y0, sprite.u0, sprite.v0,
+          x1, y0, sprite.u1, sprite.v0,
+          x1, y1, sprite.u1, sprite.v1,
+          x0, y0, sprite.u0, sprite.v0,
+          x1, y1, sprite.u1, sprite.v1,
+          x0, y1, sprite.u0, sprite.v1
         ]);
 
         const buffer = device.createBuffer({
           size: verts.byteLength,
           usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
         });
+
         device.queue.writeBuffer(buffer, 0, verts);
 
         pass.setPipeline(pipeline);
