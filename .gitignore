@@ -8,7 +8,7 @@ yarn-error.log
 
 # Vite build output
 frontend/dist/
-backend/FloppySchnauzer.Api/wwwroot/dist/
+backend/FloppySchnauzer.Api/wwwroot/
 
 # TypeScript
 *.tsbuildinfo

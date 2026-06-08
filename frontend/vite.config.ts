@@ -22,7 +22,7 @@ export default defineConfig({
   },
 
   build: {
-    outDir: path.resolve(__dirname, "../backend/FloppySchnauzer.Api/wwwroot/dist"),
+    outDir: path.resolve(__dirname, "../backend/FloppySchnauzer.Api/wwwroot"),
     emptyOutDir: true,
     rollupOptions: {
       input: path.resolve(__dirname, "index.html")
