@@ -1,8 +1,2 @@
-#!/usr/bin/env sh
-
-# Lint + format frontend (TypeScript)
-npm --prefix frontend run format
-npm --prefix frontend run lint
-
-# Format backend (C#)
-dotnet format backend/FloppySchnauzer.Api
+#!/bin/sh
+npx lint-staged

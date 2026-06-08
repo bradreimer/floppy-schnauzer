@@ -1,21 +1,24 @@
 {
-  "type": "module",
-  "devDependencies": {
-    "eslint": "^9.0.0",
-    "@typescript-eslint/eslint-plugin": "^8.60.1",
-    "@typescript-eslint/parser": "^8.60.1",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-prettier": "^5.5.6",
-    "husky": "^9.1.7",
-    "lint-staged": "^17.0.7"
-  },
+  "name": "floppy-schnauzer",
+  "private": true,
+  "workspaces": [
+    "frontend"
+  ],
   "scripts": {
     "prepare": "husky",
-    "lint": "eslint ."
+    "lint": "npm run lint -w frontend",
+    "typecheck": "npm run typecheck -w frontend"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^17.0.7"
   },
   "lint-staged": {
     "*.cs": [
       "dotnet format"
+    ],
+    "frontend/src/**/*.{ts,tsx}": [
+      "npm run lint:fix -w frontend"
     ]
   }
 }

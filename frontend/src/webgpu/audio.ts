@@ -19,7 +19,7 @@ export class AudioSystem {
       const res = await fetch(url);
       const arr = await res.arrayBuffer();
       this.buffers[name] = await this.ctx.decodeAudioData(arr);
-    } catch (err) {
+    } catch {
       console.error(`AudioSystem: failed to load audio "${name}" from ${url}`);
     }
   }

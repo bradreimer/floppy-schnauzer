@@ -15,9 +15,9 @@ export interface Sprite {
 
 export interface SpritePipeline {
   renderFrame(
-    context: GPUCanvasContext,
-    sprites: Sprite[],
-    textures: Record<string, GPUTexture>
+    _context: GPUCanvasContext,
+    _sprites: Sprite[],
+    _textures: Record<string, GPUTexture>
   ): void;
 }
 
