@@ -1,6 +1,8 @@
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
 
 jobs:
   build:
@@ -14,16 +16,22 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install frontend deps
-        run: npm ci --prefix frontend
+      - name: Install frontend dependencies
+        run: npm ci
 
       - name: Lint frontend
-        run: npm run lint --prefix frontend
+        run: npm run lint -w frontend
+
+      - name: Typecheck frontend
+        run: npm run typecheck -w frontend
+
+      - name: Build frontend
+        run: npm run build -w frontend
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.0.x"
 
-      - name: Format backend
+      - name: Verify backend formatting
         run: dotnet format --verify-no-changes backend/FloppySchnauzer.Api
