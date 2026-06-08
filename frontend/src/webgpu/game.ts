@@ -1,62 +1,64 @@
-import { AudioSystem } from "./audio";
-import { setupInput } from "./input";
-import { buildFrameSprites } from "./parallax";
-import { updateGame, GameState, createInitialState } from "./physics";
-import { createSpritePipeline, SpritePipeline } from "./sprites";
-import { loadTextures } from "./textures";
+import { AudioSystem } from "/src/webgpu/audio.ts";
+import { setupInput } from "/src/webgpu/input.ts";
+import { buildFrameSprites } from "/src/webgpu/parallax.ts";
+import { createInitialState, updatePhysics } from "/src/webgpu/physics.ts";
+import { createSpritePipeline } from "/src/webgpu/sprites.ts";
+import { loadTextures } from "/src/webgpu/textures.ts";
+import { JUMP_VELOCITY } from "/src/webgpu/config.ts";
 
 export class Game {
-  public state: GameState;
+  state;
+  device;
+  context;
+  format;
+  canvas;
+  overlay;
+  pipeline;
+  audio;
+  textures;
+  lastTime = null;
+  running = false;
 
-  private device: GPUDevice;
-  private context: GPUCanvasContext;
-  private format: GPUTextureFormat;
-  private canvas: HTMLCanvasElement;
-  private overlay: HTMLDivElement;
-
-  private pipeline!: SpritePipeline;
-  private audio!: AudioSystem;
-  private textures!: Awaited<ReturnType<typeof loadTextures>>;
-  private lastTime: number | null = null;
-  private running = false;
-
-  constructor(
-    device: GPUDevice,
-    context: GPUCanvasContext,
-    format: GPUTextureFormat,
-    canvas: HTMLCanvasElement,
-    overlay: HTMLDivElement
-  ) {
+  constructor(device, context, format, canvas, overlay) {
     this.device = device;
     this.context = context;
     this.format = format;
     this.canvas = canvas;
     this.overlay = overlay;
-    this.state = createInitialState();
+
+    // Add bestScore tracking
+    this.state = { ...createInitialState(), bestScore: 0 };
   }
 
   async init() {
-    this.pipeline = await createSpritePipeline(this.device, this.format, this.canvas);
+    this.pipeline = await createSpritePipeline(this.device, this.format);
     this.textures = await loadTextures(this.device);
     this.audio = new AudioSystem();
 
     setupInput(this.canvas, () => {
       if (!this.running) {
-        this.state = createInitialState();
+        this.state = { ...createInitialState(), bestScore: this.state.bestScore };
         this.running = true;
       }
-      this.state = { ...this.state, birdVelY: -450 };
+
+      this.state = { ...this.state, birdVelY: JUMP_VELOCITY };
       this.audio.play("jump");
     });
 
     this.overlay.textContent = "Tap to start / jump";
   }
 
-  update(dt: number) {
+  update(dt) {
     if (!this.running) return;
 
     const prevScore = this.state.score;
-    this.state = updateGame(this.state, dt);
+
+    this.state = updatePhysics(this.state, dt);
+
+    // Update best score
+    if (this.state.score > this.state.bestScore) {
+      this.state.bestScore = this.state.score;
+    }
 
     if (this.state.score > prevScore) {
       this.audio.play("score");

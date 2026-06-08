@@ -4,7 +4,7 @@ export interface WebGPUInitResult {
   format: GPUTextureFormat;
 }
 
-import { VIRTUAL_WIDTH, VIRTUAL_HEIGHT, ASPECT_RATIO } from "./config";
+import { VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "./config";
 
 export async function initWebGPU(canvas: HTMLCanvasElement): Promise<WebGPUInitResult> {
   if (!("gpu" in navigator)) {
@@ -39,7 +39,7 @@ export async function initWebGPU(canvas: HTMLCanvasElement): Promise<WebGPUInitR
     // 2. Maintain 4:7 aspect ratio when scaling to window size
     //
     const windowRatio = window.innerWidth / window.innerHeight;
-    const targetRatio = ASPECT_RATIO;
+    const targetRatio = VIRTUAL_WIDTH / VIRTUAL_HEIGHT;
 
     let displayWidth: number;
     let displayHeight: number;

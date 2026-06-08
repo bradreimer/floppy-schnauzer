@@ -1,4 +1,4 @@
-import { VIRTUAL_WIDTH, VIRTUAL_HEIGHT } from "./config";
+import { VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "./config";
 import { GameState } from "./physics";
 
 export function drawUI(state: GameState, uiCanvas: HTMLCanvasElement) {

@@ -1,4 +1,4 @@
-import { VIRTUAL_WIDTH, VIRTUAL_HEIGHT } from "./config";
+import { VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "./config";
 
 export interface Sprite {
   texture: string;
@@ -23,8 +23,7 @@ export interface SpritePipeline {
 
 export async function createSpritePipeline(
   device: GPUDevice,
-  format: GPUTextureFormat,
-  canvas: HTMLCanvasElement
+  format: GPUTextureFormat
 ): Promise<SpritePipeline> {
   const shader = device.createShaderModule({
     code: `

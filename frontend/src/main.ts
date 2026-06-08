@@ -22,18 +22,28 @@ async function start() {
     // Initialize game assets
     await game.init();
 
-    // Main loop
-    function frame() {
-      game.update();
+    // --- Main loop with proper dt calculation ---
+    let lastTime = performance.now();
+
+    function frame(time: number) {
+      // Calculate delta time in seconds
+      const dt = (time - lastTime) / 1000;
+      lastTime = time;
+
+      // Update game state and render
+      game.update(dt);
       game.render();
 
       // Draw UI overlay (score, etc.)
-      drawUI(game.state, uiCanvas);
+      if (uiCanvas) {
+        drawUI(game.state, uiCanvas);
+      }
 
       requestAnimationFrame(frame);
     }
 
-    frame();
+    requestAnimationFrame(frame);
+
   } catch (err) {
     console.error(err);
     overlay.textContent = "WebGPU not supported on this device/browser.";

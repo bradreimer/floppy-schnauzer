@@ -4,8 +4,11 @@
   "trailingComma": "none",
   "printWidth": 100,
   "tabWidth": 2,
-  "arrowParens": "avoid",
   "bracketSpacing": true,
+  "arrowParens": "avoid",
   "endOfLine": "lf",
-  "proseWrap": "preserve"
+
+  "bracketSameLine": false,
+  "proseWrap": "preserve",
+  "operatorLinebreak": "before"
 }

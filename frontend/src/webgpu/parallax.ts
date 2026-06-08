@@ -1,4 +1,11 @@
-import { VIRTUAL_WIDTH } from "./config";
+import {
+  SCROLL_CLOUDS_SPEED,
+  SCROLL_GROUND_SPEED,
+  SCROLL_HILLS_SPEED,
+  SCROLL_SKY_SPEED,
+  VIRTUAL_HEIGHT,
+  VIRTUAL_WIDTH
+} from "./config";
 import { GameState } from "./physics";
 import { Sprite } from "./sprites";
 
@@ -8,7 +15,7 @@ let scrollClouds = 0;
 let scrollHills = 0;
 let scrollGround = 0;
 
-// Virtual resolution
+// Virtual resolution tile widths
 const SKY_W = 400;
 const CLOUD_W = 400;
 const HILLS_W = 400;
@@ -18,10 +25,10 @@ export function buildFrameSprites(state: GameState): Sprite[] {
   const sprites: Sprite[] = [];
 
   // Parallax speeds (pixels per second)
-  scrollSky += 10;
-  scrollClouds += 20;
-  scrollHills += 40;
-  scrollGround += 180;
+  scrollSky += SCROLL_SKY_SPEED;
+  scrollClouds += SCROLL_CLOUDS_SPEED;
+  scrollHills += SCROLL_HILLS_SPEED;
+  scrollGround += SCROLL_GROUND_SPEED;
 
   // Background layers (z = 0 → back, higher = front)
   pushTiled(sprites, "sky", scrollSky, 0, 700, 0, SKY_W);
@@ -34,11 +41,13 @@ export function buildFrameSprites(state: GameState): Sprite[] {
   const u0 = frame / 4;
   const u1 = (frame + 1) / 4;
 
-  // Bird
-  sprites.push({
+  // ------------------------------------------------------------
+  // BIRD — aligned 1:1 with physics (top-left origin)
+  // ------------------------------------------------------------
+  const birdSprite = {
     texture: "schnauzer",
-    x: state.birdX - 32,
-    y: state.birdY - 32,
+    x: state.birdX, // physics uses top-left; rendering matches
+    y: state.birdY,
     w: 64,
     h: 64,
     u0,
@@ -46,35 +55,42 @@ export function buildFrameSprites(state: GameState): Sprite[] {
     u1,
     v1: 0.5,
     z: 5
-  });
+  };
+  sprites.push(birdSprite);
 
-  // Pipes
+  // ------------------------------------------------------------
+  // PIPES — perfectly aligned with physics
+  // ------------------------------------------------------------
   for (const p of state.pipes) {
-    sprites.push({
+    // TOP PIPE: from y=0 → p.top
+    const topSprite = {
       texture: "pipeTop",
       x: p.x,
-      y: p.top - 512,
+      y: 0,
       w: 70,
-      h: 512,
+      h: p.top,
       u0: 0,
       v0: 0,
       u1: 1,
       v1: 1,
       z: 4
-    });
+    };
+    sprites.push(topSprite);
 
-    sprites.push({
+    // BOTTOM PIPE: from y=p.bottom → VIRTUAL_HEIGHT
+    const bottomSprite = {
       texture: "pipeBottom",
       x: p.x,
-      y: p.top + 170,
+      y: p.bottom,
       w: 70,
-      h: 512,
+      h: VIRTUAL_HEIGHT - p.bottom,
       u0: 0,
       v0: 0,
       u1: 1,
       v1: 1,
       z: 4
-    });
+    };
+    sprites.push(bottomSprite);
   }
 
   return sprites;
@@ -92,7 +108,6 @@ function pushTiled(
 ) {
   const offset = -(scroll % tileWidth);
 
-  // Draw enough tiles to cover the 400px virtual width
   for (let x = offset - tileWidth; x < VIRTUAL_WIDTH + tileWidth; x += tileWidth) {
     sprites.push({
       texture,
