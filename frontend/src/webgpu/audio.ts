@@ -1,12 +1,19 @@
+import hitPlaceholder from "../assets/audio/hit.wav";
+import jumpPlaceholder from "../assets/audio/jump.wav";
+import scorePlaceholder from "../assets/audio/score.wav";
+
 export class AudioSystem {
   private ctx: AudioContext;
   private buffers: Record<string, AudioBuffer> = {};
 
   constructor() {
     this.ctx = new AudioContext();
-    this.load("jump", "/assets/audio/jump.wav");
-    this.load("score", "/assets/audio/score.wav");
-    this.load("hit", "/assets/audio/hit.wav");
+
+    const isDev = import.meta.env.DEV;
+
+    this.load("jump", isDev ? jumpPlaceholder : "/assets/audio/jump.wav");
+    this.load("score", isDev ? scorePlaceholder : "/assets/audio/score.wav");
+    this.load("hit", isDev ? hitPlaceholder : "/assets/audio/hit.wav");
   }
 
   private async load(name: string, url: string) {

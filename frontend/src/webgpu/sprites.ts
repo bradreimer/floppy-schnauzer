@@ -105,29 +105,45 @@ export async function createSpritePipeline(
           ]
         });
 
+        const cw = canvas.width;
+        const ch = canvas.height;
+
+        function toClipX(px: number) {
+          return (px / cw) * 2 - 1;
+        }
+
+        function toClipY(py: number) {
+          return 1 - (py / ch) * 2;
+        }
+
+        const x0 = toClipX(sprite.x);
+        const y0 = toClipY(sprite.y);
+        const x1 = toClipX(sprite.x + sprite.w);
+        const y1 = toClipY(sprite.y + sprite.h);
+
         const verts = new Float32Array([
-          sprite.x,
-          sprite.y,
+          x0,
+          y0,
           sprite.u0,
           sprite.v0,
-          sprite.x + sprite.w,
-          sprite.y,
+          x1,
+          y0,
           sprite.u1,
           sprite.v0,
-          sprite.x + sprite.w,
-          sprite.y + sprite.h,
+          x1,
+          y1,
           sprite.u1,
           sprite.v1,
-          sprite.x,
-          sprite.y,
+          x0,
+          y0,
           sprite.u0,
           sprite.v0,
-          sprite.x + sprite.w,
-          sprite.y + sprite.h,
+          x1,
+          y1,
           sprite.u1,
           sprite.v1,
-          sprite.x,
-          sprite.y + sprite.h,
+          x0,
+          y1,
           sprite.u0,
           sprite.v1
         ]);

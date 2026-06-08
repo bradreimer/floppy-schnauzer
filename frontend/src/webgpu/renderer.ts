@@ -18,9 +18,17 @@ export async function initWebGPU(canvas: HTMLCanvasElement): Promise<WebGPUInitR
 
   const resize = () => {
     const dpr = window.devicePixelRatio || 1;
-    const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
+    const max = device.limits.maxTextureDimension2D;
+
+    const targetWidth = Math.floor(window.innerWidth * dpr);
+    const targetHeight = Math.floor(window.innerHeight * dpr);
+
+    canvas.width = Math.min(targetWidth, max);
+    canvas.height = Math.min(targetHeight, max);
+
+    canvas.style.width = `${window.innerWidth}px`;
+    canvas.style.height = `${window.innerHeight}px`;
+
     context.configure({
       device,
       format,

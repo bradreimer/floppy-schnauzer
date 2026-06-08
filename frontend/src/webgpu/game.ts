@@ -72,9 +72,10 @@ export class Game {
         }
       }
 
-      const sprites = buildFrameSprites(this.state, this.textures);
+      const sprites = buildFrameSprites(this.state);
       this.pipeline.renderFrame(this.context, sprites, this.textures);
 
+      //console.log(`Frame time: ${dt.toFixed(3)}s, Score: ${this.state.score}`);
       requestAnimationFrame(loop);
     };
 

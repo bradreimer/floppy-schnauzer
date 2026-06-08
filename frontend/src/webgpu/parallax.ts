@@ -6,10 +6,7 @@ let scrollClouds = 0;
 let scrollHills = 0;
 let scrollGround = 0;
 
-export function buildFrameSprites(
-  state: GameState,
-  textures: Record<string, GPUTexture>
-): Sprite[] {
+export function buildFrameSprites(state: GameState): Sprite[] {
   const sprites: Sprite[] = [];
 
   scrollSky += 10;

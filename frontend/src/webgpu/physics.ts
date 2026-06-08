@@ -21,7 +21,6 @@ export function createInitialState(): GameState {
 }
 
 const GRAVITY = 1500;
-const JUMP = -450;
 const PIPE_SPEED = 180;
 const PIPE_GAP = 170;
 
