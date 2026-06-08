@@ -19,16 +19,13 @@ async function loadTexture(device: GPUDevice, url: string) {
     size: [bmp.width, bmp.height, 1],
     format: "rgba8unorm",
     usage:
-      GPUTextureUsage.TEXTURE_BINDING |
-      GPUTextureUsage.COPY_DST |
-      GPUTextureUsage.RENDER_ATTACHMENT
+      GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT
   });
 
-  device.queue.copyExternalImageToTexture(
-    { source: bmp },
-    { texture: tex },
-    [bmp.width, bmp.height]
-  );
+  device.queue.copyExternalImageToTexture({ source: bmp }, { texture: tex }, [
+    bmp.width,
+    bmp.height
+  ]);
 
   return tex;
 }
