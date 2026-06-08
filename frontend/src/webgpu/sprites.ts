@@ -127,12 +127,30 @@ export async function createSpritePipeline(
         const y1 = toClipY(sprite.y + sprite.h);
 
         const verts = new Float32Array([
-          x0, y0, sprite.u0, sprite.v0,
-          x1, y0, sprite.u1, sprite.v0,
-          x1, y1, sprite.u1, sprite.v1,
-          x0, y0, sprite.u0, sprite.v0,
-          x1, y1, sprite.u1, sprite.v1,
-          x0, y1, sprite.u0, sprite.v1
+          x0,
+          y0,
+          sprite.u0,
+          sprite.v0,
+          x1,
+          y0,
+          sprite.u1,
+          sprite.v0,
+          x1,
+          y1,
+          sprite.u1,
+          sprite.v1,
+          x0,
+          y0,
+          sprite.u0,
+          sprite.v0,
+          x1,
+          y1,
+          sprite.u1,
+          sprite.v1,
+          x0,
+          y1,
+          sprite.u0,
+          sprite.v1
         ]);
 
         const buffer = device.createBuffer({

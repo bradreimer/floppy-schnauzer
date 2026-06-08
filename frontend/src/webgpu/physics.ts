@@ -41,8 +41,8 @@ export function updateGame(state: GameState, dt: number): GameState {
 
   let { birdY, birdVelY, pipes, score, bestScore } = state;
 
-  birdVelY += GRAVITY * dt
-  birdY += birdVelY * dt
+  birdVelY += GRAVITY * dt;
+  birdY += birdVelY * dt;
 
   // Move pipes to the left
   pipes = pipes.map(p => ({ ...p, x: p.x - PIPE_SPEED * dt }));
