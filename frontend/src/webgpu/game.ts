@@ -1,10 +1,10 @@
-import { AudioSystem } from "/src/webgpu/audio.ts";
-import { setupInput } from "/src/webgpu/input.ts";
-import { buildFrameSprites } from "/src/webgpu/parallax.ts";
-import { createInitialState, updatePhysics } from "/src/webgpu/physics.ts";
-import { createSpritePipeline } from "/src/webgpu/sprites.ts";
-import { loadTextures } from "/src/webgpu/textures.ts";
-import { JUMP_VELOCITY } from "/src/webgpu/config.ts";
+import { AudioSystem } from "./audio";
+import { setupInput } from "./input";
+import { buildFrameSprites } from "./parallax";
+import { createInitialState, updatePhysics } from "./physics";
+import { createSpritePipeline } from "./sprites";
+import { loadTextures } from "./textures";
+import { JUMP_VELOCITY } from "./config";
 
 export class Game {
   state;
