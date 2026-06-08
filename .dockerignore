@@ -1,0 +1,21 @@
+# Ignore dev-only files
+docker/dev
+docker-compose.dev.yml
+
+# Ignore build artifacts
+**/bin
+**/obj
+**/out
+
+# Ignore node_modules
+frontend/node_modules
+
+# Ignore local env
+frontend/.env*
+backend/.env*
+
+# Ignore git + editor junk
+.git
+.vscode
+.idea
+.DS_Store
