@@ -4,10 +4,6 @@
 FROM node:20 AS frontend-build
 WORKDIR /app
 
-# Disable Husky + all lifecycle scripts
-ENV HUSKY=0
-ENV npm_config_lifecycle_script=0
-
 COPY package.json package-lock.json ./
 COPY frontend ./frontend
 COPY backend ./backend

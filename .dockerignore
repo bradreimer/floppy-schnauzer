@@ -8,6 +8,7 @@ docker-compose.dev.yml
 **/out
 
 # Ignore node_modules
+node_modules
 frontend/node_modules
 
 # Ignore local env

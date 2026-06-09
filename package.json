@@ -5,12 +5,10 @@
     "frontend"
   ],
   "scripts": {
-    "prepare": "husky",
     "lint": "npm run lint -w frontend",
     "typecheck": "npm run typecheck -w frontend"
   },
   "devDependencies": {
-    "husky": "^9.1.7",
     "lint-staged": "^17.0.7"
   },
   "lint-staged": {
