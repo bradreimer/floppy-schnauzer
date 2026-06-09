@@ -4,20 +4,15 @@
 FROM node:20 AS frontend-build
 WORKDIR /app
 
-# Disable Husky during Docker build
+# Disable Husky + all lifecycle scripts
 ENV HUSKY=0
+ENV npm_config_lifecycle_script=0
 
-# Copy workspace root files
 COPY package.json package-lock.json ./
-
-# Copy workspace packages
 COPY frontend ./frontend
 COPY backend ./backend
 
-# Install only the frontend workspace
 RUN npm ci --workspace=frontend
-
-# Build the frontend workspace
 RUN npm run build --workspace=frontend
 
 # ============================
