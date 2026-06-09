@@ -1,12 +1,12 @@
 // frontend/src/game/textures.ts
 
-import sky from "../assets/bg-layer-1.png";
-import clouds from "../assets/bg-layer-2.png";
-import hills from "../assets/bg-layer-2.png";
+import sky from "../assets/sky.png";
+import clouds from "../assets/clouds.png";
+import hills from "../assets/hills.png";
 import ground from "../assets/ground.png";
 import pipeBottom from "../assets/pipe-bottom.png";
 import pipeTop from "../assets/pipe-top.png";
-import schnauzer from "../assets/schnauzer-idle.png";
+import schnauzer from "../assets/schnauzer.png";
 
 async function loadTexture(device: GPUDevice, url: string) {
   const img = new Image();
@@ -14,6 +14,8 @@ async function loadTexture(device: GPUDevice, url: string) {
 
   await img.decode();
   const bmp = await createImageBitmap(img);
+
+  console.warn("Loaded texture", url, bmp.width, bmp.height);
 
   const tex = device.createTexture({
     size: [bmp.width, bmp.height, 1],

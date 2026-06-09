@@ -78,7 +78,19 @@ export async function createSpritePipeline(
     fragment: {
       module: shader,
       entryPoint: "fs_main",
-      targets: [{ format }]
+      targets: [{
+        format,
+        blend: {
+          color: {
+            srcFactor: "src-alpha",
+            dstFactor: "one-minus-src-alpha"
+          },
+          alpha: {
+            srcFactor: "one",
+            dstFactor: "one-minus-src-alpha"
+          }
+        }
+  }]
     },
     primitive: { topology: "triangle-list" }
   });

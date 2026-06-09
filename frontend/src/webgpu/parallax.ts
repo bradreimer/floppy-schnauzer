@@ -53,7 +53,7 @@ export function buildFrameSprites(state: GameState): Sprite[] {
     u0,
     v0: 0,
     u1,
-    v1: 0.5,
+    v1: .8,
     z: 5
   };
   sprites.push(birdSprite);

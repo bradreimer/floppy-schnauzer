@@ -82,7 +82,7 @@ export async function initWebGPU(canvas: HTMLCanvasElement): Promise<WebGPUInitR
     context.configure({
       device,
       format,
-      alphaMode: "opaque"
+      alphaMode: "premultiplied"
     });
   };
 
