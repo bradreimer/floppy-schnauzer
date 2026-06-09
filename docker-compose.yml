@@ -1,10 +1,9 @@
-version: "3.9"
-
 services:
   api:
     build:
-      context: ./docker/prod
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: docker/prod/Dockerfile
+    image: floppy-schnauzer-api
     ports:
       - "8080:8080"
     environment:

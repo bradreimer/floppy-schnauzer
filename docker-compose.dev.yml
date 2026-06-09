@@ -3,8 +3,8 @@ version: "3.9"
 services:
   backend:
     build:
-      context: ./docker/dev
-      dockerfile: dockerfile.dev
+      context: .
+      dockerfile: docker/dev/Dockerfile.dev
     volumes:
       - ./backend:/app/backend
     ports:
@@ -14,8 +14,8 @@ services:
 
   frontend:
     build:
-      context: ./docker/dev
-      dockerfile: dockerfile.dev.frontend
+      context: .
+      dockerfile: docker/dev/Dockerfile.dev.frontend
     volumes:
       - ./frontend:/app/frontend
     ports:

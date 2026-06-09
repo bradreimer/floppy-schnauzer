@@ -6,17 +6,18 @@ docker-compose.dev.yml
 **/bin
 **/obj
 **/out
+**/publish
+**/dist
 
-# Ignore node_modules
-node_modules
-frontend/node_modules
+# Ignore node_modules everywhere
+**/node_modules
 
 # Ignore local env
 frontend/.env*
 backend/.env*
 
 # Ignore git + editor junk
-.git
+.git/
 .vscode
 .idea
 .DS_Store

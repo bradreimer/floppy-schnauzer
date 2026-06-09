@@ -4,8 +4,11 @@
 FROM node:20 AS frontend-build
 WORKDIR /app
 
-# Copy only root workspace files first (best cache behavior)
+# Copy root workspace files
 COPY package.json package-lock.json ./
+
+# Copy backend so Vite can write into backend/wwwroot
+COPY backend ./backend
 
 # Copy only frontend package.json first (cache npm ci)
 COPY frontend/package.json frontend/package.json
