@@ -4,13 +4,18 @@
 FROM node:20 AS frontend-build
 WORKDIR /app
 
+# Copy workspace root files
+COPY package.json package-lock.json ./
+
+# Copy workspace packages
 COPY frontend ./frontend
 COPY backend ./backend
 
-WORKDIR /app/frontend
-RUN npm ci
-RUN npm run build
+# Install only the frontend workspace
+RUN npm ci --workspace=frontend
 
+# Build the frontend workspace
+RUN npm run build --workspace=frontend
 
 # ============================
 # 2. Build Backend (.NET)
