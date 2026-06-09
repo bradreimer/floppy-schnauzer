@@ -26,11 +26,8 @@ RUN npm run build --workspace=frontend
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS backend-build
 WORKDIR /src
 
-# Copy backend source
-COPY backend ./backend
-
-# Copy built frontend output into backend wwwroot
-COPY --from=frontend-build /app/frontend/dist ./backend/FloppySchnauzer.Api/wwwroot
+# Copy backend source (already contains built frontend)
+COPY --from=frontend-build /app/backend ./backend
 
 # Publish backend
 WORKDIR /src/backend/FloppySchnauzer.Api
