@@ -4,6 +4,9 @@
 FROM node:20 AS frontend-build
 WORKDIR /app
 
+# Disable Husky during Docker build
+ENV HUSKY=0
+
 # Copy workspace root files
 COPY package.json package-lock.json ./
 
