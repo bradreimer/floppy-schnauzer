@@ -2,10 +2,14 @@ services:
   api:
     build:
       context: .
-      dockerfile: docker/prod/Dockerfile
+      dockerfile: Dockerfile
     image: floppy-schnauzer-api
     ports:
-      - "8080:8080"
+      - "${PORT_API}:8080"
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT}
     restart: always
+    labels:
+      com.floppyschnauzer.env: dev
+      com.floppyschnauzer.group: platform
+      com.floppyschnauzer.service: api
