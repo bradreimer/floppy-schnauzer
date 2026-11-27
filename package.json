@@ -1,22 +1,13 @@
 {
   "name": "floppy-schnauzer",
+  "version": "0.0.0",
   "private": true,
-  "workspaces": [
-    "frontend"
-  ],
+  "description": "A caped, goofy schnauzer WebGPU game.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
-    "lint": "npm run lint -w frontend",
-    "typecheck": "npm run typecheck -w frontend"
-  },
-  "devDependencies": {
-    "lint-staged": "^17.0.7"
-  },
-  "lint-staged": {
-    "*.cs": [
-      "dotnet format"
-    ],
-    "frontend/src/**/*.{ts,tsx}": [
-      "npm run lint:fix -w frontend"
-    ]
+    "test": "node --test --test-reporter=spec \"tests/**/*.test.mjs\""
   }
 }

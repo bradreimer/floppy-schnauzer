@@ -1,39 +1,30 @@
-# VS Code workspace settinghs
+# Editors
 .vscode/
+.idea/
 
-# Node
+# Node.js
 node_modules/
-npm-debug.log
-yarn-error.log
-
-# Vite build output
-frontend/dist/
-backend/FloppySchnauzer.Api/wwwroot/
-
-# TypeScript
+dist/
+coverage/
 *.tsbuildinfo
+npm-debug.log
 
-# ASP.NET / .NET
-bin/
-obj/
-**/bin/
-**/obj/
+# .NET
+[Bb]in/
+[Oo]bj/
 *.user
 *.suo
-*.cache
-*.db
-*.log
+[Tt]est[Rr]esult*/
+*.binlog
 
-# MCP servers
-tools/firefly-mcp/node_modules/
+# The web build copied into the server for local runs.
+apps/server/src/FloppySchnauzer.Api/wwwroot/
+
+# Environment variables and secrets. .env.example is committed.
+.env
+.env.*
+!.env.example
 
 # OS files
 .DS_Store
 Thumbs.db
-
-# Logs
-*.log
-
-# Environment / secrets
-.env
-.env.*
