@@ -8,7 +8,10 @@ export const JUMP_VELOCITY = -450; // Balanced jump for 400×700 world
 
 // The schnauzer: a square sprite, with physics on its top-left corner
 export const BIRD_X = 100;
-export const BIRD_SIZE = 64;
+export const BIRD_SIZE = 64; // The sprite frame drawn on screen
+// The collision box, relative to the sprite's top-left corner. It's the union of the opaque pixels
+// in all four frames of schnauzer.png: the full width, rows 17 to 47. hitbox.test.ts checks it.
+export const BIRD_HITBOX = { x: 0, y: 17, w: 64, h: 31 } as const;
 export const WING_FRAMES = 4; // Frames side by side in schnauzer.png
 export const WING_FPS = 10; // Wing animation frames per second
 

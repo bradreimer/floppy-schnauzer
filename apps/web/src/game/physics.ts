@@ -1,5 +1,5 @@
 import {
-  BIRD_SIZE,
+  BIRD_HITBOX,
   BIRD_X,
   FLOOR_Y,
   GRAVITY,
@@ -79,8 +79,12 @@ export function updatePhysics(state: GameState, dt: number): GameState {
   birdVelY += GRAVITY * dt;
   birdY += birdVelY * dt;
 
-  // Ceiling: the top edge. Floor: the bottom edge, where the paws are.
-  if (birdY < 0 || birdY + BIRD_SIZE > FLOOR_Y) {
+  // The collision box matches the art, not the 64 × 64 sprite frame around it.
+  const boxTop = birdY + BIRD_HITBOX.y;
+  const boxBottom = boxTop + BIRD_HITBOX.h;
+
+  // Ceiling: the top of the art. Floor: the bottom of the art, where the paws are.
+  if (boxTop < 0 || boxBottom > FLOOR_Y) {
     gameOver = true;
   }
 
@@ -142,13 +146,13 @@ export function updatePhysics(state: GameState, dt: number): GameState {
     const pipeLeft = p.x;
     const pipeRight = p.x + PIPE_WIDTH;
 
-    const birdLeft = birdX;
-    const birdRight = birdX + BIRD_SIZE;
+    const birdLeft = birdX + BIRD_HITBOX.x;
+    const birdRight = birdLeft + BIRD_HITBOX.w;
 
     // Horizontal overlap
     if (birdRight > pipeLeft && birdLeft < pipeRight) {
       // Vertical collision (outside the gap)
-      if (birdY < p.top || birdY + BIRD_SIZE > p.bottom) {
+      if (boxTop < p.top || boxBottom > p.bottom) {
         gameOver = true;
       }
     }

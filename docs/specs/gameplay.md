@@ -98,10 +98,13 @@ Each frame, with the frame time `dt` in seconds:
 
 ### Game over
 
-- The round ends when the schnauzer's top edge goes above y = 0, or its bottom edge, where the
+- Collisions use the schnauzer's art, not its 64 × 64 sprite frame. The collision box
+  (`BIRD_HITBOX`) is 64 × 31 px, from row 17 to row 47 of the frame: the union of the opaque
+  pixels in all four frames of `schnauzer.png`.
+- The round ends when the top of the art goes above y = 0, or the bottom of the art, where the
   paws are, goes below the floor at y = 620.
-- The round ends when the schnauzer's 64 × 64 box overlaps a pipe's 70 px width and isn't fully
-  inside the gap.
+- The round ends when the collision box overlaps a pipe's 70 px width and isn't fully inside the
+  gap.
 - At game over, `hit.wav` plays, the rules stop changing the state, and the overlay says
   "Game Over – Score: N (best: M) – Tap to restart".
 
@@ -138,13 +141,16 @@ another test file.
 - After 0.1 s with no tap, the speed is 180 px/s downward.
 - An upward speed moves the schnauzer up.
 - Once the game is over, a frame changes nothing.
-- The game ends above the ceiling, and when the paws go below the floor while the top is still
-  above it.
+- The game ends when the top of the art passes the ceiling, and when the paws pass the floor,
+  but not when only the empty part of the sprite frame does.
 - Pipes move left at 120 px/s.
 - After 1.4 s, a pipe spawns with a 270 px gap.
 - A pipe off the left edge is removed.
 - Passing a pipe scores 1 point, once.
-- Overlapping a pipe outside the gap ends the game, and flying through the gap doesn't.
+- The art touching a pipe ends the game. Flying through the gap, or a pipe touching only the
+  empty part of the sprite frame, doesn't.
+- The collision box is the union of the opaque pixels in `schnauzer.png`
+  (`apps/web/src/game/hitbox.test.ts`).
 - A 5 s gap between frames simulates only 0.05 s (`apps/web/src/game/frame.test.ts`).
 - The background scrolls the same distance in 1 s at 60 Hz and 120 Hz, and stops at game over
   (`apps/web/src/scene/parallax.test.ts`).
@@ -168,6 +174,5 @@ These come from the code review on 2026-11-27. Questions 1 to 4 are tracked as B
 4. Answered by [#8](https://github.com/bradreimer/floppy-schnauzer/issues/8): the wings flap at 10
    frames a second.
 5. The overlay and the 2D UI canvas both show the score. Should only one?
-6. The collision box is the whole 64 × 64 frame, but the art fills only rows 17 to 47 of it, about
-   31 px tall. A pipe can end the round while it looks clear of the schnauzer by up to 17 px above
-   or below. Should the box shrink to the art? Found on 2026-11-27 while fixing #8.
+6. Answered by [#13](https://github.com/bradreimer/floppy-schnauzer/issues/13): the collision box
+   matches the art, 64 × 31 px, and a test keeps it in sync with `schnauzer.png`.
