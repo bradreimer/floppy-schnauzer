@@ -40,7 +40,7 @@ pixels. "Drawn at" is the size on the 400 × 700 virtual screen.
 | `sky.png` | 400 × 700 | No | 400 × 700 | The back parallax layer |
 | `clouds.png` | 400 × 650 | Yes | 400 × 650 | The second parallax layer |
 | `hills.png` | 400 × 550 | Yes | 400 × 550 | The third parallax layer |
-| `ground.png` | 5856 × 704 | No | 400 × 80 | The front parallax layer |
+| `ground.png` | 800 × 160 | No | 400 × 80 | The front parallax layer, at 2× for sharp screens |
 | `logo.png` | 624 × 416 | No | 360 × 70, cropped | The start screen's title card: white art on a solid dark background. Only the art and a 24 px margin are drawn, with rounded corners |
 | `audio/jump.wav` | 0.1 s, 44.1 kHz, mono | | | Plays on each flap |
 | `audio/score.wav` | 0.1 s, 44.1 kHz, mono | | | Plays when the score goes up |
@@ -69,14 +69,14 @@ style.
 
 ## Acceptance criteria
 
-- The organization test for assets passes: the table and the folder match.
+- The organization test for assets passes: the table and the folder match, and each PNG's size
+  in the table is the file's real size.
 - Every asset the code imports is in the table with a use other than "Not used".
 
 ## Open questions
 
-1. `ground.png` is 5856 × 704 and about 4 MB, but it's drawn at 400 × 80. Should it be resized to
-   400 × 80, or 800 × 160 for sharp screens? That would cut the download by almost all of its
-   size.
+1. Answered by [#19](https://github.com/bradreimer/floppy-schnauzer/issues/19): `ground.png` was 5856 × 704 and 4.1 MB, drawn at 400 × 80. It's now
+   800 × 160 and 132 KB, resized with a Lanczos filter, and looks the same in the game.
 2. Answered by [#17](https://github.com/bradreimer/floppy-schnauzer/issues/17): `logo.png` is the
    start screen's title card. `score-panel.png` was removed, because its placeholder numbers were
    part of the art; the [screens spec](screens.md) draws the panel in code instead.

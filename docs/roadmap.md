@@ -12,6 +12,23 @@ number aren't scoped yet. They become GitHub Issues when work on their version s
 | 0.2 | Organized | The project layout, docs, and checks from [#1](https://github.com/bradreimer/floppy-schnauzer/issues/1) and [#2](https://github.com/bradreimer/floppy-schnauzer/issues/2), and the specs from [#3](https://github.com/bradreimer/floppy-schnauzer/issues/3) and [#4](https://github.com/bradreimer/floppy-schnauzer/issues/4) | `./scripts/check.sh` passes in CI |
 | 0.3 | Fair and smooth | Fix the known defects in the [gameplay spec](specs/gameplay.md#open-questions): [#5](https://github.com/bradreimer/floppy-schnauzer/issues/5) to [#10](https://github.com/bradreimer/floppy-schnauzer/issues/10), all fixed | Each fix has a regression test (done), and the game plays the same at 60 Hz and 120 Hz (not yet checked in a real browser) |
 | 0.4 | Polish | A start screen with the logo and a game-over score panel ([#17](https://github.com/bradreimer/floppy-schnauzer/issues/17)), the best score kept between visits ([#16](https://github.com/bradreimer/floppy-schnauzer/issues/16)), and the Space key ([#15](https://github.com/bradreimer/floppy-schnauzer/issues/15)) | Each item has a test, and the three screens are checked in a screenshot |
+| 0.5 | Lean and tidy | The work items below, in order | Each item merged with its tests, and the play-test checklist run once by the maintainer |
+
+## Version 0.5: lean and tidy
+
+Every piece of work suggested so far, captured on 2026-11-27. Claude implements the first six
+one at a time, each in its own pull request. The last three need the maintainer.
+
+| Order | Work item | What | Who |
+| --- | --- | --- | --- |
+| 1 | [#19](https://github.com/bradreimer/floppy-schnauzer/issues/19) | Resize `ground.png` from 5856 × 704 (4.1 MB) to 800 × 160, and check asset sizes in a test | Claude |
+| 2 | [#20](https://github.com/bradreimer/floppy-schnauzer/issues/20) | Load the 7 textures in parallel, and drop the debug log | Claude |
+| 3 | [#21](https://github.com/bradreimer/floppy-schnauzer/issues/21) | Type the texture names, so a typo fails the type check | Claude |
+| 4 | [#22](https://github.com/bradreimer/floppy-schnauzer/issues/22) | Pass the random number generator into the game rules | Claude |
+| 5 | [#23](https://github.com/bradreimer/floppy-schnauzer/issues/23) | Pass the UI canvas to the renderer setup, and size the canvases in one place | Claude |
+| 6 | [#24](https://github.com/bradreimer/floppy-schnauzer/issues/24) | Write a play-test checklist for real browsers and phones | Claude writes it; the maintainer runs it |
+| 7 | [#25](https://github.com/bradreimer/floppy-schnauzer/issues/25) | Record the prompts for `logo.png` and the sounds | The maintainer |
+| 8 | [#26](https://github.com/bradreimer/floppy-schnauzer/issues/26) | Decide whether the project has a license | The maintainer |
 
 ## Version 0.3: fair and smooth
 

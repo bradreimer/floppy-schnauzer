@@ -2,21 +2,18 @@
 
 ## Current milestone
 
-Version 0.4, **Polish**. The version 0.3 fixes merged in
-[#12](https://github.com/bradreimer/floppy-schnauzer/pull/12) and
-[#14](https://github.com/bradreimer/floppy-schnauzer/pull/14). See [roadmap.md](roadmap.md).
+Version 0.5, **Lean and tidy**: the nine work items in the
+[roadmap](roadmap.md#version-05-lean-and-tidy), done one pull request at a time. Version 0.4
+merged in [#18](https://github.com/bradreimer/floppy-schnauzer/pull/18).
 
-**What was checked on 2026-11-27:** `./scripts/check.sh` passes, with 45 Vitest tests. In
-headless Chromium, the 2D UI canvas renders, so the start screen, the score, and the game-over
-panel were checked in screenshots. Space starts a round, a saved best of 3 shows on the start
-screen and survives a round that scored 0, and a stored value of `garbage` is ignored. **Not
-checked yet:** the WebGPU canvas is black in headless Chromium, so the game world behind the
-screens, and every version 0.3 visual fix, still need a real browser. The audio fix hasn't been
-heard on an iPhone. The "NEW BEST!" label is covered by tests but wasn't seen in a screenshot,
-because a headless round can't pass a pipe.
+**Still not checked in a real browser:** the WebGPU canvas is black in headless Chromium, so the
+version 0.3 and 0.4 visual changes, the sound on an iPhone, and the "NEW BEST!" label need the
+play-test checklist from [#24](https://github.com/bradreimer/floppy-schnauzer/issues/24).
 
 ## Completed
 
+- [#19](https://github.com/bradreimer/floppy-schnauzer/issues/19) `ground.png` is 800 × 160 and 132 KB instead of 5856 × 704 and 4.1 MB, and an
+  organization test checks that the asset table gives each PNG's real size.
 - [#15](https://github.com/bradreimer/floppy-schnauzer/issues/15), [#16](https://github.com/bradreimer/floppy-schnauzer/issues/16), and [#17](https://github.com/bradreimer/floppy-schnauzer/issues/17) Space flaps, the best score is saved in
   `localStorage`, and the 2D UI canvas shows a start screen with the logo card, the score while
   you play, and a game-over panel drawn in code. `score-panel.png` was removed. Not in a release
@@ -48,4 +45,5 @@ None.
 
 ## Next
 
-- Play a round in a real browser at 60 Hz and 120 Hz, and on an iPhone, to close out version 0.3.
+- The rest of the [version 0.5 work items](roadmap.md#version-05-lean-and-tidy), in order: #20 to
+  #24 by Claude, then #24's run, #25, and #26 by the maintainer.

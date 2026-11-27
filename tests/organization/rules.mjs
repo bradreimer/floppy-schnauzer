@@ -370,6 +370,38 @@ export function checkAssetTable(specMarkdown, assetFiles) {
   return problems;
 }
 
+/** Returns the width and height of a PNG from its header, or null for a file that isn't a PNG. */
+export function pngSize(bytes) {
+  const signature = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
+  if (bytes.length < 24 || !signature.every((byte, i) => bytes[i] === byte)) return null;
+  const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  return [view.getUint32(16), view.getUint32(20)];
+}
+
+/**
+ * The Size column of each PNG row in the asset table, written "W × H", matches the file's real
+ * size. `sizes` maps each PNG's path in the assets folder to its [width, height].
+ */
+export function checkAssetSizes(specMarkdown, sizes) {
+  const problems = [];
+  // Only the asset table section. The Prompts table below it also starts rows with a file name.
+  const text = stripCodeBlocks(specMarkdown);
+  const start = text.indexOf('### The asset table');
+  const section = start === -1 ? text : text.slice(start).split(/\n### (?!The asset table)/)[0];
+  const rows = section.matchAll(/^\|\s*`([^`]+\.png)`\s*\|\s*([^|]*?)\s*\|/gm);
+  for (const [, file, size] of rows) {
+    const actual = sizes[file];
+    if (!actual) continue;
+    const listed = size.match(/^(\d+) × (\d+)$/);
+    if (!listed) {
+      problems.push(`${file}: the size must look like "W × H", found "${size}"`);
+    } else if (Number(listed[1]) !== actual[0] || Number(listed[2]) !== actual[1]) {
+      problems.push(`${file}: the table says ${size}, but the file is ${actual[0]} × ${actual[1]}`);
+    }
+  }
+  return problems;
+}
+
 /** Text files use LF line endings, have no trailing spaces, and end with exactly one newline. */
 export function checkTextFormat(text) {
   const problems = [];

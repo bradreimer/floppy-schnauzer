@@ -6,6 +6,8 @@ import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { describe, it } from 'node:test';
 
+import { readFileSync } from 'node:fs';
+
 import { entries, exists, files, filesIn, foldersIn, read, root } from './repo.mjs';
 import {
   APPS_ENTRIES,
@@ -16,6 +18,7 @@ import {
   ROOT_REQUIRED,
   adrStatus,
   checkAdr,
+  checkAssetSizes,
   checkAssetTable,
   checkAdrNumbering,
   checkCheckScript,
@@ -34,6 +37,7 @@ import {
   checkTextFormat,
   isRelativeLink,
   linkTargets,
+  pngSize,
 } from './rules.mjs';
 
 const FIX = 'See docs/specs/project-organization.md.';
@@ -84,6 +88,20 @@ describe('README', () => {
 });
 
 describe('art and audio assets', () => {
+  it('the asset table gives the real size of every PNG', () => {
+    const prefix = 'apps/web/src/assets/';
+    const sizes = Object.fromEntries(
+      files
+        .filter((file) => file.startsWith(prefix) && file.endsWith('.png'))
+        .map((file) => [file.slice(prefix.length), pngSize(readFileSync(path.join(root, file)))]),
+    );
+    assertNoProblems(
+      checkAssetSizes(read('docs/specs/art-and-audio-assets.md'), sizes).map(
+        (p) => `docs/specs/art-and-audio-assets.md: ${p}`,
+      ),
+    );
+  });
+
   it('the asset table matches the files in apps/web/src/assets', () => {
     const prefix = 'apps/web/src/assets/';
     const assets = files.filter((file) => file.startsWith(prefix)).map((file) => file.slice(prefix.length));
