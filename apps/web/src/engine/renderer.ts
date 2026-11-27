@@ -4,7 +4,7 @@ export interface WebGPUInitResult {
   format: GPUTextureFormat;
 }
 
-import { VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "./config";
+import { VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "../game/config";
 
 export async function initWebGPU(canvas: HTMLCanvasElement): Promise<WebGPUInitResult> {
   if (!("gpu" in navigator)) {

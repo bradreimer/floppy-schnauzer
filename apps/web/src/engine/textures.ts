@@ -1,4 +1,4 @@
-// frontend/src/game/textures.ts
+// Loads every sprite texture onto the GPU.
 
 import sky from "../assets/sky.png";
 import clouds from "../assets/clouds.png";

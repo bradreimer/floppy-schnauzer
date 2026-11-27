@@ -1,5 +1,5 @@
-import { VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "./config";
-import { GameState } from "./physics";
+import { VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "../game/config";
+import { GameState } from "../game/physics";
 
 export function drawUI(state: GameState, uiCanvas: HTMLCanvasElement) {
   const ctx = uiCanvas.getContext("2d")!;

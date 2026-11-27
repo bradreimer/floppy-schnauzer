@@ -1,4 +1,4 @@
-import { VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "./config";
+import { VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "../game/config";
 
 export interface Sprite {
   texture: string;

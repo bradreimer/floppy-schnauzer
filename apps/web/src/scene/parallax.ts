@@ -5,9 +5,9 @@ import {
   SCROLL_SKY_SPEED,
   VIRTUAL_HEIGHT,
   VIRTUAL_WIDTH
-} from "./config";
-import { GameState } from "./physics";
-import { Sprite } from "./sprites";
+} from "../game/config";
+import { GameState } from "../game/physics";
+import { Sprite } from "../engine/sprites";
 
 // Parallax scroll offsets
 let scrollSky = 0;

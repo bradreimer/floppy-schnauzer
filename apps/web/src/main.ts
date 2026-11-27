@@ -1,6 +1,6 @@
-import { Game } from "./webgpu/game";
-import { initWebGPU } from "./webgpu/renderer";
-import { drawUI } from "./webgpu/ui";
+import { Game } from "./app";
+import { initWebGPU } from "./engine/renderer";
+import { drawUI } from "./platform/ui";
 
 async function start() {
   const canvas = document.getElementById("game") as HTMLCanvasElement | null;

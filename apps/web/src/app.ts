@@ -1,10 +1,10 @@
-import { AudioSystem } from "./audio";
-import { setupInput } from "./input";
-import { buildFrameSprites } from "./parallax";
-import { createInitialState, updatePhysics, GameState } from "./physics";
-import { createSpritePipeline, SpritePipeline } from "./sprites";
-import { loadTextures } from "./textures";
-import { JUMP_VELOCITY } from "./config";
+import { AudioSystem } from "./platform/audio";
+import { setupInput } from "./platform/input";
+import { buildFrameSprites } from "./scene/parallax";
+import { createInitialState, updatePhysics, GameState } from "./game/physics";
+import { createSpritePipeline, SpritePipeline } from "./engine/sprites";
+import { loadTextures } from "./engine/textures";
+import { JUMP_VELOCITY } from "./game/config";
 
 export class Game {
   state: GameState;
