@@ -1,0 +1,88 @@
+# Rendering pipeline
+
+This document describes how one frame of Floppy Schnauzer goes from a tap to pixels on the
+screen. It was read from the code on 2026-11-27. The rules themselves are in the
+[gameplay spec](../specs/gameplay.md).
+
+Think of each frame as a stage play that's reset and performed again 60 times a second. The rules
+decide where everyone stands, the scene writes the cast list, and the renderer puts each actor
+on stage, back row first.
+
+## One frame
+
+```text
+requestAnimationFrame(time)                                    main.ts
+  │  dt = (time − lastTime) / 1000
+  ▼
+Game.update(dt)                                                app.ts
+  │  state = updatePhysics(state, dt)                          game/physics.ts
+  │  play score.wav or hit.wav when the state says so          platform/audio.ts
+  │  write the overlay text                                    #overlay <div>
+  ▼
+Game.render()                                                  app.ts
+  │  sprites = buildFrameSprites(state)                        scene/parallax.ts
+  │  pipeline.renderFrame(context, sprites, textures)          engine/sprites.ts
+  ▼
+drawUI(state, uiCanvas)                                        platform/ui.ts
+     the score in 48 px text on the 2D canvas
+```
+
+A tap reaches `setupInput` in `platform/input.ts`, which calls back into `Game`. The callback
+starts a round if none is running, sets the vertical speed to the jump speed, and plays
+`jump.wav`.
+
+## Three layers on the page
+
+`index.html` stacks three elements, all 400 × 700 virtual pixels and scaled by CSS
+([ADR-003](../adr/ADR-003-a-fixed-virtual-resolution.md)):
+
+| z-index | Element | Drawn by | Takes taps |
+| --- | --- | --- | --- |
+| 1 | `<canvas id="game">` | WebGPU | Yes |
+| 2 | `<canvas id="ui">` | 2D canvas | No (`pointer-events: none`) |
+| 3 | `<div id="overlay">` | Text in the DOM | No |
+
+## The scene: state to sprites
+
+`buildFrameSprites` returns a list of sprites. Each sprite names a texture, a rectangle in
+virtual pixels, a texture rectangle (`u0`, `v0`, `u1`, `v1`), and a depth `z`.
+
+| z | What |
+| --- | --- |
+| 0 | Sky, repeated across the screen |
+| 1 | Clouds |
+| 2 | Hills |
+| 3 | Ground |
+| 4 | Pipes: a top and a bottom sprite for each pipe |
+| 5 | The schnauzer: one 64 × 64 frame of `schnauzer.png` |
+
+The scroll offsets for the four background layers are module variables in `scene/parallax.ts`.
+They grow by a fixed amount each frame.
+
+## The sprite pipeline
+
+`createSpritePipeline` in `engine/sprites.ts` builds one WebGPU render pipeline:
+
+- One WGSL shader. The vertex stage passes the position and texture coordinate through. The
+  fragment stage samples the texture.
+- A linear sampler, so scaled art is smoothed.
+- Alpha blending: source alpha over one minus source alpha.
+- A vertex is 4 floats: x and y in clip space, then u and v.
+
+Each frame, `renderFrame`:
+
+1. Clears the screen to sky blue (0.4, 0.7, 1.0).
+2. Sorts the sprites by `z`, back to front.
+3. For each sprite, converts its rectangle from virtual pixels to clip space, writes 6 vertices
+   (2 triangles), and draws them.
+4. Submits the command buffer.
+
+For each sprite, step 3 creates a new vertex buffer and a new bind group. Neither is reused or
+destroyed. With about 20 sprites, that's about 1,200 buffers a second at 60 Hz. The
+[roadmap](../roadmap.md) lists this as a known defect.
+
+## Textures
+
+`engine/textures.ts` imports each PNG through Vite, decodes it with `createImageBitmap`, and
+copies it into an `rgba8unorm` texture. The textures load one after another, before the first
+frame.

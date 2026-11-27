@@ -6,6 +6,9 @@ set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
+echo "==> Project organization tests"
+npm test
+
 (
   cd apps/server
   echo "==> Server: restore"

@@ -1,15 +1,60 @@
 # Floppy Schnauzer
 
-Caped, goofy schnauzer WebGPU game with:
+A caped, goofy schnauzer flaps between pipes. Tap or click to flap, and score a point for each
+pipe you pass. The game draws with WebGPU in the browser, and a small ASP.NET Core server serves
+it from one Docker container.
 
-- Web app: TypeScript and WebGPU, built with Vite, in `apps/web`
-- Server: ASP.NET Core (.NET 10), which serves the built web app, in `apps/server`
+| Part | Technology | Folder |
+| --- | --- | --- |
+| Game | TypeScript, WebGPU, and Vite | `apps/web` |
+| Server | ASP.NET Core on .NET 10 | `apps/server` |
+| Image | One Docker container | `docker` |
 
-## Web app
+## Play
+
+Open the game in a browser that supports WebGPU, such as a current Chrome, Edge, or Safari. Tap
+or click the game: the first tap starts the game, and each tap after that flaps. When you hit a pipe, the ceiling, or the ground, the game ends. Tap to play again.
+
+If your browser doesn't support WebGPU, the game shows "WebGPU not supported on this
+device/browser."
+
+## Develop
+
+You need Node.js 22 or later and the .NET 10 SDK.
 
 ```bash
 cd apps/web
 npm install
-npm run dev      # dev server
-npm run build    # outputs to apps/web/dist
+npm run dev
 ```
+
+The development server runs at `http://localhost:5173`. To reach it from another device, set
+`VITE_HOST=0.0.0.0` and `VITE_HMR_HOST` to your machine's name.
+
+Before you commit, run every check from the repository root:
+
+```bash
+./scripts/check.sh
+```
+
+The workflow, from idea to commit, is in [CONTRIBUTING.md](CONTRIBUTING.md). The documentation
+map is in [docs/README.md](docs/README.md).
+
+## Run in Docker
+
+```bash
+cp .env.example .env
+docker compose -f docker/compose.yml --env-file .env up --build
+```
+
+Then open `http://localhost:8080`. The server answers `GET /api/health` with
+`{"status":"ok"}`.
+
+## Configuration
+
+Docker Compose reads these variables from `.env`. `.env.example` lists them with their defaults.
+
+| Variable | Default | What it does |
+| --- | --- | --- |
+| `PORT_API` | `8080` | The port on your machine that maps to the server's port 8080 |
+| `ASPNETCORE_ENVIRONMENT` | `Production` | The ASP.NET Core environment name: `Development` or `Production` |
