@@ -34,5 +34,7 @@ None.
 ## Next
 
 - Play the game in a real browser, and confirm CI passes, to close out version 0.2.
-- Open a Bug Report for each known defect in the [roadmap](roadmap.md#version-03-fair-and-smooth),
-  and fix them with regression tests.
+- Fix the known defects for version 0.3, each with a regression test:
+  [#5](https://github.com/bradreimer/floppy-schnauzer/issues/5) through
+  [#10](https://github.com/bradreimer/floppy-schnauzer/issues/10). The
+  [roadmap](roadmap.md#version-03-fair-and-smooth) lists them.

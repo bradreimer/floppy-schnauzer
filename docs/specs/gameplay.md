@@ -125,8 +125,10 @@ Each criterion is covered by a test in `apps/web/src/game/physics.test.ts`.
 
 ## Open questions
 
-These are known defects from the code review on 2026-11-27. Each becomes a Bug Report and is
-listed on the [roadmap](../roadmap.md) for version 0.3.
+These come from the code review on 2026-11-27. Questions 1 to 4 are tracked as Bug Reports
+[#5](https://github.com/bradreimer/floppy-schnauzer/issues/5) to
+[#8](https://github.com/bradreimer/floppy-schnauzer/issues/8), listed on the
+[roadmap](../roadmap.md) for version 0.3.
 
 1. The background scrolls a fixed amount per frame, not per second, so it's twice as fast at
    120 Hz, and it keeps scrolling after game over. Should it stop at game over?
