@@ -17,14 +17,14 @@ requestAnimationFrame(time)                                    main.ts
 Game.update(dt)                                                app.ts
   │  state = updatePhysics(state, dt)                          game/physics.ts
   │  play score.wav or hit.wav when the state says so          platform/audio.ts
-  │  write the overlay text                                    #overlay <div>
   ▼
 Game.render()                                                  app.ts
   │  sprites = buildFrameSprites(state)                        scene/parallax.ts
   │  pipeline.renderFrame(context, sprites, textures)          engine/sprites.ts
   ▼
-drawUI(state, uiCanvas)                                        platform/ui.ts
-     the score in 48 px text on the 2D canvas
+ui.draw(game.screen())                                         platform/ui.ts
+     describeScreen picks ready, playing, or game over         platform/screens.ts
+     GameUI draws it on the 2D canvas
 ```
 
 A tap reaches `setupInput` in `platform/input.ts`, which calls back into `Game`. The callback
@@ -40,7 +40,7 @@ starts a round if none is running, sets the vertical speed to the jump speed, an
 | --- | --- | --- | --- |
 | 1 | `<canvas id="game">` | WebGPU | Yes |
 | 2 | `<canvas id="ui">` | 2D canvas | No (`pointer-events: none`) |
-| 3 | `<div id="overlay">` | Text in the DOM | No |
+| 3 | `<div id="overlay">` | Only the "WebGPU not supported" message | No |
 
 ## The scene: state to sprites
 

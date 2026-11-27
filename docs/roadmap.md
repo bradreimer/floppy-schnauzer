@@ -11,7 +11,7 @@ number aren't scoped yet. They become GitHub Issues when work on their version s
 | 0.1 | Playable | Tap to flap, pipes, scoring, game over, parallax, sounds, and one Docker image | Done: the game plays in Chrome |
 | 0.2 | Organized | The project layout, docs, and checks from [#1](https://github.com/bradreimer/floppy-schnauzer/issues/1) and [#2](https://github.com/bradreimer/floppy-schnauzer/issues/2), and the specs from [#3](https://github.com/bradreimer/floppy-schnauzer/issues/3) and [#4](https://github.com/bradreimer/floppy-schnauzer/issues/4) | `./scripts/check.sh` passes in CI |
 | 0.3 | Fair and smooth | Fix the known defects in the [gameplay spec](specs/gameplay.md#open-questions): [#5](https://github.com/bradreimer/floppy-schnauzer/issues/5) to [#10](https://github.com/bradreimer/floppy-schnauzer/issues/10), all fixed | Each fix has a regression test (done), and the game plays the same at 60 Hz and 120 Hz (not yet checked in a real browser) |
-| 0.4 | Polish | Use the logo and score panel art, remember the best score between visits, and add the Space key | Not set yet |
+| 0.4 | Polish | A start screen with the logo and a game-over score panel ([#17](https://github.com/bradreimer/floppy-schnauzer/issues/17)), the best score kept between visits ([#16](https://github.com/bradreimer/floppy-schnauzer/issues/16)), and the Space key ([#15](https://github.com/bradreimer/floppy-schnauzer/issues/15)) | Each item has a test, and the three screens are checked in a screenshot |
 
 ## Version 0.3: fair and smooth
 
