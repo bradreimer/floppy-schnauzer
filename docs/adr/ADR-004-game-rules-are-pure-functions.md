@@ -30,6 +30,7 @@ makes that the rule for all game logic.
 ## Consequences
 
 - The rules are tested with Vitest in Node.js, with no browser.
-- Randomness comes from `Math.random` today, so a test that depends on a pipe's height replaces it
-  with `vi.spyOn`. Passing a random number generator into the rules would remove the need.
+- Randomness is an argument too: `updatePhysics` takes a `random` function, `Math.random` by
+  default, so a test passes a fixed one instead of replacing `Math.random`
+  ([#22](https://github.com/bradreimer/floppy-schnauzer/issues/22)).
 - A new rule that needs the time or input receives it as an argument.

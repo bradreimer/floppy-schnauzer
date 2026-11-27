@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 import {
   BIRD_HITBOX,
@@ -23,10 +23,6 @@ const farPipe = (overrides: Partial<Pipe> = {}): Pipe => ({
 const state = (overrides: Partial<GameState> = {}): GameState => ({
   ...createInitialState(),
   ...overrides
-});
-
-afterEach(() => {
-  vi.restoreAllMocks();
 });
 
 describe("createInitialState", () => {
@@ -83,12 +79,35 @@ describe("updatePhysics", () => {
   });
 
   it("spawns a pipe with the configured gap after the spawn interval", () => {
-    vi.spyOn(Math, "random").mockReturnValue(0);
-    const next = updatePhysics(state({ timeSinceLastPipe: PIPE_SPAWN_INTERVAL }), 0.01);
+    const next = updatePhysics(state({ timeSinceLastPipe: PIPE_SPAWN_INTERVAL }), 0.01, () => 0);
     expect(next.pipes).toHaveLength(1);
     expect(next.timeSinceLastPipe).toBe(0);
     const pipe = next.pipes[0];
     expect(pipe && pipe.bottom - pipe.top).toBe(PIPE_GAP);
+  });
+
+  it("places the gap's top from 50 to 280, using the random number generator it's given", () => {
+    const due = state({ timeSinceLastPipe: PIPE_SPAWN_INTERVAL });
+    expect(updatePhysics(due, 0.01, () => 0).pipes[0]?.top).toBe(50);
+    expect(updatePhysics(due, 0.01, () => 0.5).pipes[0]?.top).toBe(165);
+    expect(updatePhysics(due, 0.01, () => 1).pipes[0]?.top).toBe(280);
+  });
+
+  it("spawns the same pipes from the same generator", () => {
+    // Regression test for #22: Math.random was called directly, so runs couldn't be repeated.
+    const sequence = () => {
+      let n = 0;
+      return () => [0.1, 0.9, 0.4][n++ % 3] ?? 0;
+    };
+    const run = (random: () => number) => {
+      let next = state();
+      for (let i = 0; i < 300; i++)
+        next = updatePhysics({ ...next, birdY: 300, birdVelY: 0 }, 0.02, random);
+      return next.pipes.map(p => p.top);
+    };
+    const first = run(sequence());
+    expect(first.length).toBeGreaterThan(1);
+    expect(run(sequence())).toEqual(first);
   });
 
   it("removes a pipe once it is off the left edge", () => {
