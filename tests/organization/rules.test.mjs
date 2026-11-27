@@ -7,6 +7,7 @@ import {
   ADR_SECTIONS,
   SPEC_SECTIONS,
   checkAdr,
+  checkAssetSizes,
   checkAssetTable,
   checkAdrNumbering,
   checkCheckScript,
@@ -26,6 +27,7 @@ import {
   headings,
   isRelativeLink,
   linkTargets,
+  pngSize,
   stripCodeBlocks,
 } from './rules.mjs';
 
@@ -314,5 +316,37 @@ describe('checkAssetTable', () => {
       'logo.png is in the assets folder but not in the table',
       'audio/jump.wav is in the table but not in the assets folder',
     ]);
+  });
+});
+
+describe('checkAssetSizes', () => {
+  const spec = '| File | Size |\n| --- | --- |\n| `sky.png` | 400 × 700 |\n| `audio/jump.wav` | 0.1 s |\n';
+
+  it('passes when every PNG size matches its file, and skips other files', () => {
+    assert.deepEqual(checkAssetSizes(spec, { 'sky.png': [400, 700] }), []);
+  });
+
+  it('reads only the asset table section when the spec has one', () => {
+    const withPrompts = `### The asset table\n\n${spec}\n### Prompts\n\n| \`sky.png\` | "a prompt" |\n`;
+    assert.deepEqual(checkAssetSizes(withPrompts, { 'sky.png': [400, 700] }), []);
+  });
+
+  it('names a PNG whose size differs from its file, or is malformed', () => {
+    assert.deepEqual(checkAssetSizes(spec, { 'sky.png': [800, 160] }), [
+      'sky.png: the table says 400 × 700, but the file is 800 × 160',
+    ]);
+    const malformed = spec.replace('400 × 700', '400x700');
+    assert.match(checkAssetSizes(malformed, { 'sky.png': [400, 700] }).join(), /must look like/);
+  });
+});
+
+describe('pngSize', () => {
+  it('reads the width and height from a PNG header, and rejects other bytes', () => {
+    const header = new Uint8Array(24);
+    header.set([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]);
+    new DataView(header.buffer).setUint32(16, 800);
+    new DataView(header.buffer).setUint32(20, 160);
+    assert.deepEqual(pngSize(header), [800, 160]);
+    assert.equal(pngSize(new Uint8Array(24)), null);
   });
 });
