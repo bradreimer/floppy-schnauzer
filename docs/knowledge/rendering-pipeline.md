@@ -69,17 +69,24 @@ They grow by a fixed amount each frame.
 - Alpha blending: source alpha over one minus source alpha.
 - A vertex is 4 floats: x and y in clip space, then u and v.
 
+It also creates, once, a vertex buffer with room for 64 sprites, and caches one bind group per
+texture the first time the texture is drawn. The vector math lives in `engine/vertices.ts` as pure
+functions, tested without a GPU.
+
 Each frame, `renderFrame`:
 
-1. Clears the screen to sky blue (0.4, 0.7, 1.0).
-2. Sorts the sprites by `z`, back to front.
-3. For each sprite, converts its rectangle from virtual pixels to clip space, writes 6 vertices
-   (2 triangles), and draws them.
+1. Drops sprites whose texture hasn't loaded, and sorts the rest by `z`, back to front.
+2. Writes every sprite's 6 vertices (2 triangles) into one `Float32Array`, converting virtual
+   pixels to clip space, and copies it to the vertex buffer with one `writeBuffer`. If a frame has
+   more sprites than the buffer holds, the buffer doubles.
+3. Clears the screen to sky blue (0.4, 0.7, 1.0), sets the pipeline and vertex buffer once, and
+   draws each sprite as a range of the buffer: `draw(6, 1, index * 6)`, with its texture's bind
+   group.
 4. Submits the command buffer.
 
-For each sprite, step 3 creates a new vertex buffer and a new bind group. Neither is reused or
-destroyed. With about 20 sprites, that's about 1,200 buffers a second at 60 Hz. The
-[roadmap](../roadmap.md) lists this as a known defect.
+Over 167 frames in headless Chromium on 2026-11-27, this made 1 buffer and 5 bind groups. Before
+[#9](https://github.com/bradreimer/floppy-schnauzer/issues/9), it made a new buffer and bind group
+for every sprite in every frame: 2,833 of each.
 
 ## Textures
 
