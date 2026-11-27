@@ -65,6 +65,8 @@ each pipe I pass, so that I have a quick game that's easy to learn and hard to m
 - The schnauzer is 64 × 64 px (`BIRD_SIZE`). In the initial state it's at x = 100 (`BIRD_X`), y = 350, with a vertical speed of 0, no
   pipes, and a score of 0.
 - A flap sets the vertical speed to −450 px/s (`JUMP_VELOCITY`) and plays `jump.wav`.
+- Browsers start sound muted until a user gesture. The first sound after a tap resumes the audio
+  context, so `jump.wav` plays on the first flap.
 
 ### Movement
 
@@ -139,6 +141,7 @@ another test file.
 - A 5 s gap between frames simulates only 0.05 s (`apps/web/src/game/frame.test.ts`).
 - The background scrolls the same distance in 1 s at 60 Hz and 120 Hz, and stops at game over
   (`apps/web/src/scene/parallax.test.ts`).
+- The first sound resumes a suspended audio context, once (`apps/web/src/platform/audio.test.ts`).
 
 ## Open questions
 
