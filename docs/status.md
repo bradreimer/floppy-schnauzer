@@ -5,9 +5,12 @@
 Version 0.2, **Organized**. The project adopts the layout, documentation, and checks used in
 fibotrail. See [roadmap.md](roadmap.md).
 
-**What isn't checked yet:** `./scripts/check.sh` passes locally. The Docker image hasn't been
-built since the Dockerfile moved to `docker/`, and the game hasn't been played since the source
-folders were split.
+**What was checked on 2026-11-27:** `./scripts/check.sh` passes locally. The image from
+`docker/Dockerfile` builds, runs as the non-root `app` user, serves the game, and answers
+`/api/health`. In headless Chromium, the game starts on a tap, the score overlay updates, and the
+round ends with no errors. **Not checked yet:** headless Chromium shows a black WebGPU canvas,
+for the code before and after these changes alike, so the drawing hasn't been seen in a real
+browser since the source folders were split. CI hasn't run the new check script yet.
 
 ## Completed
 
@@ -30,6 +33,6 @@ None.
 
 ## Next
 
-- Build and run the Docker image, and play the game in a browser, to close out version 0.2.
+- Play the game in a real browser, and confirm CI passes, to close out version 0.2.
 - Open a Bug Report for each known defect in the [roadmap](roadmap.md#version-03-fair-and-smooth),
   and fix them with regression tests.
