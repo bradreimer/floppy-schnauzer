@@ -105,6 +105,13 @@ Each frame, with the frame time `dt` in seconds:
 - At game over, `hit.wav` plays, the rules stop changing the state, and the overlay says
   "Game Over – Score: N (best: M) – Tap to restart".
 
+### The schnauzer's wings
+
+- `schnauzer.png` holds 4 frames of 64 × 64 side by side. The scene shows frame
+  `floor(roundTime × 10) % 4` (`WING_FPS`), where `roundTime` is the seconds since the round
+  started, so the wings flap 10 frames a second while the round runs.
+- The whole 64 × 64 frame is drawn, with no crop, so the art keeps its shape.
+
 ### The background
 
 - Four layers scroll left behind the pipes, from back to front: sky, clouds, hills, and ground.
@@ -142,6 +149,7 @@ another test file.
 - The background scrolls the same distance in 1 s at 60 Hz and 120 Hz, and stops at game over
   (`apps/web/src/scene/parallax.test.ts`).
 - The first sound resumes a suspended audio context, once (`apps/web/src/platform/audio.test.ts`).
+- The wing frame changes over time with no change in score (`apps/web/src/scene/parallax.test.ts`).
 
 ## Open questions
 
@@ -157,6 +165,9 @@ These come from the code review on 2026-11-27. Questions 1 to 4 are tracked as B
    0.05 s.
 3. Answered by [#7](https://github.com/bradreimer/floppy-schnauzer/issues/7): the paws touch the
    top of the ground art, at y = 620.
-4. The wing animation frame is `score % 4`, so the wings move only when you score. How many
-   frames per second should the wings flap?
+4. Answered by [#8](https://github.com/bradreimer/floppy-schnauzer/issues/8): the wings flap at 10
+   frames a second.
 5. The overlay and the 2D UI canvas both show the score. Should only one?
+6. The collision box is the whole 64 × 64 frame, but the art fills only rows 17 to 47 of it, about
+   31 px tall. A pipe can end the round while it looks clear of the schnauzer by up to 17 px above
+   or below. Should the box shrink to the art? Found on 2026-11-27 while fixing #8.

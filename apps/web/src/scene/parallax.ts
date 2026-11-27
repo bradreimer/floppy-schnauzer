@@ -7,6 +7,8 @@ import {
   PARALLAX_HILLS,
   PARALLAX_SKY,
   PIPE_WIDTH,
+  WING_FPS,
+  WING_FRAMES,
   VIRTUAL_WIDTH
 } from "../game/config";
 import type { GameState } from "../game/physics";
@@ -14,6 +16,11 @@ import type { Sprite } from "../engine/sprites";
 
 // Every background tile is as wide as the virtual screen.
 const TILE_W = 400;
+
+/** Returns which of the wing frames in schnauzer.png to show, from the seconds since the round began. */
+export function wingFrame(roundTime: number): number {
+  return Math.floor(roundTime * WING_FPS) % WING_FRAMES;
+}
 
 /** Builds the sprites for one frame from the game state. It reads the state and changes nothing. */
 export function buildFrameSprites(state: GameState): Sprite[] {
@@ -27,9 +34,9 @@ export function buildFrameSprites(state: GameState): Sprite[] {
   pushTiled(sprites, "ground", scroll * PARALLAX_GROUND, FLOOR_Y, GROUND_HEIGHT, 3, TILE_W);
 
   // Bird animation frame
-  const frame = state.score % 4;
-  const u0 = frame / 4;
-  const u1 = (frame + 1) / 4;
+  const frame = wingFrame(state.roundTime);
+  const u0 = frame / WING_FRAMES;
+  const u1 = (frame + 1) / WING_FRAMES;
 
   // ------------------------------------------------------------
   // BIRD — aligned 1:1 with physics (top-left origin)
@@ -43,7 +50,7 @@ export function buildFrameSprites(state: GameState): Sprite[] {
     u0,
     v0: 0,
     u1,
-    v1: 0.8,
+    v1: 1,
     z: 5
   };
   sprites.push(birdSprite);

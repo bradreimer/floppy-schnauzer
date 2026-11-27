@@ -31,6 +31,9 @@ export interface GameState {
   /** How far the world has scrolled left this round, in px. The scene derives the parallax from it. */
   scrollX: number;
 
+  /** Seconds since the round started. The scene picks the wing frame from it. */
+  roundTime: number;
+
   score: number;
   bestScore: number;
 
@@ -50,6 +53,7 @@ export function createInitialState(): GameState {
     timeSinceLastPipe: 0,
 
     scrollX: 0,
+    roundTime: 0,
 
     score: 0,
     bestScore: 0,
@@ -84,6 +88,7 @@ export function updatePhysics(state: GameState, dt: number): GameState {
   // Pipe movement
   // ------------------------------------------------------------
   const scrollX = state.scrollX + PIPE_SPEED * dt;
+  const roundTime = state.roundTime + dt;
 
   pipes = pipes.map((p: Pipe): Pipe => ({
     ...p,
@@ -160,6 +165,7 @@ export function updatePhysics(state: GameState, dt: number): GameState {
     pipes,
     timeSinceLastPipe,
     scrollX,
+    roundTime,
     score,
     bestScore,
     gameOver

@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { PARALLAX_CLOUDS, PIPE_SPEED } from "../game/config";
+import { PARALLAX_CLOUDS, PIPE_SPEED, WING_FPS } from "../game/config";
 import { createInitialState, type GameState, updatePhysics } from "../game/physics";
-import { buildFrameSprites } from "./parallax";
+import { buildFrameSprites, wingFrame } from "./parallax";
 
 function run(state: GameState, frames: number, dt: number): GameState {
   let next = state;
@@ -44,5 +44,21 @@ describe("parallax scrolling", () => {
   it("builds the same sprites when called twice with the same state", () => {
     const state = { ...createInitialState(), scrollX: 123 };
     expect(buildFrameSprites(state)).toEqual(buildFrameSprites(state));
+  });
+});
+
+describe("wing animation", () => {
+  it("cycles through the four frames over time", () => {
+    const step = 1 / WING_FPS;
+    expect([0, 1, 2, 3, 4].map(i => wingFrame(i * step + step / 2))).toEqual([0, 1, 2, 3, 0]);
+  });
+
+  it("flaps with no change in score", () => {
+    // Regression test for #8: the old frame was score % 4, so it only changed on a point.
+    const u0At = (roundTime: number) =>
+      buildFrameSprites({ ...createInitialState(), roundTime }).find(s => s.texture === "schnauzer")
+        ?.u0;
+    expect(u0At(0)).toBe(0);
+    expect(u0At(1.5 / WING_FPS)).toBe(0.25);
   });
 });
