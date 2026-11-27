@@ -52,8 +52,9 @@ that the repository stays organized without me policing it.
 
 - `apps/server/src/` holds one folder per C# project, and `apps/server/tests/` holds its test
   project, as the [quality gates spec](quality-gates.md) requires.
-- `apps/web/src/` holds `game/`, `scene/`, `engine/`, `platform/`, and `assets/`, with the jobs
-  that `CLAUDE.md` lists.
+- `apps/web/src/` holds `game/`, `scene/`, `engine/`, `platform/`, `testing/`, and `assets/`,
+  with the jobs that `CLAUDE.md` lists. `testing/` holds helpers that only tests import, such as
+  the PNG decoder that checks numbers in the code against the art.
 - Every file in `apps/web/src/assets/` is listed in the
   [art and audio assets spec](art-and-audio-assets.md), and every file listed there exists.
 

@@ -51,9 +51,11 @@ and best, so that the game looks finished and I always know what to do next.
 
 Shown from page load until the first tap or Space press.
 
-- The logo card: `logo.png` scaled to 320 × 213 px, centered, from y = 70, with 20 px rounded
-  corners. `logo.png` has a solid dark background and no transparency, so it's drawn whole, as a
-  card. The maintainer chose this on 2026-11-27.
+- The logo card: the part of `logo.png` that holds the art, plus a 24 px margin (`LOGO_CROP`:
+  568 × 111 px from x = 28, y = 153), scaled to 360 × 70 px, centered, from y = 165, with 14 px
+  rounded corners. `logo.png` has a solid dark background and no transparency, so it's drawn as a
+  card; the maintainer chose this on 2026-11-27, then asked for the card to be cropped close to
+  the art. A test checks that the crop holds all of the art with at least 20 px of margin.
 - "Tap or press Space to start", centered at y = 480.
 - "Best: N" under the prompt, only when a saved best score is above 0.
 

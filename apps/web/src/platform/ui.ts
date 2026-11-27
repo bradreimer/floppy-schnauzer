@@ -31,8 +31,13 @@ export type UiContext = Pick<
 const CENTER_X = VIRTUAL_WIDTH / 2;
 const FONT = "system-ui, -apple-system, 'Segoe UI', sans-serif";
 
+// The part of logo.png that holds the art, plus a 24 px margin. The art is at x 52 to 571 and
+// y 177 to 239 of the 624 × 416 image; the rest is the plain dark background. ui.test.ts checks it.
+export const LOGO_CROP = { x: 28, y: 153, w: 568, h: 111 } as const;
+
 // Layout, in virtual pixels. See docs/specs/screens.md.
-const LOGO = { w: 320, h: 213, y: 70, radius: 20 };
+const LOGO_W = 360;
+const LOGO = { w: LOGO_W, h: (LOGO_W * LOGO_CROP.h) / LOGO_CROP.w, y: 165, radius: 14 };
 const PANEL = { w: 320, h: 210, y: 190, radius: 24 };
 const PANEL_X = (VIRTUAL_WIDTH - PANEL.w) / 2;
 
@@ -69,7 +74,17 @@ export class GameUI {
       ctx.beginPath();
       ctx.roundRect(x, LOGO.y, LOGO.w, LOGO.h, LOGO.radius);
       ctx.clip();
-      ctx.drawImage(this.logo, x, LOGO.y, LOGO.w, LOGO.h);
+      ctx.drawImage(
+        this.logo,
+        LOGO_CROP.x,
+        LOGO_CROP.y,
+        LOGO_CROP.w,
+        LOGO_CROP.h,
+        x,
+        LOGO.y,
+        LOGO.w,
+        LOGO.h
+      );
       ctx.restore();
     }
     this.text("Tap or press Space to start", 480, 22, "white");

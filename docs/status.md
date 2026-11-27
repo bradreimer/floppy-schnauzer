@@ -6,7 +6,7 @@ Version 0.4, **Polish**. The version 0.3 fixes merged in
 [#12](https://github.com/bradreimer/floppy-schnauzer/pull/12) and
 [#14](https://github.com/bradreimer/floppy-schnauzer/pull/14). See [roadmap.md](roadmap.md).
 
-**What was checked on 2026-11-27:** `./scripts/check.sh` passes, with 44 Vitest tests. In
+**What was checked on 2026-11-27:** `./scripts/check.sh` passes, with 45 Vitest tests. In
 headless Chromium, the 2D UI canvas renders, so the start screen, the score, and the game-over
 panel were checked in screenshots. Space starts a round, a saved best of 3 shows on the start
 screen and survives a round that scored 0, and a stored value of `garbage` is ignored. **Not
