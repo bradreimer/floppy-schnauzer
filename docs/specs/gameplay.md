@@ -10,7 +10,7 @@ This spec records the rules of the game and every tuning number, as the code imp
 
 Think of the game as a conveyor belt. The schnauzer stays at one spot left to right, and only
 moves up and down. The pipes ride the belt from right to left. The player's only control is a
-tap, which tosses the schnauzer upward against gravity.
+tap (or the Space key), which tosses the schnauzer upward against gravity.
 
 ```text
         x = 100                      pipes move left at 120 px/s
@@ -34,7 +34,7 @@ each pipe I pass, so that I have a quick game that's easy to learn and hard to m
 
 ## Goals
 
-- One input, a tap or click, does everything: start, flap, and restart.
+- One input, a tap, a click, or the Space key, does everything: start, flap, and restart.
 - A round lasts seconds to minutes, and the player always knows why it ended.
 - The rules live in `apps/web/src/game/` as pure functions, per
   [ADR-004](../adr/ADR-004-game-rules-are-pure-functions.md), and each acceptance criterion has a
@@ -44,7 +44,7 @@ each pipe I pass, so that I have a quick game that's easy to learn and hard to m
 
 - Difficulty that rises during a round. The gap and the speed are fixed.
 - Leaderboards, accounts, or online play.
-- Keeping the best score between visits. It's on the [roadmap](../roadmap.md) for version 0.4.
+- Sharing the best score across browsers or devices. It's kept only in the browser it was set in.
 
 ## Requirements
 
@@ -59,9 +59,12 @@ each pipe I pass, so that I have a quick game that's easy to learn and hard to m
 
 ### Starting, flapping, and restarting
 
-- Before the first tap, the game is waiting, and the overlay says "Tap to start / jump".
+- Before the first tap, the game is waiting on the start screen. The [screens spec](screens.md)
+  defines what each screen shows.
 - A tap while waiting or after a game over starts a new round from the initial state, keeps the
   best score, and flaps.
+- Pressing Space anywhere in the window does exactly what a tap does. Holding it down flaps once,
+  and it doesn't scroll the page. Other keys do nothing.
 - The schnauzer is 64 × 64 px (`BIRD_SIZE`). In the initial state it's at x = 100 (`BIRD_X`), y = 350, with a vertical speed of 0, no
   pipes, and a score of 0.
 - A flap sets the vertical speed to −450 px/s (`JUMP_VELOCITY`) and plays `jump.wav`.
@@ -92,9 +95,12 @@ Each frame, with the frame time `dt` in seconds:
 ### Scoring
 
 - The score goes up by 1 when a pipe's right edge passes left of the schnauzer's x, once per pipe.
-- The best score is the highest score this visit. `score.wav` plays when the score goes up.
-- The score shows at the top of the screen, in 48 px white text, and in the overlay with the best
-  score.
+- The best score is the highest score in this browser. `score.wav` plays when the score goes up.
+- When a round ends with a new best, the game saves it to `localStorage` under
+  `floppy-schnauzer.bestScore`, and loads it at start-up. A missing value, a value that isn't a
+  whole number of 0 or more, or storage that's blocked or full counts as no saved score, and the
+  game plays as usual (`apps/web/src/platform/best-score.ts`).
+- The score shows once, at the top of the screen, while a round runs.
 
 ### Game over
 
@@ -105,8 +111,8 @@ Each frame, with the frame time `dt` in seconds:
   paws are, goes below the floor at y = 620.
 - The round ends when the collision box overlaps a pipe's 70 px width and isn't fully inside the
   gap.
-- At game over, `hit.wav` plays, the rules stop changing the state, and the overlay says
-  "Game Over – Score: N (best: M) – Tap to restart".
+- At game over, `hit.wav` plays, the rules stop changing the state, and the game-over panel shows
+  the score and the best score.
 
 ### The schnauzer's wings
 
@@ -139,6 +145,10 @@ another test file.
 
 - A new round starts with the schnauzer at y = 350, still, with no pipes and a score of 0.
 - After 0.1 s with no tap, the speed is 180 px/s downward.
+- A saved best score loads after a reload, and blocked storage or a bad value counts as 0
+  (`apps/web/src/platform/best-score.test.ts`).
+- Space flaps once per press, even when held, and other keys don't flap
+  (`apps/web/src/platform/input.test.ts`).
 - An upward speed moves the schnauzer up.
 - Once the game is over, a frame changes nothing.
 - The game ends when the top of the art passes the ceiling, and when the paws pass the floor,
@@ -173,6 +183,7 @@ These come from the code review on 2026-11-27. Questions 1 to 4 are tracked as B
    top of the ground art, at y = 620.
 4. Answered by [#8](https://github.com/bradreimer/floppy-schnauzer/issues/8): the wings flap at 10
    frames a second.
-5. The overlay and the 2D UI canvas both show the score. Should only one?
+5. Answered by [#17](https://github.com/bradreimer/floppy-schnauzer/issues/17): the score shows
+   once, on the 2D UI canvas. The overlay keeps only the "WebGPU not supported" message.
 6. Answered by [#13](https://github.com/bradreimer/floppy-schnauzer/issues/13): the collision box
    matches the art, 64 × 31 px, and a test keeps it in sync with `schnauzer.png`.

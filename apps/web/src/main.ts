@@ -1,7 +1,7 @@
 import { Game } from "./app";
 import { initWebGPU } from "./engine/renderer";
 import { frameTime } from "./game/frame";
-import { drawUI } from "./platform/ui";
+import { GameUI } from "./platform/ui";
 
 async function start() {
   const canvas = document.getElementById("game") as HTMLCanvasElement | null;
@@ -18,10 +18,16 @@ async function start() {
     const { device, context, format } = await initWebGPU(canvas);
 
     // Create the game instance
-    const game = new Game(device, context, format, canvas, overlay);
+    const game = new Game(device, context, format, canvas);
 
     // Initialize game assets
     await game.init();
+
+    // The 2D UI canvas: the start screen, the score, and the game-over panel.
+    const uiContext = uiCanvas.getContext("2d");
+    if (!uiContext) throw new Error("2D canvas not supported");
+    const ui = new GameUI(uiContext);
+    await ui.loadLogo();
 
     // Main loop. frameTime caps the step, so a hidden tab doesn't jump the game ahead.
     let lastTime = performance.now();
@@ -34,10 +40,7 @@ async function start() {
       game.update(dt);
       game.render();
 
-      // Draw UI overlay (score, etc.)
-      if (uiCanvas) {
-        drawUI(game.state, uiCanvas);
-      }
+      ui.draw(game.screen());
 
       requestAnimationFrame(frame);
     }

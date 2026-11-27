@@ -2,19 +2,25 @@
 
 ## Current milestone
 
-Version 0.3, **Fair and smooth**. Version 0.2 merged in
-[#11](https://github.com/bradreimer/floppy-schnauzer/pull/11). The six known defects from the code
-review were fixed in [#12](https://github.com/bradreimer/floppy-schnauzer/pull/12), each with a
-regression test. See [roadmap.md](roadmap.md).
+Version 0.4, **Polish**. The version 0.3 fixes merged in
+[#12](https://github.com/bradreimer/floppy-schnauzer/pull/12) and
+[#14](https://github.com/bradreimer/floppy-schnauzer/pull/14). See [roadmap.md](roadmap.md).
 
-**What was checked on 2026-11-27:** `./scripts/check.sh` passes, with 29 Vitest tests. In
-headless Chromium, the game runs a round with no WebGPU validation errors, and 167 frames create 1
-GPU buffer instead of 2,833. **Not checked yet:** headless Chromium shows a black WebGPU canvas, so
-the new parallax speeds, the wing animation, the unstretched schnauzer, and the floor line haven't
-been seen in a real browser. The audio fix hasn't been heard on an iPhone.
+**What was checked on 2026-11-27:** `./scripts/check.sh` passes, with 45 Vitest tests. In
+headless Chromium, the 2D UI canvas renders, so the start screen, the score, and the game-over
+panel were checked in screenshots. Space starts a round, a saved best of 3 shows on the start
+screen and survives a round that scored 0, and a stored value of `garbage` is ignored. **Not
+checked yet:** the WebGPU canvas is black in headless Chromium, so the game world behind the
+screens, and every version 0.3 visual fix, still need a real browser. The audio fix hasn't been
+heard on an iPhone. The "NEW BEST!" label is covered by tests but wasn't seen in a screenshot,
+because a headless round can't pass a pipe.
 
 ## Completed
 
+- [#15](https://github.com/bradreimer/floppy-schnauzer/issues/15), [#16](https://github.com/bradreimer/floppy-schnauzer/issues/16), and [#17](https://github.com/bradreimer/floppy-schnauzer/issues/17) Space flaps, the best score is saved in
+  `localStorage`, and the 2D UI canvas shows a start screen with the logo card, the score while
+  you play, and a game-over panel drawn in code. `score-panel.png` was removed. Not in a release
+  yet.
 - [#13](https://github.com/bradreimer/floppy-schnauzer/issues/13) The collision box matches the
   schnauzer's art (64 × 31 px, rows 17 to 47 of the frame), so a pipe only ends the round when it
   touches what you see. A test keeps the box in sync with `schnauzer.png`.

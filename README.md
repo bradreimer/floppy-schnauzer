@@ -13,7 +13,11 @@ it from one Docker container.
 ## Play
 
 Open the game in a browser that supports WebGPU, such as a current Chrome, Edge, or Safari. Tap
-or click the game: the first tap starts the game, and each tap after that flaps. When you hit a pipe, the ceiling, or the ground, the game ends. Tap to play again.
+or click the game, or press Space: the first press starts a round, and each press after that
+flaps. When you hit a pipe, the ceiling, or the ground, the round ends. Press again to play
+again.
+
+Your best score is saved in this browser, so it's still there when you come back.
 
 If your browser doesn't support WebGPU, the game shows "WebGPU not supported on this
 device/browser."

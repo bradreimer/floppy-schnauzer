@@ -58,3 +58,4 @@ None.
 | [quality-gates.md](quality-gates.md) | The checks every check-in must pass, and how they're run |
 | [gameplay.md](gameplay.md) | Flap, pipes, scoring, game over, and the tuning numbers |
 | [art-and-audio-assets.md](art-and-audio-assets.md) | Every sprite and sound, with its size and use |
+| [screens.md](screens.md) | The start screen, the score, and the game-over panel |

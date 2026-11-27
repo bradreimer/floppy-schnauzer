@@ -41,8 +41,7 @@ pixels. "Drawn at" is the size on the 400 × 700 virtual screen.
 | `clouds.png` | 400 × 650 | Yes | 400 × 650 | The second parallax layer |
 | `hills.png` | 400 × 550 | Yes | 400 × 550 | The third parallax layer |
 | `ground.png` | 5856 × 704 | No | 400 × 80 | The front parallax layer |
-| `logo.png` | 624 × 416 | Yes | Not used | The game's logo |
-| `score-panel.png` | 624 × 416 | Yes | Not used | A panel for the game-over score |
+| `logo.png` | 624 × 416 | No | 360 × 70, cropped | The start screen's title card: white art on a solid dark background. Only the art and a 24 px margin are drawn, with rounded corners |
 | `audio/jump.wav` | 0.1 s, 44.1 kHz, mono | | | Plays on each flap |
 | `audio/score.wav` | 0.1 s, 44.1 kHz, mono | | | Plays when the score goes up |
 | `audio/hit.wav` | 0.1 s, 44.1 kHz, mono | | | Plays at game over |
@@ -78,6 +77,7 @@ style.
 1. `ground.png` is 5856 × 704 and about 4 MB, but it's drawn at 400 × 80. Should it be resized to
    400 × 80, or 800 × 160 for sharp screens? That would cut the download by almost all of its
    size.
-2. `logo.png` and `score-panel.png` aren't used yet. They're planned for version 0.4 on the
-   [roadmap](../roadmap.md). Keep them until then?
-3. The prompts for `logo.png`, `score-panel.png`, and the sounds weren't recorded.
+2. Answered by [#17](https://github.com/bradreimer/floppy-schnauzer/issues/17): `logo.png` is the
+   start screen's title card. `score-panel.png` was removed, because its placeholder numbers were
+   part of the art; the [screens spec](screens.md) draws the panel in code instead.
+3. The prompts for `logo.png` and the sounds weren't recorded.

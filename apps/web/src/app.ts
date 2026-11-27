@@ -1,5 +1,7 @@
 import { AudioSystem } from "./platform/audio";
+import { browserStorage, loadBestScore, saveBestScore } from "./platform/best-score";
 import { setupInput } from "./platform/input";
+import { describeScreen, type Screen } from "./platform/screens";
 import { buildFrameSprites } from "./scene/parallax";
 import { createInitialState, updatePhysics, type GameState } from "./game/physics";
 import { createSpritePipeline, type SpritePipeline } from "./engine/sprites";
@@ -12,7 +14,6 @@ export class Game {
   context: GPUCanvasContext;
   format: GPUTextureFormat;
   canvas: HTMLCanvasElement;
-  overlay: HTMLDivElement;
 
   pipeline!: SpritePipeline;
   audio!: AudioSystem;
@@ -20,21 +21,23 @@ export class Game {
 
   lastTime: number | null = null;
   running = false;
+  /** True once the first round has started, so the start screen gives way to the game. */
+  started = false;
+  /** The best score when the current round began, to tell whether the round set a new best. */
+  bestAtRoundStart = 0;
 
   constructor(
     device: GPUDevice,
     context: GPUCanvasContext,
     format: GPUTextureFormat,
-    canvas: HTMLCanvasElement,
-    overlay: HTMLDivElement
+    canvas: HTMLCanvasElement
   ) {
     this.device = device;
     this.context = context;
     this.format = format;
     this.canvas = canvas;
-    this.overlay = overlay;
 
-    this.state = { ...createInitialState(), bestScore: 0 };
+    this.state = { ...createInitialState(), bestScore: loadBestScore(browserStorage()) };
   }
 
   async init(): Promise<void> {
@@ -49,13 +52,13 @@ export class Game {
           bestScore: this.state.bestScore
         };
         this.running = true;
+        this.started = true;
+        this.bestAtRoundStart = this.state.bestScore;
       }
 
       this.state = { ...this.state, birdVelY: JUMP_VELOCITY };
       this.audio.play("jump");
     });
-
-    this.overlay.textContent = "Tap to start / jump";
   }
 
   update(dt: number): void {
@@ -65,10 +68,6 @@ export class Game {
 
     this.state = updatePhysics(this.state, dt);
 
-    if (this.state.score > this.state.bestScore) {
-      this.state.bestScore = this.state.score;
-    }
-
     if (this.state.score > prevScore) {
       this.audio.play("score");
     }
@@ -76,10 +75,18 @@ export class Game {
     if (this.state.gameOver && this.running) {
       this.running = false;
       this.audio.play("hit");
-      this.overlay.textContent = `Game Over – Score: ${this.state.score} (best: ${this.state.bestScore}) – Tap to restart`;
-    } else {
-      this.overlay.textContent = `Score: ${this.state.score} (best: ${this.state.bestScore})`;
+      if (this.state.bestScore > this.bestAtRoundStart) {
+        saveBestScore(browserStorage(), this.state.bestScore);
+      }
     }
+  }
+
+  /** What the UI canvas should show this frame. */
+  screen(): Screen {
+    return describeScreen(this.state, {
+      started: this.started,
+      bestAtRoundStart: this.bestAtRoundStart
+    });
   }
 
   render(): void {

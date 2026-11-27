@@ -85,6 +85,7 @@ Inside `apps/web/src`, each folder has one job:
 | `scene/` | The step that turns a `GameState` into sprites | Change the game state |
 | `engine/` | WebGPU: device setup, the sprite pipeline, and textures | Know the game rules |
 | `platform/` | Browser APIs: input, audio, and the 2D UI canvas | Hold game rules |
+| `testing/` | Helpers that only tests import, such as the PNG decoder | Be imported by game code |
 | `app.ts` | The wiring between the folders | Hold logic that a folder could own |
 
 Don't add a new top-level file or folder, or a new folder under `docs/`, without updating the
