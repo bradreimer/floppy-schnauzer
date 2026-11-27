@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
-  BIRD_SIZE,
+  BIRD_HITBOX,
   FLOOR_Y,
   GRAVITY,
   PIPE_GAP,
@@ -57,18 +57,24 @@ describe("updatePhysics", () => {
     expect(updatePhysics(over, 1)).toBe(over);
   });
 
-  it("ends the game above the ceiling", () => {
-    expect(updatePhysics(state({ birdY: -1, birdVelY: -10 }), 0.01).gameOver).toBe(true);
+  // The art's top and bottom edges, for a schnauzer whose sprite is at y.
+  const artTop = (y: number) => y + BIRD_HITBOX.y;
+  const artBottom = (y: number) => y + BIRD_HITBOX.y + BIRD_HITBOX.h;
+
+  it("ends the game when the top of the art passes the ceiling", () => {
+    // Regression test for #13: the sprite frame passes the ceiling 17 px before the art does.
+    const frameAboveArtBelow = -BIRD_HITBOX.y + 1;
+    expect(artTop(frameAboveArtBelow)).toBe(1);
+    expect(updatePhysics(state({ birdY: frameAboveArtBelow }), 0).gameOver).toBe(false);
+    expect(updatePhysics(state({ birdY: -BIRD_HITBOX.y - 1 }), 0).gameOver).toBe(true);
   });
 
-  it("ends the game when the paws touch the ground, while the top is still above it", () => {
-    // Regression test for #7: the old check used the top edge, so this kept playing.
-    const pawsBelowFloor = state({ birdY: FLOOR_Y - BIRD_SIZE + 1 });
-    expect(updatePhysics(pawsBelowFloor, 0.001).gameOver).toBe(true);
-  });
-
-  it("keeps playing while the paws are above the ground", () => {
-    expect(updatePhysics(state({ birdY: FLOOR_Y - BIRD_SIZE - 10 }), 0.001).gameOver).toBe(false);
+  it("ends the game when the paws, the bottom of the art, pass the floor", () => {
+    // Regression test for #13: the 64 × 64 frame reached the floor 16 px before the paws did.
+    const pawsAboveFloor = FLOOR_Y - BIRD_HITBOX.y - BIRD_HITBOX.h - 1;
+    expect(artBottom(pawsAboveFloor)).toBe(FLOOR_Y - 1);
+    expect(updatePhysics(state({ birdY: pawsAboveFloor }), 0).gameOver).toBe(false);
+    expect(updatePhysics(state({ birdY: pawsAboveFloor + 2 }), 0).gameOver).toBe(true);
   });
 
   it("moves pipes left at the pipe speed", () => {
@@ -101,14 +107,24 @@ describe("updatePhysics", () => {
     expect(twice.score).toBe(1);
   });
 
-  it("ends the game when the schnauzer hits a pipe outside the gap", () => {
-    // The pipe overlaps the schnauzer, and the gap starts below it.
-    const blocked = state({ pipes: [farPipe({ x: 90, top: 500, bottom: 500 + PIPE_GAP })] });
-    expect(updatePhysics(blocked, 0.001).gameOver).toBe(true);
-  });
+  describe("pipe collisions, with the schnauzer's sprite at y = 300 and a pipe overlapping it", () => {
+    const y = 300;
+    const withGap = (top: number, bottom = top + PIPE_GAP) =>
+      updatePhysics(state({ birdY: y, pipes: [farPipe({ x: 90, top, bottom })] }), 0).gameOver;
 
-  it("lets the schnauzer fly through the gap", () => {
-    const clear = state({ pipes: [farPipe({ x: 90, top: 200, bottom: 200 + PIPE_GAP })] });
-    expect(updatePhysics(clear, 0.001).gameOver).toBe(false);
+    it("lets the schnauzer fly through the gap", () => {
+      expect(withGap(200)).toBe(false);
+    });
+
+    it("ends the game when the art touches the top pipe, not when the empty frame does", () => {
+      // Regression test for #13: the old 64 × 64 box hit a pipe ending 16 px above the art.
+      expect(withGap(artTop(y) - 1)).toBe(false);
+      expect(withGap(artTop(y) + 1)).toBe(true);
+    });
+
+    it("ends the game when the art touches the bottom pipe, not when the empty frame does", () => {
+      expect(withGap(0, artBottom(y) + 1)).toBe(false);
+      expect(withGap(0, artBottom(y) - 1)).toBe(true);
+    });
   });
 });
