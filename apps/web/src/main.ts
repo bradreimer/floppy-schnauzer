@@ -1,5 +1,6 @@
 import { Game } from "./app";
 import { initWebGPU } from "./engine/renderer";
+import { frameTime } from "./game/frame";
 import { drawUI } from "./platform/ui";
 
 async function start() {
@@ -22,12 +23,11 @@ async function start() {
     // Initialize game assets
     await game.init();
 
-    // --- Main loop with proper dt calculation ---
+    // Main loop. frameTime caps the step, so a hidden tab doesn't jump the game ahead.
     let lastTime = performance.now();
 
     function frame(time: number) {
-      // Calculate delta time in seconds
-      const dt = (time - lastTime) / 1000;
+      const dt = frameTime(time, lastTime);
       lastTime = time;
 
       // Update game state and render

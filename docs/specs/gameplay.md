@@ -68,6 +68,9 @@ each pipe I pass, so that I have a quick game that's easy to learn and hard to m
 
 Each frame, with the frame time `dt` in seconds:
 
+- `dt` is the time since the last frame, capped at 0.05 s (`MAX_FRAME_TIME`) by `frameTime` in
+  `apps/web/src/game/frame.ts`. A longer gap, such as a hidden tab, moves the game only 0.05 s.
+
 - The vertical speed grows by 1800 × `dt` (`GRAVITY`, in px/s²), and then y grows by speed ×
   `dt`.
 - Every pipe moves left by 120 × `dt` (`PIPE_SPEED`, in px/s).
@@ -110,7 +113,8 @@ Each frame, with the frame time `dt` in seconds:
 
 ## Acceptance criteria
 
-Each criterion is covered by a test in `apps/web/src/game/physics.test.ts`.
+Each criterion is covered by a test in `apps/web/src/game/physics.test.ts`, unless it names
+another test file.
 
 - A new round starts with the schnauzer at y = 350, still, with no pipes and a score of 0.
 - After 0.1 s with no tap, the speed is 180 px/s downward.
@@ -122,6 +126,7 @@ Each criterion is covered by a test in `apps/web/src/game/physics.test.ts`.
 - A pipe off the left edge is removed.
 - Passing a pipe scores 1 point, once.
 - Overlapping a pipe outside the gap ends the game, and flying through the gap doesn't.
+- A 5 s gap between frames simulates only 0.05 s (`apps/web/src/game/frame.test.ts`).
 
 ## Open questions
 
@@ -132,8 +137,8 @@ These come from the code review on 2026-11-27. Questions 1 to 4 are tracked as B
 
 1. The background scrolls a fixed amount per frame, not per second, so it's twice as fast at
    120 Hz, and it keeps scrolling after game over. Should it stop at game over?
-2. The frame time `dt` isn't capped. What cap keeps a long pause from ending the round? 0.05 s is a
-   common choice.
+2. Answered by [#6](https://github.com/bradreimer/floppy-schnauzer/issues/6): `dt` is capped at
+   0.05 s.
 3. The floor check uses the schnauzer's top edge, so it sinks 64 px into the ground. The ground art
    is drawn from y = 620, but the floor is at 660. Which line should the paws touch?
 4. The wing animation frame is `score % 4`, so the wings move only when you score. How many

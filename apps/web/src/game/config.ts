@@ -20,3 +20,6 @@ export const SCROLL_SKY_SPEED = 2; // Slowest layer for depth
 export const SCROLL_CLOUDS_SPEED = 5;
 export const SCROLL_HILLS_SPEED = 10;
 export const SCROLL_GROUND_SPEED = PIPE_SPEED / 60; // Match pipe speed for consistency
+
+// Frame time
+export const MAX_FRAME_TIME = 0.05; // Longest step, in seconds, that one frame may simulate
