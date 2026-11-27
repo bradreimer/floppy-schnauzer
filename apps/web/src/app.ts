@@ -1,4 +1,5 @@
 import { AudioSystem } from "./platform/audio";
+import { browserStorage, loadBestScore, saveBestScore } from "./platform/best-score";
 import { setupInput } from "./platform/input";
 import { buildFrameSprites } from "./scene/parallax";
 import { createInitialState, updatePhysics, type GameState } from "./game/physics";
@@ -20,6 +21,8 @@ export class Game {
 
   lastTime: number | null = null;
   running = false;
+  /** The best score when the current round began, to tell whether the round set a new best. */
+  bestAtRoundStart = 0;
 
   constructor(
     device: GPUDevice,
@@ -34,7 +37,7 @@ export class Game {
     this.canvas = canvas;
     this.overlay = overlay;
 
-    this.state = { ...createInitialState(), bestScore: 0 };
+    this.state = { ...createInitialState(), bestScore: loadBestScore(browserStorage()) };
   }
 
   async init(): Promise<void> {
@@ -49,6 +52,7 @@ export class Game {
           bestScore: this.state.bestScore
         };
         this.running = true;
+        this.bestAtRoundStart = this.state.bestScore;
       }
 
       this.state = { ...this.state, birdVelY: JUMP_VELOCITY };
@@ -65,10 +69,6 @@ export class Game {
 
     this.state = updatePhysics(this.state, dt);
 
-    if (this.state.score > this.state.bestScore) {
-      this.state.bestScore = this.state.score;
-    }
-
     if (this.state.score > prevScore) {
       this.audio.play("score");
     }
@@ -76,6 +76,9 @@ export class Game {
     if (this.state.gameOver && this.running) {
       this.running = false;
       this.audio.play("hit");
+      if (this.state.bestScore > this.bestAtRoundStart) {
+        saveBestScore(browserStorage(), this.state.bestScore);
+      }
       this.overlay.textContent = `Game Over – Score: ${this.state.score} (best: ${this.state.bestScore}) – Tap to restart`;
     } else {
       this.overlay.textContent = `Score: ${this.state.score} (best: ${this.state.bestScore})`;

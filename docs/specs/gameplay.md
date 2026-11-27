@@ -44,7 +44,7 @@ each pipe I pass, so that I have a quick game that's easy to learn and hard to m
 
 - Difficulty that rises during a round. The gap and the speed are fixed.
 - Leaderboards, accounts, or online play.
-- Keeping the best score between visits. It's on the [roadmap](../roadmap.md) for version 0.4.
+- Sharing the best score across browsers or devices. It's kept only in the browser it was set in.
 
 ## Requirements
 
@@ -94,7 +94,11 @@ Each frame, with the frame time `dt` in seconds:
 ### Scoring
 
 - The score goes up by 1 when a pipe's right edge passes left of the schnauzer's x, once per pipe.
-- The best score is the highest score this visit. `score.wav` plays when the score goes up.
+- The best score is the highest score in this browser. `score.wav` plays when the score goes up.
+- When a round ends with a new best, the game saves it to `localStorage` under
+  `floppy-schnauzer.bestScore`, and loads it at start-up. A missing value, a value that isn't a
+  whole number of 0 or more, or storage that's blocked or full counts as no saved score, and the
+  game plays as usual (`apps/web/src/platform/best-score.ts`).
 - The score shows at the top of the screen, in 48 px white text, and in the overlay with the best
   score.
 
@@ -141,6 +145,8 @@ another test file.
 
 - A new round starts with the schnauzer at y = 350, still, with no pipes and a score of 0.
 - After 0.1 s with no tap, the speed is 180 px/s downward.
+- A saved best score loads after a reload, and blocked storage or a bad value counts as 0
+  (`apps/web/src/platform/best-score.test.ts`).
 - Space flaps once per press, even when held, and other keys don't flap
   (`apps/web/src/platform/input.test.ts`).
 - An upward speed moves the schnauzer up.
