@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { PARALLAX_CLOUDS, PIPE_SPEED, WING_FPS } from "../game/config";
 import { createInitialState, type GameState, updatePhysics } from "../game/physics";
+import type { TextureName } from "../engine/textures";
 import { buildFrameSprites, wingFrame } from "./parallax";
 
 function run(state: GameState, frames: number, dt: number): GameState {
@@ -11,7 +12,7 @@ function run(state: GameState, frames: number, dt: number): GameState {
   return next;
 }
 
-const leftmostX = (state: GameState, texture: string) =>
+const leftmostX = (state: GameState, texture: TextureName) =>
   Math.min(
     ...buildFrameSprites(state)
       .filter(s => s.texture === texture)

@@ -1,3 +1,4 @@
+import type { TextureName } from "./textures";
 import {
   FLOATS_PER_SPRITE,
   FLOATS_PER_VERTEX,
@@ -7,7 +8,8 @@ import {
 } from "./vertices";
 
 export interface Sprite extends SpriteQuad {
-  texture: string;
+  /** A key of TEXTURE_URLS, so a misspelled name fails the type check. */
+  texture: TextureName;
   z?: number;
 }
 
@@ -18,7 +20,7 @@ export interface SpritePipeline {
   renderFrame(
     _context: GPUCanvasContext,
     _sprites: Sprite[],
-    _textures: Record<string, GPUTexture>
+    _textures: Record<TextureName, GPUTexture>
   ): void;
 }
 
@@ -133,10 +135,9 @@ export function createSpritePipeline(device: GPUDevice, format: GPUTextureFormat
 
   return {
     renderFrame(context, sprites, textures) {
-      // Back to front, and only sprites whose texture has loaded.
+      // Back to front. Every texture name has a loaded texture, so no sprite is skipped.
       const drawn = sprites
         .map(sprite => ({ sprite, texture: textures[sprite.texture] }))
-        .filter((d): d is { sprite: Sprite; texture: GPUTexture } => d.texture !== undefined)
         .sort((a, b) => (a.sprite.z ?? 0) - (b.sprite.z ?? 0));
 
       ensureCapacity(drawn.length);

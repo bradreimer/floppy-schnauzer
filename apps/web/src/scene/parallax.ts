@@ -13,6 +13,7 @@ import {
 } from "../game/config";
 import type { GameState } from "../game/physics";
 import type { Sprite } from "../engine/sprites";
+import type { TextureName } from "../engine/textures";
 
 // Every background tile is as wide as the virtual screen.
 const TILE_W = 400;
@@ -41,7 +42,7 @@ export function buildFrameSprites(state: GameState): Sprite[] {
   // ------------------------------------------------------------
   // BIRD — aligned 1:1 with physics (top-left origin)
   // ------------------------------------------------------------
-  const birdSprite = {
+  const birdSprite: Sprite = {
     texture: "schnauzer",
     x: state.birdX, // physics uses top-left; rendering matches
     y: state.birdY,
@@ -60,7 +61,7 @@ export function buildFrameSprites(state: GameState): Sprite[] {
   // ------------------------------------------------------------
   for (const p of state.pipes) {
     // TOP PIPE: from y=0 → p.top
-    const topSprite = {
+    const topSprite: Sprite = {
       texture: "pipeTop",
       x: p.x,
       y: 0,
@@ -75,7 +76,7 @@ export function buildFrameSprites(state: GameState): Sprite[] {
     sprites.push(topSprite);
 
     // BOTTOM PIPE: from y=p.bottom down to the ground
-    const bottomSprite = {
+    const bottomSprite: Sprite = {
       texture: "pipeBottom",
       x: p.x,
       y: p.bottom,
@@ -96,7 +97,7 @@ export function buildFrameSprites(state: GameState): Sprite[] {
 // Push a horizontally tiled parallax layer
 function pushTiled(
   sprites: Sprite[],
-  texture: string,
+  texture: TextureName,
   scroll: number,
   y: number,
   h: number,

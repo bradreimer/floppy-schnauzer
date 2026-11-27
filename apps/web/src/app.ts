@@ -5,7 +5,7 @@ import { describeScreen, type Screen } from "./platform/screens";
 import { buildFrameSprites } from "./scene/parallax";
 import { createInitialState, updatePhysics, type GameState } from "./game/physics";
 import { createSpritePipeline, type SpritePipeline } from "./engine/sprites";
-import { loadTextures } from "./engine/textures";
+import { loadTextures, type TextureName } from "./engine/textures";
 import { JUMP_VELOCITY } from "./game/config";
 
 export class Game {
@@ -17,7 +17,7 @@ export class Game {
 
   pipeline!: SpritePipeline;
   audio!: AudioSystem;
-  textures!: Record<string, GPUTexture>;
+  textures!: Record<TextureName, GPUTexture>;
 
   lastTime: number | null = null;
   running = false;
