@@ -56,8 +56,8 @@ virtual pixels, a texture rectangle (`u0`, `v0`, `u1`, `v1`), and a depth `z`.
 | 4 | Pipes: a top and a bottom sprite for each pipe |
 | 5 | The schnauzer: one 64 × 64 frame of `schnauzer.png` |
 
-The scroll offsets for the four background layers are module variables in `scene/parallax.ts`.
-They grow by a fixed amount each frame.
+`buildFrameSprites` only reads the state. Each background layer's offset is the state's `scrollX`
+times the layer's parallax share, so the same state always gives the same sprites.
 
 ## The sprite pipeline
 

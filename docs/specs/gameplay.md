@@ -107,13 +107,18 @@ Each frame, with the frame time `dt` in seconds:
 
 - Four layers scroll left behind the pipes, from back to front: sky, clouds, hills, and ground.
 - Each layer is 400 px wide and repeats to fill the screen.
+- `updatePhysics` adds 120 × `dt` to `scrollX` in the game state, the distance the world has moved.
+  Each layer's offset is `scrollX` times its share (`PARALLAX_*` in `config.ts`), so the
+  background moves the same distance each second at any refresh rate.
+- The background moves only while a round runs, like the pipes. It holds still before the first
+  tap and after game over.
 
-| Layer | y | Height | Scroll per frame |
-| --- | --- | --- | --- |
-| Sky | 0 | 700 | 2 px |
-| Clouds | 50 | 650 | 5 px |
-| Hills | 150 | 550 | 10 px |
-| Ground | 620 | 80 | 2 px |
+| Layer | y | Height | Share of the pipe speed | Speed |
+| --- | --- | --- | --- | --- |
+| Sky | 0 | 700 | 0.1 | 12 px/s |
+| Clouds | 50 | 650 | 0.25 | 30 px/s |
+| Hills | 150 | 550 | 0.5 | 60 px/s |
+| Ground | 620 | 80 | 1 | 120 px/s |
 
 ## Acceptance criteria
 
@@ -132,6 +137,8 @@ another test file.
 - Passing a pipe scores 1 point, once.
 - Overlapping a pipe outside the gap ends the game, and flying through the gap doesn't.
 - A 5 s gap between frames simulates only 0.05 s (`apps/web/src/game/frame.test.ts`).
+- The background scrolls the same distance in 1 s at 60 Hz and 120 Hz, and stops at game over
+  (`apps/web/src/scene/parallax.test.ts`).
 
 ## Open questions
 
@@ -140,8 +147,9 @@ These come from the code review on 2026-11-27. Questions 1 to 4 are tracked as B
 [#8](https://github.com/bradreimer/floppy-schnauzer/issues/8), listed on the
 [roadmap](../roadmap.md) for version 0.3.
 
-1. The background scrolls a fixed amount per frame, not per second, so it's twice as fast at
-   120 Hz, and it keeps scrolling after game over. Should it stop at game over?
+1. Answered by [#5](https://github.com/bradreimer/floppy-schnauzer/issues/5): the background
+   scrolls by `dt` and stops at game over. The speeds in the table replace per-frame steps that
+   came to 120, 300, 600, and 120 px/s at 60 Hz.
 2. Answered by [#6](https://github.com/bradreimer/floppy-schnauzer/issues/6): `dt` is capped at
    0.05 s.
 3. Answered by [#7](https://github.com/bradreimer/floppy-schnauzer/issues/7): the paws touch the

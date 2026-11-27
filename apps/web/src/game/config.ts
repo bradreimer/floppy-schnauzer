@@ -21,11 +21,12 @@ export const PIPE_SPAWN_INTERVAL = 1.4;
 export const GROUND_HEIGHT = 80; // The ground art is drawn from FLOOR_Y to the bottom
 export const FLOOR_Y = VIRTUAL_HEIGHT - GROUND_HEIGHT;
 
-// Parallax scroll speeds (pixels per second)
-export const SCROLL_SKY_SPEED = 2; // Slowest layer for depth
-export const SCROLL_CLOUDS_SPEED = 5;
-export const SCROLL_HILLS_SPEED = 10;
-export const SCROLL_GROUND_SPEED = PIPE_SPEED / 60; // Match pipe speed for consistency
+// Parallax: each layer scrolls at this share of the pipe speed. The ground moves with the pipes,
+// and farther layers move slower, which reads as depth.
+export const PARALLAX_SKY = 0.1; // 12 px/s
+export const PARALLAX_CLOUDS = 0.25; // 30 px/s
+export const PARALLAX_HILLS = 0.5; // 60 px/s
+export const PARALLAX_GROUND = 1; // 120 px/s, the pipe speed
 
 // Frame time
 export const MAX_FRAME_TIME = 0.05; // Longest step, in seconds, that one frame may simulate
