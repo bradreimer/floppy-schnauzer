@@ -6,8 +6,8 @@ import {
   VIRTUAL_HEIGHT,
   VIRTUAL_WIDTH
 } from "../game/config";
-import { GameState } from "../game/physics";
-import { Sprite } from "../engine/sprites";
+import type { GameState } from "../game/physics";
+import type { Sprite } from "../engine/sprites";
 
 // Parallax scroll offsets
 let scrollSky = 0;
@@ -53,7 +53,7 @@ export function buildFrameSprites(state: GameState): Sprite[] {
     u0,
     v0: 0,
     u1,
-    v1: .8,
+    v1: 0.8,
     z: 5
   };
   sprites.push(birdSprite);

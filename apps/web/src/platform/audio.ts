@@ -9,9 +9,9 @@ export class AudioSystem {
   constructor() {
     this.ctx = new AudioContext();
 
-    this.load("jump", jump);
-    this.load("score", score);
-    this.load("hit", hit);
+    void this.load("jump", jump);
+    void this.load("score", score);
+    void this.load("hit", hit);
   }
 
   private async load(name: string, url: string) {

@@ -2,8 +2,6 @@
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddRouting();
-
 WebApplication app = builder.Build();
 
 app.UseDefaultFiles();

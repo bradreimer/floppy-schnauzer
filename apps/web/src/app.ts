@@ -1,8 +1,8 @@
 import { AudioSystem } from "./platform/audio";
 import { setupInput } from "./platform/input";
 import { buildFrameSprites } from "./scene/parallax";
-import { createInitialState, updatePhysics, GameState } from "./game/physics";
-import { createSpritePipeline, SpritePipeline } from "./engine/sprites";
+import { createInitialState, updatePhysics, type GameState } from "./game/physics";
+import { createSpritePipeline, type SpritePipeline } from "./engine/sprites";
 import { loadTextures } from "./engine/textures";
 import { JUMP_VELOCITY } from "./game/config";
 
@@ -38,7 +38,7 @@ export class Game {
   }
 
   async init(): Promise<void> {
-    this.pipeline = await createSpritePipeline(this.device, this.format);
+    this.pipeline = createSpritePipeline(this.device, this.format);
     this.textures = await loadTextures(this.device);
     this.audio = new AudioSystem();
 

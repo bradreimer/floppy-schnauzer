@@ -21,10 +21,7 @@ export interface SpritePipeline {
   ): void;
 }
 
-export async function createSpritePipeline(
-  device: GPUDevice,
-  format: GPUTextureFormat
-): Promise<SpritePipeline> {
+export function createSpritePipeline(device: GPUDevice, format: GPUTextureFormat): SpritePipeline {
   const shader = device.createShaderModule({
     code: `
       struct VertexIn {
@@ -78,19 +75,21 @@ export async function createSpritePipeline(
     fragment: {
       module: shader,
       entryPoint: "fs_main",
-      targets: [{
-        format,
-        blend: {
-          color: {
-            srcFactor: "src-alpha",
-            dstFactor: "one-minus-src-alpha"
-          },
-          alpha: {
-            srcFactor: "one",
-            dstFactor: "one-minus-src-alpha"
+      targets: [
+        {
+          format,
+          blend: {
+            color: {
+              srcFactor: "src-alpha",
+              dstFactor: "one-minus-src-alpha"
+            },
+            alpha: {
+              srcFactor: "one",
+              dstFactor: "one-minus-src-alpha"
+            }
           }
         }
-  }]
+      ]
     },
     primitive: { topology: "triangle-list" }
   });
@@ -123,8 +122,7 @@ export async function createSpritePipeline(
 
       for (const sprite of sprites) {
         const tex = textures[sprite.texture];
-        if (!tex)
-          continue; // skip missing textures
+        if (!tex) continue; // skip missing textures
 
         const bindGroup = device.createBindGroup({
           layout: pipeline.getBindGroupLayout(0),

@@ -53,16 +53,8 @@ export function createInitialState(): GameState {
 // Main physics update
 // ------------------------------------------------------------
 export function updatePhysics(state: GameState, dt: number): GameState {
-  let {
-    birdX,
-    birdY,
-    birdVelY,
-    pipes,
-    timeSinceLastPipe,
-    score,
-    bestScore,
-    gameOver
-  } = state;
+  const { birdX } = state;
+  let { birdY, birdVelY, pipes, timeSinceLastPipe, score, bestScore, gameOver } = state;
 
   if (gameOver) {
     return state;
@@ -106,8 +98,7 @@ export function updatePhysics(state: GameState, dt: number): GameState {
     const lastPipe = pipes[pipes.length - 1];
     const lastX = lastPipe?.x ?? VIRTUAL_WIDTH + 50;
 
-    const topHeight =
-      Math.random() * (VIRTUAL_HEIGHT - PIPE_GAP - 200) + 50;
+    const topHeight = Math.random() * (VIRTUAL_HEIGHT - PIPE_GAP - 200) + 50;
 
     pipes.push({
       x: lastX + 220,
@@ -120,7 +111,7 @@ export function updatePhysics(state: GameState, dt: number): GameState {
   // ------------------------------------------------------------
   // Scoring
   // ------------------------------------------------------------
-  for (const p of pipes as Pipe[]) {
+  for (const p of pipes) {
     if (!p.scored && p.x + 70 < birdX) {
       score += 1;
       p.scored = true;

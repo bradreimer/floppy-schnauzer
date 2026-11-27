@@ -7,8 +7,6 @@
   "bracketSpacing": true,
   "arrowParens": "avoid",
   "endOfLine": "lf",
-
   "bracketSameLine": false,
-  "proseWrap": "preserve",
-  "operatorLinebreak": "before"
+  "proseWrap": "preserve"
 }

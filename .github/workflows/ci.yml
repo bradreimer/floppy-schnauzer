@@ -1,32 +1,33 @@
 name: CI
 
 on:
-  push:
   pull_request:
+    branches: [main]
+  push:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
+  checks:
+    name: Project checks
     runs-on: ubuntu-latest
-
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
-
-      - name: Web checks
-        working-directory: apps/web
-        run: |
-          npm ci
-          npm run lint
-          npm run typecheck
-          npm run build
+          node-version-file: .nvmrc
 
       - uses: actions/setup-dotnet@v4
         with:
           global-json-file: apps/server/global.json
 
-      - name: Server checks
-        working-directory: apps/server
-        run: dotnet format --verify-no-changes
+      - name: Run checks
+        run: ./scripts/check.sh
