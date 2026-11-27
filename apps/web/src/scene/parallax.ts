@@ -1,9 +1,12 @@
 import {
+  BIRD_SIZE,
+  FLOOR_Y,
+  GROUND_HEIGHT,
+  PIPE_WIDTH,
   SCROLL_CLOUDS_SPEED,
   SCROLL_GROUND_SPEED,
   SCROLL_HILLS_SPEED,
   SCROLL_SKY_SPEED,
-  VIRTUAL_HEIGHT,
   VIRTUAL_WIDTH
 } from "../game/config";
 import type { GameState } from "../game/physics";
@@ -34,7 +37,7 @@ export function buildFrameSprites(state: GameState): Sprite[] {
   pushTiled(sprites, "sky", scrollSky, 0, 700, 0, SKY_W);
   pushTiled(sprites, "clouds", scrollClouds, 50, 650, 1, CLOUD_W);
   pushTiled(sprites, "hills", scrollHills, 150, 550, 2, HILLS_W);
-  pushTiled(sprites, "ground", scrollGround, 620, 80, 3, GROUND_W);
+  pushTiled(sprites, "ground", scrollGround, FLOOR_Y, GROUND_HEIGHT, 3, GROUND_W);
 
   // Bird animation frame
   const frame = state.score % 4;
@@ -48,8 +51,8 @@ export function buildFrameSprites(state: GameState): Sprite[] {
     texture: "schnauzer",
     x: state.birdX, // physics uses top-left; rendering matches
     y: state.birdY,
-    w: 64,
-    h: 64,
+    w: BIRD_SIZE,
+    h: BIRD_SIZE,
     u0,
     v0: 0,
     u1,
@@ -67,7 +70,7 @@ export function buildFrameSprites(state: GameState): Sprite[] {
       texture: "pipeTop",
       x: p.x,
       y: 0,
-      w: 70,
+      w: PIPE_WIDTH,
       h: p.top,
       u0: 0,
       v0: 0,
@@ -77,13 +80,13 @@ export function buildFrameSprites(state: GameState): Sprite[] {
     };
     sprites.push(topSprite);
 
-    // BOTTOM PIPE: from y=p.bottom → VIRTUAL_HEIGHT
+    // BOTTOM PIPE: from y=p.bottom down to the ground
     const bottomSprite = {
       texture: "pipeBottom",
       x: p.x,
       y: p.bottom,
-      w: 70,
-      h: VIRTUAL_HEIGHT - p.bottom,
+      w: PIPE_WIDTH,
+      h: FLOOR_Y - p.bottom,
       u0: 0,
       v0: 0,
       u1: 1,

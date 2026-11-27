@@ -23,7 +23,7 @@ tap, which tosses the schnauzer upward against gravity.
           │       tap: speed -450 │      │  ▼
           │       gravity: +1800  ├──────┤
           │                       │bottom│
-  y = 660 ┼───────────────────────┴──────┴───────────────────  floor
+  y = 620 ┼───────────────────────┴──────┴───────────────────  floor: the ground art starts here
   y = 700 ┴──────────────────────────────────────────────────  bottom of the world
 ```
 
@@ -53,14 +53,16 @@ each pipe I pass, so that I have a quick game that's easy to learn and hard to m
 - The world is 400 × 700 virtual pixels, per
   [ADR-003](../adr/ADR-003-a-fixed-virtual-resolution.md). Positions are the top-left corner of a
   sprite, with y growing downward.
-- The floor is at y = 660 (`FLOOR_Y`, which is 700 minus a `GROUND_HEIGHT` of 40).
+- The floor is at y = 620 (`FLOOR_Y`, which is 700 minus a `GROUND_HEIGHT` of 80). The ground
+  art is drawn from the floor to the bottom of the world, so the line the schnauzer hits is the
+  line the player sees.
 
 ### Starting, flapping, and restarting
 
 - Before the first tap, the game is waiting, and the overlay says "Tap to start / jump".
 - A tap while waiting or after a game over starts a new round from the initial state, keeps the
   best score, and flaps.
-- In the initial state the schnauzer is at x = 100, y = 350, with a vertical speed of 0, no
+- The schnauzer is 64 × 64 px (`BIRD_SIZE`). In the initial state it's at x = 100 (`BIRD_X`), y = 350, with a vertical speed of 0, no
   pipes, and a score of 0.
 - A flap sets the vertical speed to −450 px/s (`JUMP_VELOCITY`) and plays `jump.wav`.
 
@@ -78,10 +80,11 @@ Each frame, with the frame time `dt` in seconds:
 
 ### Pipes
 
-- A pipe is 70 px wide. It has a top part from y = 0 to `top`, and a bottom part from `bottom` to
-  700, where `bottom` = `top` + 270 (`PIPE_GAP`).
+- A pipe is 70 px wide (`PIPE_WIDTH`). It has a top part from y = 0 to `top`, and a bottom part
+  from `bottom` down to the floor, where `bottom` = `top` + 270 (`PIPE_GAP`).
 - A new pipe spawns when more than 1.4 s (`PIPE_SPAWN_INTERVAL`) have passed since the last one.
-- A new pipe's x is 220 px right of the last pipe, or 450 when there are no pipes.
+- A new pipe's x is 220 px (`PIPE_SPACING`) right of the last pipe, or 450 when there are no
+  pipes.
 - `top` is a random number from 50 up to, but not including, 280.
 
 ### Scoring
@@ -93,7 +96,8 @@ Each frame, with the frame time `dt` in seconds:
 
 ### Game over
 
-- The round ends when the schnauzer's top edge goes above y = 0 or below y = 660.
+- The round ends when the schnauzer's top edge goes above y = 0, or its bottom edge, where the
+  paws are, goes below the floor at y = 620.
 - The round ends when the schnauzer's 64 × 64 box overlaps a pipe's 70 px width and isn't fully
   inside the gap.
 - At game over, `hit.wav` plays, the rules stop changing the state, and the overlay says
@@ -120,7 +124,8 @@ another test file.
 - After 0.1 s with no tap, the speed is 180 px/s downward.
 - An upward speed moves the schnauzer up.
 - Once the game is over, a frame changes nothing.
-- The game ends above the ceiling and below the floor.
+- The game ends above the ceiling, and when the paws go below the floor while the top is still
+  above it.
 - Pipes move left at 120 px/s.
 - After 1.4 s, a pipe spawns with a 270 px gap.
 - A pipe off the left edge is removed.
@@ -139,8 +144,8 @@ These come from the code review on 2026-11-27. Questions 1 to 4 are tracked as B
    120 Hz, and it keeps scrolling after game over. Should it stop at game over?
 2. Answered by [#6](https://github.com/bradreimer/floppy-schnauzer/issues/6): `dt` is capped at
    0.05 s.
-3. The floor check uses the schnauzer's top edge, so it sinks 64 px into the ground. The ground art
-   is drawn from y = 620, but the floor is at 660. Which line should the paws touch?
+3. Answered by [#7](https://github.com/bradreimer/floppy-schnauzer/issues/7): the paws touch the
+   top of the ground art, at y = 620.
 4. The wing animation frame is `score % 4`, so the wings move only when you score. How many
    frames per second should the wings flap?
 5. The overlay and the 2D UI canvas both show the score. Should only one?

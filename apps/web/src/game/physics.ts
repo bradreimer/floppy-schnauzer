@@ -1,9 +1,13 @@
 import {
+  BIRD_SIZE,
+  BIRD_X,
   FLOOR_Y,
   GRAVITY,
   PIPE_GAP,
+  PIPE_SPACING,
   PIPE_SPAWN_INTERVAL,
   PIPE_SPEED,
+  PIPE_WIDTH,
   VIRTUAL_HEIGHT,
   VIRTUAL_WIDTH
 } from "./config";
@@ -35,7 +39,7 @@ export interface GameState {
 // ------------------------------------------------------------
 export function createInitialState(): GameState {
   return {
-    birdX: 100,
+    birdX: BIRD_X,
     birdY: VIRTUAL_HEIGHT / 2,
     birdVelY: 0,
 
@@ -66,8 +70,8 @@ export function updatePhysics(state: GameState, dt: number): GameState {
   birdVelY += GRAVITY * dt;
   birdY += birdVelY * dt;
 
-  // Floor / ceiling
-  if (birdY < 0 || birdY > FLOOR_Y) {
+  // Ceiling: the top edge. Floor: the bottom edge, where the paws are.
+  if (birdY < 0 || birdY + BIRD_SIZE > FLOOR_Y) {
     gameOver = true;
   }
 
@@ -82,7 +86,7 @@ export function updatePhysics(state: GameState, dt: number): GameState {
   // Remove off-screen pipes
   if (pipes.length > 0) {
     const first = pipes[0];
-    if (first && first.x + 70 < 0) {
+    if (first && first.x + PIPE_WIDTH < 0) {
       pipes.shift();
     }
   }
@@ -101,7 +105,7 @@ export function updatePhysics(state: GameState, dt: number): GameState {
     const topHeight = Math.random() * (VIRTUAL_HEIGHT - PIPE_GAP - 200) + 50;
 
     pipes.push({
-      x: lastX + 220,
+      x: lastX + PIPE_SPACING,
       top: topHeight,
       bottom: topHeight + PIPE_GAP,
       scored: false
@@ -112,7 +116,7 @@ export function updatePhysics(state: GameState, dt: number): GameState {
   // Scoring
   // ------------------------------------------------------------
   for (const p of pipes) {
-    if (!p.scored && p.x + 70 < birdX) {
+    if (!p.scored && p.x + PIPE_WIDTH < birdX) {
       score += 1;
       p.scored = true;
       bestScore = Math.max(bestScore, score);
@@ -122,22 +126,17 @@ export function updatePhysics(state: GameState, dt: number): GameState {
   // ------------------------------------------------------------
   // Collision detection
   // ------------------------------------------------------------
-  const birdWidth = 64;
-  const birdHeight = 64;
-  const pipeWidth = 70;
-
   for (const p of pipes) {
     const pipeLeft = p.x;
-    const pipeRight = p.x + pipeWidth;
+    const pipeRight = p.x + PIPE_WIDTH;
 
     const birdLeft = birdX;
-    const birdRight = birdX + birdWidth;
+    const birdRight = birdX + BIRD_SIZE;
 
     // Horizontal overlap
     if (birdRight > pipeLeft && birdLeft < pipeRight) {
       // Vertical collision (outside the gap)
-      if (birdY < p.top || birdY + birdHeight > p.bottom) {
-        console.log("COLLISION TRIGGERED");
+      if (birdY < p.top || birdY + BIRD_SIZE > p.bottom) {
         gameOver = true;
       }
     }
