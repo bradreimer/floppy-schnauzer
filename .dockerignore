@@ -1,23 +1,14 @@
-# Ignore dev-only files
-docker/dev
-docker-compose.dev.yml
-
-# Ignore build artifacts
-**/bin
-**/obj
-**/out
-**/publish
-**/dist
-
-# Ignore node_modules everywhere
-**/node_modules
-
-# Ignore local env
-frontend/.env*
-backend/.env*
-
-# Ignore git + editor junk
-.git/
+# Keep the build context small, and keep secrets out of it.
+.env
+.env.*
+.git
+.github
 .vscode
 .idea
-.DS_Store
+**/bin
+**/obj
+**/node_modules
+**/dist
+docs
+tests
+apps/server/tests

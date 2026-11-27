@@ -1,0 +1,13 @@
+# Runs the game locally in Docker. From the repository root:
+#   docker compose -f docker/compose.yml --env-file .env up --build
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    image: floppy-schnauzer
+    ports:
+      - "${PORT_API:-8080}:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+    restart: unless-stopped

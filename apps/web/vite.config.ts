@@ -21,12 +21,10 @@ export default defineConfig({
     }
   },
 
+  // The build goes to dist/. The Docker image copies it into the server's wwwroot/.
   build: {
-    outDir: path.resolve(__dirname, "../backend/FloppySchnauzer.Api/wwwroot"),
-    emptyOutDir: true,
-    rollupOptions: {
-      input: path.resolve(__dirname, "index.html")
-    }
+    outDir: "dist",
+    emptyOutDir: true
   },
 
   resolve: {

@@ -2,15 +2,14 @@
 
 Caped, goofy schnauzer WebGPU game with:
 
-- Frontend: TypeScript + WebGPU (Vite)
-- Backend: ASP.NET (.NET 10)
-- Tools: Firefly MCP server for asset generation
+- Web app: TypeScript and WebGPU, built with Vite, in `apps/web`
+- Server: ASP.NET Core (.NET 10), which serves the built web app, in `apps/server`
 
-## Frontend
+## Web app
 
 ```bash
-cd frontend
+cd apps/web
 npm install
 npm run dev      # dev server
-npm run build    # outputs to ../backend/FloppySchnauzer.Api/wwwroot/dist
+npm run build    # outputs to apps/web/dist
 ```
