@@ -1,45 +1,42 @@
 import {
-  SCROLL_CLOUDS_SPEED,
-  SCROLL_GROUND_SPEED,
-  SCROLL_HILLS_SPEED,
-  SCROLL_SKY_SPEED,
-  VIRTUAL_HEIGHT,
+  BIRD_SIZE,
+  FLOOR_Y,
+  GROUND_HEIGHT,
+  PARALLAX_CLOUDS,
+  PARALLAX_GROUND,
+  PARALLAX_HILLS,
+  PARALLAX_SKY,
+  PIPE_WIDTH,
+  WING_FPS,
+  WING_FRAMES,
   VIRTUAL_WIDTH
 } from "../game/config";
 import type { GameState } from "../game/physics";
 import type { Sprite } from "../engine/sprites";
 
-// Parallax scroll offsets
-let scrollSky = 0;
-let scrollClouds = 0;
-let scrollHills = 0;
-let scrollGround = 0;
+// Every background tile is as wide as the virtual screen.
+const TILE_W = 400;
 
-// Virtual resolution tile widths
-const SKY_W = 400;
-const CLOUD_W = 400;
-const HILLS_W = 400;
-const GROUND_W = 400;
+/** Returns which of the wing frames in schnauzer.png to show, from the seconds since the round began. */
+export function wingFrame(roundTime: number): number {
+  return Math.floor(roundTime * WING_FPS) % WING_FRAMES;
+}
 
+/** Builds the sprites for one frame from the game state. It reads the state and changes nothing. */
 export function buildFrameSprites(state: GameState): Sprite[] {
   const sprites: Sprite[] = [];
 
-  // Parallax speeds (pixels per second)
-  scrollSky += SCROLL_SKY_SPEED;
-  scrollClouds += SCROLL_CLOUDS_SPEED;
-  scrollHills += SCROLL_HILLS_SPEED;
-  scrollGround += SCROLL_GROUND_SPEED;
-
   // Background layers (z = 0 → back, higher = front)
-  pushTiled(sprites, "sky", scrollSky, 0, 700, 0, SKY_W);
-  pushTiled(sprites, "clouds", scrollClouds, 50, 650, 1, CLOUD_W);
-  pushTiled(sprites, "hills", scrollHills, 150, 550, 2, HILLS_W);
-  pushTiled(sprites, "ground", scrollGround, 620, 80, 3, GROUND_W);
+  const scroll = state.scrollX;
+  pushTiled(sprites, "sky", scroll * PARALLAX_SKY, 0, 700, 0, TILE_W);
+  pushTiled(sprites, "clouds", scroll * PARALLAX_CLOUDS, 50, 650, 1, TILE_W);
+  pushTiled(sprites, "hills", scroll * PARALLAX_HILLS, 150, 550, 2, TILE_W);
+  pushTiled(sprites, "ground", scroll * PARALLAX_GROUND, FLOOR_Y, GROUND_HEIGHT, 3, TILE_W);
 
   // Bird animation frame
-  const frame = state.score % 4;
-  const u0 = frame / 4;
-  const u1 = (frame + 1) / 4;
+  const frame = wingFrame(state.roundTime);
+  const u0 = frame / WING_FRAMES;
+  const u1 = (frame + 1) / WING_FRAMES;
 
   // ------------------------------------------------------------
   // BIRD — aligned 1:1 with physics (top-left origin)
@@ -48,12 +45,12 @@ export function buildFrameSprites(state: GameState): Sprite[] {
     texture: "schnauzer",
     x: state.birdX, // physics uses top-left; rendering matches
     y: state.birdY,
-    w: 64,
-    h: 64,
+    w: BIRD_SIZE,
+    h: BIRD_SIZE,
     u0,
     v0: 0,
     u1,
-    v1: 0.8,
+    v1: 1,
     z: 5
   };
   sprites.push(birdSprite);
@@ -67,7 +64,7 @@ export function buildFrameSprites(state: GameState): Sprite[] {
       texture: "pipeTop",
       x: p.x,
       y: 0,
-      w: 70,
+      w: PIPE_WIDTH,
       h: p.top,
       u0: 0,
       v0: 0,
@@ -77,13 +74,13 @@ export function buildFrameSprites(state: GameState): Sprite[] {
     };
     sprites.push(topSprite);
 
-    // BOTTOM PIPE: from y=p.bottom → VIRTUAL_HEIGHT
+    // BOTTOM PIPE: from y=p.bottom down to the ground
     const bottomSprite = {
       texture: "pipeBottom",
       x: p.x,
       y: p.bottom,
-      w: 70,
-      h: VIRTUAL_HEIGHT - p.bottom,
+      w: PIPE_WIDTH,
+      h: FLOOR_Y - p.bottom,
       u0: 0,
       v0: 0,
       u1: 1,

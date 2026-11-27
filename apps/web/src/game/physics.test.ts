@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import {
+  BIRD_SIZE,
   FLOOR_Y,
   GRAVITY,
   PIPE_GAP,
@@ -60,8 +61,14 @@ describe("updatePhysics", () => {
     expect(updatePhysics(state({ birdY: -1, birdVelY: -10 }), 0.01).gameOver).toBe(true);
   });
 
-  it("ends the game below the floor", () => {
-    expect(updatePhysics(state({ birdY: FLOOR_Y + 1 }), 0.01).gameOver).toBe(true);
+  it("ends the game when the paws touch the ground, while the top is still above it", () => {
+    // Regression test for #7: the old check used the top edge, so this kept playing.
+    const pawsBelowFloor = state({ birdY: FLOOR_Y - BIRD_SIZE + 1 });
+    expect(updatePhysics(pawsBelowFloor, 0.001).gameOver).toBe(true);
+  });
+
+  it("keeps playing while the paws are above the ground", () => {
+    expect(updatePhysics(state({ birdY: FLOOR_Y - BIRD_SIZE - 10 }), 0.001).gameOver).toBe(false);
   });
 
   it("moves pipes left at the pipe speed", () => {
@@ -95,7 +102,6 @@ describe("updatePhysics", () => {
   });
 
   it("ends the game when the schnauzer hits a pipe outside the gap", () => {
-    vi.spyOn(console, "log").mockImplementation(() => {});
     // The pipe overlaps the schnauzer, and the gap starts below it.
     const blocked = state({ pipes: [farPipe({ x: 90, top: 500, bottom: 500 + PIPE_GAP })] });
     expect(updatePhysics(blocked, 0.001).gameOver).toBe(true);

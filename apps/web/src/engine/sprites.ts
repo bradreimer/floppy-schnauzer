@@ -1,17 +1,18 @@
-import { VIRTUAL_HEIGHT, VIRTUAL_WIDTH } from "../game/config";
+import {
+  FLOATS_PER_SPRITE,
+  FLOATS_PER_VERTEX,
+  type SpriteQuad,
+  VERTICES_PER_SPRITE,
+  writeSpriteVertices
+} from "./vertices";
 
-export interface Sprite {
+export interface Sprite extends SpriteQuad {
   texture: string;
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-  u0: number;
-  v0: number;
-  u1: number;
-  v1: number;
   z?: number;
 }
+
+/** Room for this many sprites before the vertex buffer has to grow. A frame uses about 20. */
+const INITIAL_SPRITE_CAPACITY = 64;
 
 export interface SpritePipeline {
   renderFrame(
@@ -64,7 +65,7 @@ export function createSpritePipeline(device: GPUDevice, format: GPUTextureFormat
       entryPoint: "vs_main",
       buffers: [
         {
-          arrayStride: 16,
+          arrayStride: FLOATS_PER_VERTEX * Float32Array.BYTES_PER_ELEMENT,
           attributes: [
             { shaderLocation: 0, offset: 0, format: "float32x2" },
             { shaderLocation: 1, offset: 8, format: "float32x2" }
@@ -94,17 +95,57 @@ export function createSpritePipeline(device: GPUDevice, format: GPUTextureFormat
     primitive: { topology: "triangle-list" }
   });
 
-  // Pixel → clip-space conversion
-  function toClipX(px: number) {
-    return (px / VIRTUAL_WIDTH) * 2 - 1;
+  // Created once and reused every frame. The buffer doubles when a frame has more sprites.
+  let capacity = INITIAL_SPRITE_CAPACITY;
+  let vertices = new Float32Array(capacity * FLOATS_PER_SPRITE);
+  let vertexBuffer = createVertexBuffer(capacity);
+  const bindGroups = new WeakMap<GPUTexture, GPUBindGroup>();
+
+  function createVertexBuffer(sprites: number): GPUBuffer {
+    return device.createBuffer({
+      size: sprites * FLOATS_PER_SPRITE * Float32Array.BYTES_PER_ELEMENT,
+      usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
+    });
   }
 
-  function toClipY(py: number) {
-    return 1 - (py / VIRTUAL_HEIGHT) * 2;
+  function ensureCapacity(sprites: number) {
+    if (sprites <= capacity) return;
+    while (capacity < sprites) capacity *= 2;
+    vertexBuffer.destroy();
+    vertexBuffer = createVertexBuffer(capacity);
+    vertices = new Float32Array(capacity * FLOATS_PER_SPRITE);
+  }
+
+  function bindGroupFor(texture: GPUTexture): GPUBindGroup {
+    let group = bindGroups.get(texture);
+    if (!group) {
+      group = device.createBindGroup({
+        layout: pipeline.getBindGroupLayout(0),
+        entries: [
+          { binding: 0, resource: sampler },
+          { binding: 1, resource: texture.createView() }
+        ]
+      });
+      bindGroups.set(texture, group);
+    }
+    return group;
   }
 
   return {
     renderFrame(context, sprites, textures) {
+      // Back to front, and only sprites whose texture has loaded.
+      const drawn = sprites
+        .map(sprite => ({ sprite, texture: textures[sprite.texture] }))
+        .filter((d): d is { sprite: Sprite; texture: GPUTexture } => d.texture !== undefined)
+        .sort((a, b) => (a.sprite.z ?? 0) - (b.sprite.z ?? 0));
+
+      ensureCapacity(drawn.length);
+      const floats = writeSpriteVertices(
+        drawn.map(d => d.sprite),
+        vertices
+      );
+      device.queue.writeBuffer(vertexBuffer, 0, vertices, 0, floats);
+
       const encoder = device.createCommandEncoder();
       const pass = encoder.beginRenderPass({
         colorAttachments: [
@@ -117,65 +158,12 @@ export function createSpritePipeline(device: GPUDevice, format: GPUTextureFormat
         ]
       });
 
-      // Depth sort
-      sprites.sort((a, b) => (a.z ?? 0) - (b.z ?? 0));
-
-      for (const sprite of sprites) {
-        const tex = textures[sprite.texture];
-        if (!tex) continue; // skip missing textures
-
-        const bindGroup = device.createBindGroup({
-          layout: pipeline.getBindGroupLayout(0),
-          entries: [
-            { binding: 0, resource: sampler },
-            { binding: 1, resource: tex.createView() }
-          ]
-        });
-
-        const x0 = toClipX(sprite.x);
-        const y0 = toClipY(sprite.y);
-        const x1 = toClipX(sprite.x + sprite.w);
-        const y1 = toClipY(sprite.y + sprite.h);
-
-        const verts = new Float32Array([
-          x0,
-          y0,
-          sprite.u0,
-          sprite.v0,
-          x1,
-          y0,
-          sprite.u1,
-          sprite.v0,
-          x1,
-          y1,
-          sprite.u1,
-          sprite.v1,
-          x0,
-          y0,
-          sprite.u0,
-          sprite.v0,
-          x1,
-          y1,
-          sprite.u1,
-          sprite.v1,
-          x0,
-          y1,
-          sprite.u0,
-          sprite.v1
-        ]);
-
-        const buffer = device.createBuffer({
-          size: verts.byteLength,
-          usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
-        });
-
-        device.queue.writeBuffer(buffer, 0, verts);
-
-        pass.setPipeline(pipeline);
-        pass.setBindGroup(0, bindGroup);
-        pass.setVertexBuffer(0, buffer);
-        pass.draw(6);
-      }
+      pass.setPipeline(pipeline);
+      pass.setVertexBuffer(0, vertexBuffer);
+      drawn.forEach((d, index) => {
+        pass.setBindGroup(0, bindGroupFor(d.texture));
+        pass.draw(VERTICES_PER_SPRITE, 1, index * VERTICES_PER_SPRITE);
+      });
 
       pass.end();
       device.queue.submit([encoder.finish()]);
