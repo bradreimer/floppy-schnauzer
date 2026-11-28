@@ -5,7 +5,9 @@ import {
   FLOOR_Y,
   GRAVITY,
   PIPE_GAP,
-  PIPE_SPAWN_INTERVAL,
+  FIRST_PIPE_X,
+  PIPE_SPACING,
+  PIPE_SPAWN_X,
   PIPE_SPEED,
   VIRTUAL_HEIGHT
 } from "./config";
@@ -78,16 +80,49 @@ describe("updatePhysics", () => {
     expect(next.pipes[0]?.x).toBeCloseTo(1000 - PIPE_SPEED * 0.5);
   });
 
-  it("spawns a pipe with the configured gap after the spawn interval", () => {
-    const next = updatePhysics(state({ timeSinceLastPipe: PIPE_SPAWN_INTERVAL }), 0.01, () => 0);
+  it("spawns the first pipe at the start of a round, with the configured gap", () => {
+    const next = updatePhysics(state(), 0.01, () => 0);
     expect(next.pipes).toHaveLength(1);
-    expect(next.timeSinceLastPipe).toBe(0);
     const pipe = next.pipes[0];
+    expect(pipe?.x).toBe(FIRST_PIPE_X);
     expect(pipe && pipe.bottom - pipe.top).toBe(PIPE_GAP);
   });
 
+  it("spawns the next pipe PIPE_SPACING right of the last, once that fits at the spawn point", () => {
+    const notYet = updatePhysics(
+      state({ pipes: [farPipe({ x: PIPE_SPAWN_X - PIPE_SPACING + 10 })] }),
+      0
+    );
+    expect(notYet.pipes).toHaveLength(1);
+    const due = updatePhysics(state({ pipes: [farPipe({ x: PIPE_SPAWN_X - PIPE_SPACING })] }), 0);
+    expect(due.pipes.map(p => p.x)).toEqual([PIPE_SPAWN_X - PIPE_SPACING, PIPE_SPAWN_X]);
+  });
+
+  it("keeps a few pipes, 220 px apart, through a 10-minute round", () => {
+    // Regression test for #34: pipes spawned on a timer piled up off-screen, 99 after 10 minutes.
+    let next = state();
+    let most = 0;
+    for (let frame = 0; frame < 10 * 60 * 60; frame++) {
+      // Keep the schnauzer mid-air, and open every gap, so the round never ends.
+      next = updatePhysics(
+        {
+          ...next,
+          birdY: 300,
+          birdVelY: 0,
+          pipes: next.pipes.map(p => ({ ...p, top: 0, bottom: 700 }))
+        },
+        1 / 60
+      );
+      most = Math.max(most, next.pipes.length);
+    }
+    expect(next.gameOver).toBe(false);
+    expect(most).toBeLessThanOrEqual(4);
+    const xs = next.pipes.map(p => p.x);
+    xs.slice(1).forEach((x, i) => expect(x - (xs[i] ?? 0)).toBeCloseTo(PIPE_SPACING));
+  });
+
   it("places the gap's top from 50 to 280, using the random number generator it's given", () => {
-    const due = state({ timeSinceLastPipe: PIPE_SPAWN_INTERVAL });
+    const due = state();
     expect(updatePhysics(due, 0.01, () => 0).pipes[0]?.top).toBe(50);
     expect(updatePhysics(due, 0.01, () => 0.5).pipes[0]?.top).toBe(165);
     expect(updatePhysics(due, 0.01, () => 1).pipes[0]?.top).toBe(280);
@@ -111,8 +146,10 @@ describe("updatePhysics", () => {
   });
 
   it("removes a pipe once it is off the left edge", () => {
-    const next = updatePhysics(state({ pipes: [farPipe({ x: -71, scored: true })] }), 0.01);
-    expect(next.pipes).toHaveLength(0);
+    const offScreen = farPipe({ x: -71, scored: true });
+    const next = updatePhysics(state({ pipes: [offScreen, farPipe({ x: 300 })] }), 0.01);
+    expect(next.pipes.map(p => p.x)).not.toContainEqual(expect.closeTo(-71 - 1.2));
+    expect(next.pipes.every(p => p.x + 70 >= 0)).toBe(true);
   });
 
   it("scores once for each pipe the schnauzer passes", () => {

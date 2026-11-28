@@ -87,9 +87,12 @@ Each frame, with the frame time `dt` in seconds:
 
 - A pipe is 70 px wide (`PIPE_WIDTH`). It has a top part from y = 0 to `top`, and a bottom part
   from `bottom` down to the floor, where `bottom` = `top` + 270 (`PIPE_GAP`).
-- A new pipe spawns when more than 1.4 s (`PIPE_SPAWN_INTERVAL`) have passed since the last one.
-- A new pipe's x is 220 px (`PIPE_SPACING`) right of the last pipe, or 450 when there are no
-  pipes.
+- Pipes spawn by distance, not time ([#34](https://github.com/bradreimer/floppy-schnauzer/issues/34)). The first pipe of a round starts at x = 840
+  (`FIRST_PIPE_X`), so it reaches the schnauzer about 5.6 s in. Each next pipe starts 220 px
+  (`PIPE_SPACING`) right of the last one, as soon as that point is at or left of x = 450
+  (`PIPE_SPAWN_X`), just past the right edge of the screen.
+- So pipes are always 220 px apart, a pipe arrives every 1.83 s (220 px at 120 px/s), and at most 4
+  pipes exist at once.
 - `top` is a random number from 50 up to, but not including, 280. The random number comes from the
   `random` argument of `updatePhysics`, which is `Math.random` in the game.
 
@@ -157,6 +160,7 @@ another test file.
 - Pipes move left at 120 px/s.
 - After 1.4 s, a pipe spawns with a 270 px gap.
 - A pipe off the left edge is removed.
+- Through a 10-minute round, at most 4 pipes exist, always 220 px apart.
 - Passing a pipe scores 1 point, once.
 - The art touching a pipe ends the game. Flying through the gap, or a pipe touching only the
   empty part of the sprite frame, doesn't.
