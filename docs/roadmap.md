@@ -28,7 +28,7 @@ one at a time, each in its own pull request. The last three need the maintainer.
 | 5 | [#23](https://github.com/bradreimer/floppy-schnauzer/issues/23) | Pass the UI canvas to the renderer setup, and size the canvases in one place | Claude |
 | 6 | [#24](https://github.com/bradreimer/floppy-schnauzer/issues/24) | Write a play-test checklist for real browsers and phones | Claude writes it; the maintainer runs it |
 | 7 | [#25](https://github.com/bradreimer/floppy-schnauzer/issues/25) | Record the prompts for `logo.png` and the sounds | The maintainer |
-| 8 | [#26](https://github.com/bradreimer/floppy-schnauzer/issues/26) | Decide whether the project has a license | The maintainer |
+| 8 | [#26](https://github.com/bradreimer/floppy-schnauzer/issues/26) | Decide whether the project has a license: the MIT License, chosen 2026-11-28 | Done |
 
 ## Version 0.3: fair and smooth
 

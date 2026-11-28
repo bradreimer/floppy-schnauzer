@@ -1,4 +1,4 @@
-// Copyright (c) 2026 Brad Reimer. All rights reserved.
+// Copyright (c) 2026 Brad Reimer. Licensed under the MIT License.
 
 namespace FloppySchnauzer.Api.Tests;
 

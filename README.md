@@ -62,3 +62,7 @@ Docker Compose reads these variables from `.env`. `.env.example` lists them with
 | --- | --- | --- |
 | `PORT_API` | `8080` | The port on your machine that maps to the server's port 8080 |
 | `ASPNETCORE_ENVIRONMENT` | `Production` | The ASP.NET Core environment name: `Development` or `Production` |
+
+## License
+
+Floppy Schnauzer is under the MIT License. See [LICENSE](LICENSE).

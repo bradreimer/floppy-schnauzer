@@ -17,6 +17,7 @@ import {
   checkImageName,
   checkIndex,
   checkIssueTemplate,
+  checkLicense,
   checkKnowledgeName,
   checkMentions,
   checkReadme,
@@ -348,5 +349,21 @@ describe('pngSize', () => {
     new DataView(header.buffer).setUint32(20, 160);
     assert.deepEqual(pngSize(header), [800, 160]);
     assert.equal(pngSize(new Uint8Array(24)), null);
+  });
+});
+
+describe('checkLicense', () => {
+  const mit = 'MIT License\n\nCopyright (c) 2026 Someone\n\nPermission is hereby granted...\n';
+
+  it('passes the MIT License with packages that say MIT', () => {
+    assert.deepEqual(checkLicense(mit, { 'package.json': '{"license": "MIT"}' }), []);
+  });
+
+  it('rejects another license text, and a package that names another license or none', () => {
+    assert.match(checkLicense('Apache License\n', {}).join(), /must start with "MIT License"/);
+    assert.deepEqual(checkLicense(mit, { 'a/package.json': '{"license": "ISC"}', 'b/package.json': '{}' }), [
+      'a/package.json: "license" must be "MIT"',
+      'b/package.json: "license" must be "MIT"',
+    ]);
   });
 });

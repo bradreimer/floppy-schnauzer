@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "The Floppy Schnauzer web app: TypeScript and WebGPU, built with Vite.",
+  "license": "MIT",
   "type": "module",
   "engines": {
     "node": ">=22"

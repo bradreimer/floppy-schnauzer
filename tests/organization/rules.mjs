@@ -10,6 +10,7 @@ export const ROOT_REQUIRED = [
   '.nvmrc',
   'CLAUDE.md',
   'CONTRIBUTING.md',
+  'LICENSE',
   'README.md',
   'apps',
   'docker',
@@ -19,7 +20,7 @@ export const ROOT_REQUIRED = [
   'tests',
 ];
 
-export const ROOT_OPTIONAL = ['.dockerignore', 'LICENSE', 'package-lock.json'];
+export const ROOT_OPTIONAL = ['.dockerignore', 'package-lock.json'];
 
 export const APPS_ENTRIES = ['server', 'web'];
 
@@ -398,6 +399,21 @@ export function checkAssetSizes(specMarkdown, sizes) {
     } else if (Number(listed[1]) !== actual[0] || Number(listed[2]) !== actual[1]) {
       problems.push(`${file}: the table says ${size}, but the file is ${actual[0]} × ${actual[1]}`);
     }
+  }
+  return problems;
+}
+
+/**
+ * LICENSE is the MIT License, and every package.json says so, so the license in the files and the
+ * license that npm reports agree. `packages` maps each package.json path to its text.
+ */
+export function checkLicense(licenseText, packages) {
+  const problems = [];
+  if (!/^MIT License\n\nCopyright \(c\) \d{4} \S/.test(licenseText)) {
+    problems.push('LICENSE must start with "MIT License" and a "Copyright (c) YEAR NAME" line');
+  }
+  for (const [file, text] of Object.entries(packages)) {
+    if (JSON.parse(text).license !== 'MIT') problems.push(`${file}: "license" must be "MIT"`);
   }
   return problems;
 }
