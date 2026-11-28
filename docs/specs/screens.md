@@ -71,7 +71,8 @@ Shown from page load until the first tap or Space press.
   2026-11-27.
 - Inside the panel: "SCORE", the score in large cyan text, and "BEST: N".
 - "NEW BEST!" in gold inside the panel when the round set a new best score.
-- "Tap or press Space to play again", centered below the panel.
+- "Tap or press Space to play again", centered below the panel, once a press would restart: 0.5 s
+  after the round ends. Until then the panel shows alone.
 
 ## Acceptance criteria
 
@@ -83,6 +84,7 @@ Each criterion is covered by a test in `apps/web/src/platform/screens.test.ts` o
 - After a round, the screen is game over, with the score and best, and "NEW BEST!" only when the
   round beat the best it started with.
 - Each screen draws its text, and the playing screen draws the score once.
+- The game-over screen offers a restart only once the restart delay has passed.
 
 The look of each screen is checked with a screenshot from headless Chromium, where the 2D canvas
 renders.

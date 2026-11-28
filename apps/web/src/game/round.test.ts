@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 
-import { JUMP_VELOCITY, PIPE_GAP } from "./config";
+import { JUMP_VELOCITY, PIPE_GAP, RESTART_DELAY } from "./config";
 import type { Pipe } from "./physics";
-import { advance, createRound, pressFlap, type Round } from "./round";
+import { advance, canRestart, createRound, pressFlap, type Round } from "./round";
 
 // A pipe whose right edge is just left of the schnauzer, so the next frame scores it.
 const passedPipe: Pipe = { x: 29, top: 100, bottom: 100 + PIPE_GAP, scored: false };
@@ -37,7 +37,11 @@ describe("pressFlap", () => {
   });
 
   it("restarts after game over, keeping the best score", () => {
-    const over: Round = { ...playing({ score: 5, bestScore: 9, gameOver: true }), phase: "over" };
+    const over: Round = {
+      ...playing({ score: 5, bestScore: 9, gameOver: true }),
+      phase: "over",
+      sinceOver: RESTART_DELAY
+    };
     const { round } = pressFlap(over);
     expect(round.phase).toBe("playing");
     expect(round.game.score).toBe(0);
@@ -66,5 +70,29 @@ describe("advance", () => {
 
     const noBest = advance(playing({ birdY: 650, score: 2, bestScore: 4 }, 4), 0.001);
     expect(noBest.events).toEqual(["hit"]);
+  });
+});
+
+describe("the restart delay", () => {
+  // Regression test for #36: a tap right after a crash restarted at once, skipping the panel.
+  const crash = () => advance(playing({ birdY: 650 }), 0.001).round;
+
+  it("ignores a press right after the round ends", () => {
+    const over = crash();
+    expect(canRestart(over)).toBe(false);
+    expect(pressFlap(over)).toEqual({ round: over, events: [] });
+  });
+
+  it("restarts on a press once RESTART_DELAY has passed", () => {
+    let over = crash();
+    over = advance(over, RESTART_DELAY / 2).round;
+    expect(pressFlap(over).round.phase).toBe("over");
+    over = advance(over, RESTART_DELAY / 2).round;
+    expect(canRestart(over)).toBe(true);
+    expect(pressFlap(over).round.phase).toBe("playing");
+  });
+
+  it("doesn't delay the first round", () => {
+    expect(canRestart(createRound(0))).toBe(true);
   });
 });

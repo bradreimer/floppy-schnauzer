@@ -37,5 +37,9 @@ export const PARALLAX_CLOUDS = 0.25; // 30 px/s
 export const PARALLAX_HILLS = 0.5; // 60 px/s
 export const PARALLAX_GROUND = 1; // 120 px/s, the pipe speed
 
+// After a round ends, presses are ignored this long, in seconds, so a frantic tap meant as a flap
+// doesn't skip the game-over panel. See #36.
+export const RESTART_DELAY = 0.5;
+
 // Frame time
 export const MAX_FRAME_TIME = 0.05; // Longest step, in seconds, that one frame may simulate

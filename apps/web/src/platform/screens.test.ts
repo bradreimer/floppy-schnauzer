@@ -4,10 +4,16 @@ import { createInitialState, type GameState } from "../game/physics";
 import type { Phase, Round } from "../game/round";
 import { describeScreen } from "./screens";
 
-const round = (phase: Phase, game: Partial<GameState> = {}, bestAtRoundStart = 0): Round => ({
+const round = (
+  phase: Phase,
+  game: Partial<GameState> = {},
+  bestAtRoundStart = 0,
+  sinceOver = 0
+): Round => ({
   phase,
   game: { ...createInitialState(), ...game },
-  bestAtRoundStart
+  bestAtRoundStart,
+  sinceOver
 });
 
 describe("describeScreen", () => {
@@ -24,9 +30,17 @@ describe("describeScreen", () => {
       kind: "over",
       score: 9,
       best: 9,
-      newBest: true
+      newBest: true,
+      canRestart: false
     });
     const tied = round("over", { score: 7, bestScore: 7, gameOver: true }, 7);
     expect(describeScreen(tied)).toMatchObject({ newBest: false });
+  });
+
+  it("offers a restart only once the restart delay has passed", () => {
+    const over = (sinceOver: number) =>
+      describeScreen(round("over", { gameOver: true }, 0, sinceOver));
+    expect(over(0.1)).toMatchObject({ canRestart: false });
+    expect(over(0.5)).toMatchObject({ canRestart: true });
   });
 });
