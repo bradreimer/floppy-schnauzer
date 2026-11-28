@@ -39,7 +39,7 @@ describe("GameUI", () => {
   it("draws the game-over panel, with NEW BEST! only for a new best", () => {
     const { ctx, texts } = recordingContext();
     const ui = new GameUI(ctx);
-    ui.draw({ kind: "over", score: 9, best: 9, newBest: true });
+    ui.draw({ kind: "over", score: 9, best: 9, newBest: true, canRestart: true });
     expect(texts).toEqual([
       "SCORE",
       "9",
@@ -49,8 +49,14 @@ describe("GameUI", () => {
     ]);
 
     texts.length = 0;
-    ui.draw({ kind: "over", score: 3, best: 9, newBest: false });
+    ui.draw({ kind: "over", score: 3, best: 9, newBest: false, canRestart: true });
     expect(texts).not.toContain("NEW BEST!");
+  });
+
+  it("holds back the play-again prompt until a press would restart", () => {
+    const { ctx, texts } = recordingContext();
+    new GameUI(ctx).draw({ kind: "over", score: 3, best: 9, newBest: false, canRestart: false });
+    expect(texts).toEqual(["SCORE", "3", "BEST: 9"]);
   });
 });
 

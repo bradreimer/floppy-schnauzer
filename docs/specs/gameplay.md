@@ -63,6 +63,8 @@ each pipe I pass, so that I have a quick game that's easy to learn and hard to m
   defines what each screen shows.
 - A tap while waiting or after a game over starts a new round from the initial state, keeps the
   best score, and flaps.
+- For 0.5 s after a round ends (`RESTART_DELAY`), presses are ignored, so a tap meant as a flap
+  doesn't skip the game-over panel ([#36](https://github.com/bradreimer/floppy-schnauzer/issues/36)).
 - Pressing Space anywhere in the window does exactly what a tap does. Holding it down flaps once,
   and it doesn't scroll the page. Other keys do nothing.
 - The schnauzer is 64 × 64 px (`BIRD_SIZE`). In the initial state it's at x = 100 (`BIRD_X`), y = 350, with a vertical speed of 0, no

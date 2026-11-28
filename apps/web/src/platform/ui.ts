@@ -63,7 +63,7 @@ export class GameUI {
     this.ctx.clearRect(0, 0, VIRTUAL_WIDTH, VIRTUAL_HEIGHT);
     if (screen.kind === "ready") this.drawReady(screen.best);
     else if (screen.kind === "playing") this.text(String(screen.score), 80, 48, "white");
-    else this.drawGameOver(screen.score, screen.best, screen.newBest);
+    else this.drawGameOver(screen.score, screen.best, screen.newBest, screen.canRestart);
   }
 
   private drawReady(best: number): void {
@@ -91,7 +91,7 @@ export class GameUI {
     if (best > 0) this.text(`Best: ${best}`, 515, 20, "white");
   }
 
-  private drawGameOver(score: number, best: number, newBest: boolean): void {
+  private drawGameOver(score: number, best: number, newBest: boolean, canRestart: boolean): void {
     const { ctx } = this;
 
     // The panel: a rounded card with a blue-to-purple gradient and a light blue border.
@@ -116,7 +116,8 @@ export class GameUI {
     this.text(`BEST: ${best}`, PANEL.y + 150, 20, "#b8c2e8", false);
     if (newBest) this.text("NEW BEST!", PANEL.y + 184, 20, "#ffd34d", false);
 
-    this.text("Tap or press Space to play again", PANEL.y + PANEL.h + 45, 22, "white");
+    if (canRestart)
+      this.text("Tap or press Space to play again", PANEL.y + PANEL.h + 45, 22, "white");
   }
 
   /** Draws centered bold text, with a dark outline for contrast over the game, and an optional glow. */

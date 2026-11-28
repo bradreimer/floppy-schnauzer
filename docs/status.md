@@ -13,6 +13,8 @@ visual changes since version 0.3 and the sound on an iPhone need the
 
 ## Completed
 
+- [#36](https://github.com/bradreimer/floppy-schnauzer/issues/36) Presses are ignored for 0.5 s after game over, and the play-again prompt
+  appears only then. In headless Chromium the prompt came 515 ms after the panel.
 - [#35](https://github.com/bradreimer/floppy-schnauzer/issues/35) The round flow is pure: `game/round.ts` returns the next round and events, and
   `app.ts` only plays sounds and saves the best. 7 new tests cover start, flap, restart, and saving.
 - [#34](https://github.com/bradreimer/floppy-schnauzer/issues/34) Pipes spawn by distance, so at most 4 exist and they're always 220 px apart.
@@ -61,7 +63,7 @@ None.
 ## Next
 
 - The rest of the [version 0.6 work items](roadmap.md#version-06-steady-and-shipped), in order:
-  #36 to #40.
+  #37 to #40.
 
 These need the maintainer:
 
