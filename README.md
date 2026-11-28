@@ -20,7 +20,7 @@ again.
 Your best score is saved in this browser, so it's still there when you come back.
 
 If your browser doesn't support WebGPU, the game shows "WebGPU not supported on this
-device/browser."
+device/browser." If anything else stops it from starting, it asks you to reload.
 
 ## Develop
 

@@ -13,6 +13,8 @@ visual changes since version 0.3 and the sound on an iPhone need the
 
 ## Completed
 
+- [#39](https://github.com/bradreimer/floppy-schnauzer/issues/39) The page is titled "Floppy Schnauzer", with a description and a dog-head icon. A
+  start-up failure says WebGPU is missing only when it is, and asks for a reload otherwise.
 - [#38](https://github.com/bradreimer/floppy-schnauzer/issues/38) Hashed files under `/assets/` are cached for a year and `index.html` is
   checked on every visit. Text is compressed: the script went from 11.7 KB to 5.7 KB with Brotli.
 - [#37](https://github.com/bradreimer/floppy-schnauzer/issues/37) The image has a Docker health check: the server checks its own `/api/health`.
@@ -67,7 +69,7 @@ None.
 ## Next
 
 - The rest of the [version 0.6 work items](roadmap.md#version-06-steady-and-shipped), in order:
-  #39 and #40.
+  #40.
 
 These need the maintainer:
 

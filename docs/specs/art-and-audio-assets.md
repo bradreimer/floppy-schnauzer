@@ -41,6 +41,7 @@ pixels. "Drawn at" is the size on the 400 × 700 virtual screen.
 | `clouds.png` | 400 × 650 | Yes | 400 × 650 | The second parallax layer |
 | `hills.png` | 400 × 550 | Yes | 400 × 550 | The third parallax layer |
 | `ground.png` | 800 × 160 | No | 400 × 80 | The front parallax layer, at 2× for sharp screens |
+| `icon.png` | 64 × 64 | No | Browser tab | The page icon: the dog head from `logo.png`, cropped at x 46 to 126 and y 168 to 248 |
 | `logo.png` | 624 × 416 | No | 360 × 70, cropped | The start screen's title card: white art on a solid dark background. Only the art and a 24 px margin are drawn, with rounded corners |
 | `audio/jump.wav` | 0.1 s, 44.1 kHz, mono | | | Plays on each flap |
 | `audio/score.wav` | 0.1 s, 44.1 kHz, mono | | | Plays when the score goes up |

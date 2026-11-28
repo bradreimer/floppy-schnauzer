@@ -2,6 +2,7 @@ import { Game } from "./app";
 import { initWebGPU } from "./engine/renderer";
 import { frameTime } from "./game/frame";
 import { layOutCanvases } from "./platform/layout";
+import { startupMessage } from "./platform/startup";
 import { GameUI } from "./platform/ui";
 
 async function start() {
@@ -53,7 +54,7 @@ async function start() {
     requestAnimationFrame(frame);
   } catch (err) {
     console.error(err);
-    overlay.textContent = "WebGPU not supported on this device/browser.";
+    overlay.textContent = startupMessage(err);
   }
 }
 
