@@ -25,7 +25,9 @@ app.UseStaticFiles(new StaticFileOptions
         context.Context.Response.Headers[HeaderNames.CacheControl] = CachePolicy.For(context.Context.Request.Path),
 });
 
-app.MapGet("/api/health", () => Results.Ok(new { status = "ok" }));
+// The version comes from the image: 0.6.0 for a release, edge-<commit> from main, dev otherwise.
+string version = Environment.GetEnvironmentVariable("FLOPPY_SCHNAUZER_VERSION") ?? "dev";
+app.MapGet("/api/health", () => Results.Ok(new { status = "ok", version }));
 
 await app.RunAsync().ConfigureAwait(false);
 return 0;

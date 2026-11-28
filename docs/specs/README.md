@@ -59,3 +59,4 @@ None.
 | [gameplay.md](gameplay.md) | Flap, pipes, scoring, game over, and the tuning numbers |
 | [art-and-audio-assets.md](art-and-audio-assets.md) | Every sprite and sound, with its size and use |
 | [screens.md](screens.md) | The start screen, the score, and the game-over panel |
+| [release.md](release.md) | Image tags, the publish and release workflows, and how to release |

@@ -51,10 +51,13 @@ cp .env.example .env
 docker compose -f docker/compose.yml --env-file .env up --build
 ```
 
-Then open `http://localhost:8080`. The server answers `GET /api/health` with
-`{"status":"ok"}`.
+Then open `http://localhost:8080`. The server answers `GET /api/health` with its status and
+version, such as `{"status":"ok","version":"dev"}`.
 Docker checks that endpoint every 30 s, so `docker ps` shows the container as `healthy` or
 `unhealthy`.
+
+Published images are at `ghcr.io/bradreimer/floppy-schnauzer`. Use a version tag such as `0.6.0`,
+or `latest` for the newest release. `edge` is the latest merge to `main`, for testing.
 
 ## Configuration
 

@@ -31,7 +31,9 @@ import {
   checkLicense,
   checkKnowledgeName,
   checkMentions,
+  checkPublishWorkflow,
   checkReadme,
+  checkReleaseWorkflow,
   checkSpec,
   checkStatus,
   checkTestProjects,
@@ -94,6 +96,20 @@ describe('secrets', () => {
 describe('README', () => {
   it('has the required sections and documents every variable', () => {
     assertNoProblems(checkReadme(read('README.md'), read('.env.example')).map((p) => `README.md: ${p}`));
+  });
+});
+
+describe('publish workflow', () => {
+  it('moves edge on main, builds on pull requests, and leaves latest to releases', () => {
+    assertNoProblems(
+      checkPublishWorkflow(read('.github/workflows/publish-image.yml')).map((p) => `publish-image.yml: ${p}`),
+    );
+  });
+});
+
+describe('release workflow', () => {
+  it('publishes a version only from a checked tag', () => {
+    assertNoProblems(checkReleaseWorkflow(read('.github/workflows/release.yml')).map((p) => `release.yml: ${p}`));
   });
 });
 

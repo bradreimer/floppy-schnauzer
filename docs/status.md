@@ -13,6 +13,9 @@ visual changes since version 0.3 and the sound on an iPhone need the
 
 ## Completed
 
+- [#40](https://github.com/bradreimer/floppy-schnauzer/issues/40) Merges to `main` push `edge`; a `v*.*.*` tag on a commit that passed CI pushes
+  that version and `latest`. `/api/health` reports the version. The first tag, `v0.6.0`, is the
+  maintainer's to push.
 - [#39](https://github.com/bradreimer/floppy-schnauzer/issues/39) The page is titled "Floppy Schnauzer", with a description and a dog-head icon. A
   start-up failure says WebGPU is missing only when it is, and asks for a reload otherwise.
 - [#38](https://github.com/bradreimer/floppy-schnauzer/issues/38) Hashed files under `/assets/` are cached for a year and `index.html` is
@@ -68,11 +71,9 @@ None.
 
 ## Next
 
-- The rest of the [version 0.6 work items](roadmap.md#version-06-steady-and-shipped), in order:
-  #40.
-
 These need the maintainer:
 
+- Push the first release tag, `v0.6.0`, as the [release spec](specs/release.md) describes.
 - Run the [play-test checklist](knowledge/play-test-checklist.md) on a desktop browser and an
   iPhone, record the result here, and close [#24](https://github.com/bradreimer/floppy-schnauzer/issues/24).
 - Record the prompts for `logo.png` and the sounds: [#25](https://github.com/bradreimer/floppy-schnauzer/issues/25).
