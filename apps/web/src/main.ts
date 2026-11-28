@@ -1,6 +1,7 @@
 import { Game } from "./app";
 import { initWebGPU } from "./engine/renderer";
 import { frameTime } from "./game/frame";
+import { layOutCanvases } from "./platform/layout";
 import { GameUI } from "./platform/ui";
 
 async function start() {
@@ -12,6 +13,10 @@ async function start() {
     console.error("Missing canvas, UI canvas, or overlay element");
     return;
   }
+
+  // Both canvases render at the virtual resolution and share one rectangle on the page.
+  layOutCanvases([canvas, uiCanvas]);
+  window.addEventListener("resize", () => layOutCanvases([canvas, uiCanvas]));
 
   try {
     // Initialize WebGPU
