@@ -41,8 +41,8 @@ and best, so that the game looks finished and I always know what to do next.
 
 ### Where the screens are drawn
 
-- `describeScreen` in `apps/web/src/platform/screens.ts` turns the game state into one of three
-  screen descriptions: ready, playing, or game over.
+- `describeScreen` in `apps/web/src/platform/screens.ts` turns the round (`game/round.ts`: the
+  phase and the game state) into one of three screen descriptions: ready, playing, or game over.
 - `GameUI` in `apps/web/src/platform/ui.ts` draws the description on the `<canvas id="ui">`, at the
   400 × 700 virtual resolution, once per frame.
 - The `#overlay` element shows only the "WebGPU not supported on this device/browser." message.

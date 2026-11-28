@@ -34,3 +34,7 @@ makes that the rule for all game logic.
   default, so a test passes a fixed one instead of replacing `Math.random`
   ([#22](https://github.com/bradreimer/floppy-schnauzer/issues/22)).
 - A new rule that needs the time or input receives it as an argument.
+- The round flow is pure too ([#35](https://github.com/bradreimer/floppy-schnauzer/issues/35)). `game/round.ts` holds the phase (ready, playing, or
+  over) beside the `GameState`, and `pressFlap` and `advance` return the next round plus events
+  such as `jump`, `hit`, and `saveBest`. `app.ts` only applies the events: it plays the sound or
+  saves the score.

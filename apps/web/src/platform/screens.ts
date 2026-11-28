@@ -1,4 +1,4 @@
-import type { GameState } from "../game/physics";
+import type { Round } from "../game/round";
 
 /** What the UI canvas shows. See docs/specs/screens.md. */
 export type Screen =
@@ -6,21 +6,13 @@ export type Screen =
   | { kind: "playing"; score: number }
   | { kind: "over"; score: number; best: number; newBest: boolean };
 
-/** Where the game is between rounds, beside the GameState that the rules own. */
-export interface RoundStatus {
-  /** True once the first round has started. */
-  started: boolean;
-  /** The best score when the current or last round began. */
-  bestAtRoundStart: number;
-}
-
-export function describeScreen(state: GameState, round: RoundStatus): Screen {
-  if (!round.started) return { kind: "ready", best: state.bestScore };
-  if (!state.gameOver) return { kind: "playing", score: state.score };
+export function describeScreen({ phase, game, bestAtRoundStart }: Round): Screen {
+  if (phase === "ready") return { kind: "ready", best: game.bestScore };
+  if (phase === "playing") return { kind: "playing", score: game.score };
   return {
     kind: "over",
-    score: state.score,
-    best: state.bestScore,
-    newBest: state.bestScore > round.bestAtRoundStart
+    score: game.score,
+    best: game.bestScore,
+    newBest: game.bestScore > bestAtRoundStart
   };
 }

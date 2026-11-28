@@ -13,6 +13,8 @@ visual changes since version 0.3 and the sound on an iPhone need the
 
 ## Completed
 
+- [#35](https://github.com/bradreimer/floppy-schnauzer/issues/35) The round flow is pure: `game/round.ts` returns the next round and events, and
+  `app.ts` only plays sounds and saves the best. 7 new tests cover start, flap, restart, and saving.
 - [#34](https://github.com/bradreimer/floppy-schnauzer/issues/34) Pipes spawn by distance, so at most 4 exist and they're always 220 px apart.
   Before, a 10-minute round kept 99 pipes, the farthest 21,680 px off-screen.
 - [#26](https://github.com/bradreimer/floppy-schnauzer/issues/26) The project is under the MIT License: `LICENSE`, the `license` field of each
@@ -59,7 +61,7 @@ None.
 ## Next
 
 - The rest of the [version 0.6 work items](roadmap.md#version-06-steady-and-shipped), in order:
-  #35 to #40.
+  #36 to #40.
 
 These need the maintainer:
 
