@@ -23,3 +23,4 @@ A knowledge document describes. It doesn't decide and it doesn't promise:
 | --- | --- | --- |
 | [rendering-pipeline.md](rendering-pipeline.md) | How one frame goes from a tap to pixels: the loop, the rules, the scene, and the WebGPU sprite pipeline | Read from the code on 2026-11-27 |
 | [web-app-development.md](web-app-development.md) | How to run, test, and change the game, and the Vite and TypeScript settings that matter | Written with the quality gates, #2, on 2026-11-27 |
+| [play-test-checklist.md](play-test-checklist.md) | The 17 checks to run by hand on a real browser and an iPhone before a release | Written for [#24](https://github.com/bradreimer/floppy-schnauzer/issues/24) on 2026-11-28, from the specs. Not run yet |

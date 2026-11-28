@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-Version 0.5, **Lean and tidy**: the nine work items in the
+Version 0.5, **Lean and tidy**: the eight work items in the
 [roadmap](roadmap.md#version-05-lean-and-tidy), done one pull request at a time. Version 0.4
 merged in [#18](https://github.com/bradreimer/floppy-schnauzer/pull/18).
 
@@ -12,6 +12,8 @@ play-test checklist from [#24](https://github.com/bradreimer/floppy-schnauzer/is
 
 ## Completed
 
+- [#24](https://github.com/bradreimer/floppy-schnauzer/issues/24) The [play-test checklist](knowledge/play-test-checklist.md) lists 17 checks to run by
+  hand. It hasn't been run yet, so the issue stays open.
 - [#23](https://github.com/bradreimer/floppy-schnauzer/issues/23) `initWebGPU` no longer looks up `#ui` or reconfigures the context on resize. A pure
   `fitToWindow` computes the letterbox, and `layOutCanvases` applies it to both canvases.
 - [#22](https://github.com/bradreimer/floppy-schnauzer/issues/22) `updatePhysics` takes its random number generator as an argument, so no test
@@ -51,4 +53,9 @@ None.
 
 ## Next
 
-- The rest of the [version 0.5 work items](roadmap.md#version-05-lean-and-tidy), in order: #24 by Claude, then #24's run, #25, and #26 by the maintainer.
+These need the maintainer:
+
+- Run the [play-test checklist](knowledge/play-test-checklist.md) on a desktop browser and an
+  iPhone, record the result here, and close [#24](https://github.com/bradreimer/floppy-schnauzer/issues/24).
+- Record the prompts for `logo.png` and the sounds: [#25](https://github.com/bradreimer/floppy-schnauzer/issues/25).
+- Decide whether the project has a license: [#26](https://github.com/bradreimer/floppy-schnauzer/issues/26).
