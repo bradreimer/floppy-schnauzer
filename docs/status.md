@@ -13,6 +13,8 @@ visual changes since version 0.3 and the sound on an iPhone need the
 
 ## Completed
 
+- [#38](https://github.com/bradreimer/floppy-schnauzer/issues/38) Hashed files under `/assets/` are cached for a year and `index.html` is
+  checked on every visit. Text is compressed: the script went from 11.7 KB to 5.7 KB with Brotli.
 - [#37](https://github.com/bradreimer/floppy-schnauzer/issues/37) The image has a Docker health check: the server checks its own `/api/health`.
   A container built from it reported `healthy` within 30 s.
 - [#36](https://github.com/bradreimer/floppy-schnauzer/issues/36) Presses are ignored for 0.5 s after game over, and the play-again prompt
@@ -65,7 +67,7 @@ None.
 ## Next
 
 - The rest of the [version 0.6 work items](roadmap.md#version-06-steady-and-shipped), in order:
-  #38 to #40.
+  #39 and #40.
 
 These need the maintainer:
 

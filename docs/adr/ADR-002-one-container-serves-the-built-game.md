@@ -36,3 +36,7 @@ The Vite build writes only to `apps/web/dist`. It never writes into the server's
 - Docker checks the container's health every 30 s ([#37](https://github.com/bradreimer/floppy-schnauzer/issues/37)). The runtime image has no `curl`
   or `wget`, so `dotnet FloppySchnauzer.Api.dll healthcheck` requests `/api/health` from inside
   the container and exits 0 or 1. `docker ps` shows `healthy` or `unhealthy`.
+- The server sets caching by path ([#38](https://github.com/bradreimer/floppy-schnauzer/issues/38)). Vite names each built file under `/assets/`
+  with a hash of its content, so those are cached for a year (`public, max-age=31536000,
+  immutable`). Everything else, above all `index.html`, gets `no-cache`. Text responses are
+  compressed with Brotli or gzip; on 2026-11-28 the game's script went from 11.7 KB to 5.7 KB.
