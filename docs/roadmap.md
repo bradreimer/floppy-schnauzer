@@ -13,6 +13,22 @@ number aren't scoped yet. They become GitHub Issues when work on their version s
 | 0.3 | Fair and smooth | Fix the known defects in the [gameplay spec](specs/gameplay.md#open-questions): [#5](https://github.com/bradreimer/floppy-schnauzer/issues/5) to [#10](https://github.com/bradreimer/floppy-schnauzer/issues/10), all fixed | Each fix has a regression test (done), and the game plays the same at 60 Hz and 120 Hz (not yet checked in a real browser) |
 | 0.4 | Polish | A start screen with the logo and a game-over score panel ([#17](https://github.com/bradreimer/floppy-schnauzer/issues/17)), the best score kept between visits ([#16](https://github.com/bradreimer/floppy-schnauzer/issues/16)), and the Space key ([#15](https://github.com/bradreimer/floppy-schnauzer/issues/15)) | Each item has a test, and the three screens are checked in a screenshot |
 | 0.5 | Lean and tidy | The work items below, in order | Each item merged with its tests, and the play-test checklist run once by the maintainer |
+| 0.6 | Steady and shipped | The work items below, from the code review on 2026-11-28 | Each item merged with its tests, and a first tagged release |
+
+## Version 0.6: steady and shipped
+
+From the second code review, on 2026-11-28. Claude does each in order, one pull request at a
+time.
+
+| Order | Work item | What |
+| --- | --- | --- |
+| 1 | [#34](https://github.com/bradreimer/floppy-schnauzer/issues/34) | Bug: pipes piled up off-screen, 99 after 10 minutes. Spawn them by distance |
+| 2 | [#35](https://github.com/bradreimer/floppy-schnauzer/issues/35) | Move the round flow (start, flap, restart, save the best) into pure functions |
+| 3 | [#36](https://github.com/bradreimer/floppy-schnauzer/issues/36) | Ignore presses for 0.5 s after game over, so a frantic tap doesn't skip the panel |
+| 4 | [#37](https://github.com/bradreimer/floppy-schnauzer/issues/37) | A Docker health check |
+| 5 | [#38](https://github.com/bradreimer/floppy-schnauzer/issues/38) | Cache headers for hashed assets, and response compression |
+| 6 | [#39](https://github.com/bradreimer/floppy-schnauzer/issues/39) | Page title, icon, separate start-up error messages, and unused fields |
+| 7 | [#40](https://github.com/bradreimer/floppy-schnauzer/issues/40) | Tagged releases: `latest` moves only when a version is tagged |
 
 ## Version 0.5: lean and tidy
 

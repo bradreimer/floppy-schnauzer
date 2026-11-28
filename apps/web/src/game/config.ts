@@ -20,7 +20,11 @@ export const PIPE_WIDTH = 70;
 export const PIPE_SPACING = 220; // Horizontal distance from one pipe to the next
 export const PIPE_SPEED = 120; // Pipes enter screen in ~2 seconds
 export const PIPE_GAP = 270; // Good difficulty for 700px height
-export const PIPE_SPAWN_INTERVAL = 1.4;
+// Pipes spawn by distance, not time, so exactly the pipes that are needed exist. A new pipe
+// appears PIPE_SPACING right of the last one as soon as the last one has moved in to
+// PIPE_SPAWN_X - PIPE_SPACING. A pipe arrives every PIPE_SPACING / PIPE_SPEED = 1.83 s.
+export const PIPE_SPAWN_X = VIRTUAL_WIDTH + 50; // Just past the right edge of the screen
+export const FIRST_PIPE_X = 840; // The first pipe reaches the schnauzer about 5.6 s into a round
 
 // Ground collision
 export const GROUND_HEIGHT = 80; // The ground art is drawn from FLOOR_Y to the bottom

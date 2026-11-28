@@ -2,16 +2,19 @@
 
 ## Current milestone
 
-Version 0.5, **Lean and tidy**: the eight work items in the
-[roadmap](roadmap.md#version-05-lean-and-tidy), done one pull request at a time. Version 0.4
-merged in [#18](https://github.com/bradreimer/floppy-schnauzer/pull/18).
+Version 0.6, **Steady and shipped**: the seven work items in the
+[roadmap](roadmap.md#version-06-steady-and-shipped), done one pull request at a time. Version 0.5
+is merged, except the play-test run ([#24](https://github.com/bradreimer/floppy-schnauzer/issues/24)) and the art prompts ([#25](https://github.com/bradreimer/floppy-schnauzer/issues/25)), which need
+the maintainer.
 
 **Still not checked in a real browser:** the WebGPU canvas is black in headless Chromium, so the
-version 0.3 and 0.4 visual changes, the sound on an iPhone, and the "NEW BEST!" label need the
-play-test checklist from [#24](https://github.com/bradreimer/floppy-schnauzer/issues/24).
+visual changes since version 0.3 and the sound on an iPhone need the
+[play-test checklist](knowledge/play-test-checklist.md).
 
 ## Completed
 
+- [#34](https://github.com/bradreimer/floppy-schnauzer/issues/34) Pipes spawn by distance, so at most 4 exist and they're always 220 px apart.
+  Before, a 10-minute round kept 99 pipes, the farthest 21,680 px off-screen.
 - [#26](https://github.com/bradreimer/floppy-schnauzer/issues/26) The project is under the MIT License: `LICENSE`, the `license` field of each
   `package.json`, and the C# file header. An organization test keeps them in agreement.
 - [#24](https://github.com/bradreimer/floppy-schnauzer/issues/24) The [play-test checklist](knowledge/play-test-checklist.md) lists 17 checks to run by
@@ -54,6 +57,9 @@ play-test checklist from [#24](https://github.com/bradreimer/floppy-schnauzer/is
 None.
 
 ## Next
+
+- The rest of the [version 0.6 work items](roadmap.md#version-06-steady-and-shipped), in order:
+  #35 to #40.
 
 These need the maintainer:
 

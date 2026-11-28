@@ -5,11 +5,11 @@ import {
   GRAVITY,
   PIPE_GAP,
   PIPE_SPACING,
-  PIPE_SPAWN_INTERVAL,
+  FIRST_PIPE_X,
+  PIPE_SPAWN_X,
   PIPE_SPEED,
   PIPE_WIDTH,
-  VIRTUAL_HEIGHT,
-  VIRTUAL_WIDTH
+  VIRTUAL_HEIGHT
 } from "./config";
 
 export interface Pipe {
@@ -25,8 +25,6 @@ export interface GameState {
   birdVelY: number;
 
   pipes: Pipe[];
-
-  timeSinceLastPipe: number;
 
   /** How far the world has scrolled left this round, in px. The scene derives the parallax from it. */
   scrollX: number;
@@ -50,7 +48,6 @@ export function createInitialState(): GameState {
     birdVelY: 0,
 
     pipes: [],
-    timeSinceLastPipe: 0,
 
     scrollX: 0,
     roundTime: 0,
@@ -76,7 +73,7 @@ export function updatePhysics(
   random: () => number = Math.random
 ): GameState {
   const { birdX } = state;
-  let { birdY, birdVelY, pipes, timeSinceLastPipe, score, bestScore, gameOver } = state;
+  let { birdY, birdVelY, pipes, score, bestScore, gameOver } = state;
 
   if (gameOver) {
     return state;
@@ -119,18 +116,16 @@ export function updatePhysics(
   // ------------------------------------------------------------
   // Pipe spawning
   // ------------------------------------------------------------
-  timeSinceLastPipe += dt;
+  // By distance: the next pipe goes PIPE_SPACING right of the last one, once the last one is far
+  // enough in that the new one starts at or before PIPE_SPAWN_X. See #34.
+  const lastPipe = pipes[pipes.length - 1];
+  const spawnX = lastPipe ? lastPipe.x + PIPE_SPACING : FIRST_PIPE_X;
 
-  if (timeSinceLastPipe > PIPE_SPAWN_INTERVAL) {
-    timeSinceLastPipe = 0;
-
-    const lastPipe = pipes[pipes.length - 1];
-    const lastX = lastPipe?.x ?? VIRTUAL_WIDTH + 50;
-
+  if (!lastPipe || spawnX <= PIPE_SPAWN_X) {
     const topHeight = random() * (VIRTUAL_HEIGHT - PIPE_GAP - 200) + 50;
 
     pipes.push({
-      x: lastX + PIPE_SPACING,
+      x: spawnX,
       top: topHeight,
       bottom: topHeight + PIPE_GAP,
       scored: false
@@ -176,7 +171,6 @@ export function updatePhysics(
     birdY,
     birdVelY,
     pipes,
-    timeSinceLastPipe,
     scrollX,
     roundTime,
     score,
