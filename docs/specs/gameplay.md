@@ -90,7 +90,8 @@ Each frame, with the frame time `dt` in seconds:
 - A new pipe spawns when more than 1.4 s (`PIPE_SPAWN_INTERVAL`) have passed since the last one.
 - A new pipe's x is 220 px (`PIPE_SPACING`) right of the last pipe, or 450 when there are no
   pipes.
-- `top` is a random number from 50 up to, but not including, 280.
+- `top` is a random number from 50 up to, but not including, 280. The random number comes from the
+  `random` argument of `updatePhysics`, which is `Math.random` in the game.
 
 ### Scoring
 

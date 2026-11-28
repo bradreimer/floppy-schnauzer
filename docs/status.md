@@ -12,6 +12,8 @@ play-test checklist from [#24](https://github.com/bradreimer/floppy-schnauzer/is
 
 ## Completed
 
+- [#22](https://github.com/bradreimer/floppy-schnauzer/issues/22) `updatePhysics` takes its random number generator as an argument, so no test
+  replaces `Math.random`.
 - [#21](https://github.com/bradreimer/floppy-schnauzer/issues/21) Texture names have a type, so a misspelled name fails the type check.
 - [#20](https://github.com/bradreimer/floppy-schnauzer/issues/20) The 7 textures load in parallel, and the debug log on each load is gone.
 - [#19](https://github.com/bradreimer/floppy-schnauzer/issues/19) `ground.png` is 800 × 160 and 132 KB instead of 5856 × 704 and 4.1 MB, and an
@@ -47,5 +49,5 @@ None.
 
 ## Next
 
-- The rest of the [version 0.5 work items](roadmap.md#version-05-lean-and-tidy), in order: #22 to
+- The rest of the [version 0.5 work items](roadmap.md#version-05-lean-and-tidy), in order: #23 and
   #24 by Claude, then #24's run, #25, and #26 by the maintainer.

@@ -65,7 +65,16 @@ export function createInitialState(): GameState {
 // ------------------------------------------------------------
 // Main physics update
 // ------------------------------------------------------------
-export function updatePhysics(state: GameState, dt: number): GameState {
+/**
+ * Advances the game by dt seconds and returns the new state. `random` returns a number from 0 up
+ * to, but not including, 1, like Math.random. It places each new pipe's gap, and a test passes a
+ * fixed function so the result is repeatable.
+ */
+export function updatePhysics(
+  state: GameState,
+  dt: number,
+  random: () => number = Math.random
+): GameState {
   const { birdX } = state;
   let { birdY, birdVelY, pipes, timeSinceLastPipe, score, bestScore, gameOver } = state;
 
@@ -118,7 +127,7 @@ export function updatePhysics(state: GameState, dt: number): GameState {
     const lastPipe = pipes[pipes.length - 1];
     const lastX = lastPipe?.x ?? VIRTUAL_WIDTH + 50;
 
-    const topHeight = Math.random() * (VIRTUAL_HEIGHT - PIPE_GAP - 200) + 50;
+    const topHeight = random() * (VIRTUAL_HEIGHT - PIPE_GAP - 200) + 50;
 
     pipes.push({
       x: lastX + PIPE_SPACING,

@@ -46,11 +46,9 @@ secure, or serve the dev server over HTTPS.
 ## Writing a test
 
 Tests sit next to the code, named `*.test.ts`. A rule in `src/game/` takes a `GameState` and
-returns a new one, so a test builds a state, calls the rule, and checks the result. For a rule
-that uses `Math.random`, replace it in the test:
+returns a new one, so a test builds a state, calls the rule, and checks the result. A rule that
+needs randomness takes a `random` function, so a test passes a fixed one:
 
 ```ts
-vi.spyOn(Math, "random").mockReturnValue(0);
+updatePhysics(state, 0.01, () => 0); // the lowest possible gap position
 ```
-
-Restore it after each test with `vi.restoreAllMocks()` in `afterEach`.
