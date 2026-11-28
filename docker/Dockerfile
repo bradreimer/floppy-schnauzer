@@ -41,4 +41,9 @@ COPY --from=web /web/dist/ ./wwwroot/
 USER $APP_UID
 EXPOSE 8080
 
+# The image has no curl or wget, so the server checks itself: it requests /api/health and exits 0
+# when the answer is ok. "docker ps" shows the result as healthy or unhealthy.
+HEALTHCHECK --interval=30s --timeout=10s --start-period=10s --retries=3 \
+    CMD ["dotnet", "/app/FloppySchnauzer.Api.dll", "healthcheck"]
+
 ENTRYPOINT ["dotnet", "FloppySchnauzer.Api.dll"]

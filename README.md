@@ -53,6 +53,8 @@ docker compose -f docker/compose.yml --env-file .env up --build
 
 Then open `http://localhost:8080`. The server answers `GET /api/health` with
 `{"status":"ok"}`.
+Docker checks that endpoint every 30 s, so `docker ps` shows the container as `healthy` or
+`unhealthy`.
 
 ## Configuration
 

@@ -13,6 +13,8 @@ visual changes since version 0.3 and the sound on an iPhone need the
 
 ## Completed
 
+- [#37](https://github.com/bradreimer/floppy-schnauzer/issues/37) The image has a Docker health check: the server checks its own `/api/health`.
+  A container built from it reported `healthy` within 30 s.
 - [#36](https://github.com/bradreimer/floppy-schnauzer/issues/36) Presses are ignored for 0.5 s after game over, and the play-again prompt
   appears only then. In headless Chromium the prompt came 515 ms after the panel.
 - [#35](https://github.com/bradreimer/floppy-schnauzer/issues/35) The round flow is pure: `game/round.ts` returns the next round and events, and
@@ -63,7 +65,7 @@ None.
 ## Next
 
 - The rest of the [version 0.6 work items](roadmap.md#version-06-steady-and-shipped), in order:
-  #37 to #40.
+  #38 to #40.
 
 These need the maintainer:
 
