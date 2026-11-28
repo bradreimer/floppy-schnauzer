@@ -8,18 +8,29 @@ import pipeBottom from "../assets/pipe-bottom.png";
 import pipeTop from "../assets/pipe-top.png";
 import schnauzer from "../assets/schnauzer.png";
 
-async function loadTexture(device: GPUDevice, url: string) {
+/** The URL of each texture's image, by the name sprites use. */
+export const TEXTURE_URLS = {
+  sky,
+  clouds,
+  hills,
+  ground,
+  pipeTop,
+  pipeBottom,
+  schnauzer
+} as const;
+
+/** Decodes one image and copies it into a new GPU texture. */
+async function loadTexture(device: GPUDevice, url: string): Promise<GPUTexture> {
   const img = new Image();
   img.src = url;
 
   await img.decode();
   const bmp = await createImageBitmap(img);
 
-  console.warn("Loaded texture", url, bmp.width, bmp.height);
-
   const tex = device.createTexture({
     size: [bmp.width, bmp.height, 1],
     format: "rgba8unorm",
+    // copyExternalImageToTexture needs RENDER_ATTACHMENT as well as COPY_DST on its destination.
     usage:
       GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST | GPUTextureUsage.RENDER_ATTACHMENT
   });
@@ -32,16 +43,18 @@ async function loadTexture(device: GPUDevice, url: string) {
   return tex;
 }
 
-export async function loadTextures(device: GPUDevice) {
-  return {
-    sky: await loadTexture(device, sky),
-    clouds: await loadTexture(device, clouds),
-    hills: await loadTexture(device, hills),
-    ground: await loadTexture(device, ground),
+export type TextureName = keyof typeof TEXTURE_URLS;
 
-    pipeTop: await loadTexture(device, pipeTop),
-    pipeBottom: await loadTexture(device, pipeBottom),
+/** Starts a load for every texture at once, and resolves when all have loaded. */
+export async function loadAll<T>(
+  load: (url: string) => Promise<T>
+): Promise<Record<TextureName, T>> {
+  const names = Object.keys(TEXTURE_URLS) as TextureName[];
+  const loaded = await Promise.all(names.map(name => load(TEXTURE_URLS[name])));
+  return Object.fromEntries(names.map((name, i) => [name, loaded[i]])) as Record<TextureName, T>;
+}
 
-    schnauzer: await loadTexture(device, schnauzer)
-  };
+/** Loads every sprite texture onto the GPU, in parallel. */
+export function loadTextures(device: GPUDevice): Promise<Record<TextureName, GPUTexture>> {
+  return loadAll(url => loadTexture(device, url));
 }

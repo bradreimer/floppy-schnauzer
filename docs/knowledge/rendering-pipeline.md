@@ -91,5 +91,6 @@ for every sprite in every frame: 2,833 of each.
 ## Textures
 
 `engine/textures.ts` imports each PNG through Vite, decodes it with `createImageBitmap`, and
-copies it into an `rgba8unorm` texture. The textures load one after another, before the first
-frame.
+copies it into an `rgba8unorm` texture. `loadAll` starts all 7 loads at once with `Promise.all`,
+and the first frame waits until every texture has loaded. `TextureName` is the type of the names
+sprites use.
