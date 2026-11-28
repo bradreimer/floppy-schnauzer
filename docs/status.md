@@ -12,6 +12,8 @@ play-test checklist from [#24](https://github.com/bradreimer/floppy-schnauzer/is
 
 ## Completed
 
+- [#23](https://github.com/bradreimer/floppy-schnauzer/issues/23) `initWebGPU` no longer looks up `#ui` or reconfigures the context on resize. A pure
+  `fitToWindow` computes the letterbox, and `layOutCanvases` applies it to both canvases.
 - [#22](https://github.com/bradreimer/floppy-schnauzer/issues/22) `updatePhysics` takes its random number generator as an argument, so no test
   replaces `Math.random`.
 - [#21](https://github.com/bradreimer/floppy-schnauzer/issues/21) Texture names have a type, so a misspelled name fails the type check.
@@ -49,5 +51,4 @@ None.
 
 ## Next
 
-- The rest of the [version 0.5 work items](roadmap.md#version-05-lean-and-tidy), in order: #23 and
-  #24 by Claude, then #24's run, #25, and #26 by the maintainer.
+- The rest of the [version 0.5 work items](roadmap.md#version-05-lean-and-tidy), in order: #24 by Claude, then #24's run, #25, and #26 by the maintainer.

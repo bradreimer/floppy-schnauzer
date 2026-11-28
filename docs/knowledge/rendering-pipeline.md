@@ -34,7 +34,10 @@ starts a round if none is running, sets the vertical speed to the jump speed, an
 ## Three layers on the page
 
 `index.html` stacks three elements, all 400 × 700 virtual pixels and scaled by CSS
-([ADR-003](../adr/ADR-003-a-fixed-virtual-resolution.md)):
+([ADR-003](../adr/ADR-003-a-fixed-virtual-resolution.md)). `layOutCanvases` in
+`platform/layout.ts` places both canvases on the rectangle that `fitToWindow` returns, at start-up
+and on every window resize. `initWebGPU` configures the WebGPU context once; a resize doesn't
+change it.
 
 | z-index | Element | Drawn by | Takes taps |
 | --- | --- | --- | --- |
