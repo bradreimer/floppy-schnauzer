@@ -53,6 +53,7 @@ The checks are defined in [specs/quality-gates.md](specs/quality-gates.md).
 
 ## Releases
 
-A push to `main` builds the Docker image and pushes it to the GitHub Container Registry as
-`latest`, the branch name, and the commit. A `v*` tag also pushes the version. A release needs its
-work items completed, tests passing, and documentation updated.
+A merge to `main` pushes the Docker image as `edge` and `sha-<commit>`. Pushing a tag such as
+`v0.6.0` publishes that version and moves `latest`, after checking that the commit is on `main`
+and passed CI. A release needs its work items completed, tests passing, and documentation updated.
+The steps are in the [release spec](specs/release.md).

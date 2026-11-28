@@ -29,9 +29,14 @@ RUN dotnet publish src/FloppySchnauzer.Api -c Release --no-restore -o /app
 # Stage 3 is the image that runs. It holds the ASP.NET Core runtime only.
 FROM mcr.microsoft.com/dotnet/aspnet:10.0
 
+# The publish and release workflows pass the version, such as 0.6.0 or edge-1a2b3c4.
+# /api/health reports it.
+ARG VERSION=dev
+
 # Inside the container, the server listens on port 8080.
 ENV ASPNETCORE_HTTP_PORTS=8080 \
-    DOTNET_EnableDiagnostics=0
+    DOTNET_EnableDiagnostics=0 \
+    FLOPPY_SCHNAUZER_VERSION=$VERSION
 
 WORKDIR /app
 COPY --from=build /app ./

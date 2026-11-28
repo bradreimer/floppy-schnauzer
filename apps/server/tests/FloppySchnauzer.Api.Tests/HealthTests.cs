@@ -25,7 +25,10 @@ public sealed class HealthTests : IClassFixture<WebApplicationFactory<Program>>
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         HealthBody? body = await response.Content.ReadFromJsonAsync<HealthBody>();
         Assert.Equal("ok", body?.Status);
+
+        // Outside the image, FLOPPY_SCHNAUZER_VERSION isn't set, so the version is "dev".
+        Assert.Equal(Environment.GetEnvironmentVariable("FLOPPY_SCHNAUZER_VERSION") ?? "dev", body?.Version);
     }
 
-    private sealed record HealthBody(string Status);
+    private sealed record HealthBody(string Status, string Version);
 }

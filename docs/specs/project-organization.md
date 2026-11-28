@@ -79,6 +79,12 @@ that the repository stays organized without me policing it.
   order.
 - It documents, in code format, every variable in `.env.example`, including commented ones.
 
+### Workflows
+
+- `.github/workflows/ci.yml` runs `./scripts/check.sh`.
+- `.github/workflows/publish-image.yml` and `.github/workflows/release.yml` follow the
+  [release spec](release.md), and organization tests check their safeguards.
+
 ### The docs folder
 
 - `docs/` holds exactly five files and three folders: `README.md`, `development-workflow.md`,

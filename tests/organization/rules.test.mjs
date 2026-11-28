@@ -20,7 +20,9 @@ import {
   checkLicense,
   checkKnowledgeName,
   checkMentions,
+  checkPublishWorkflow,
   checkReadme,
+  checkReleaseWorkflow,
   checkSpec,
   checkStatus,
   checkTestProjects,
@@ -365,5 +367,45 @@ describe('checkLicense', () => {
       'a/package.json: "license" must be "MIT"',
       'b/package.json: "license" must be "MIT"',
     ]);
+  });
+});
+
+describe('checkReleaseWorkflow', () => {
+  const good = [
+    'on:\n  push:\n    tags: ["v*.*.*"]',
+    'git merge-base --is-ancestor "$GITHUB_SHA" origin/main',
+    'gh run list --workflow CI --commit "$SHA" \\\n  --status success',
+    'VERSION=${{ steps.version.outputs.version }}',
+    'tags: |\n  img:${{ steps.version.outputs.version }}\n  img:latest',
+  ].join('\n');
+
+  it('passes a workflow with every safeguard', () => {
+    assert.deepEqual(checkReleaseWorkflow(good), []);
+  });
+
+  it('names each missing safeguard, and rejects a branch trigger', () => {
+    assert.match(checkReleaseWorkflow(good.replace('merge-base --is-ancestor', 'true')).join(), /on main/);
+    assert.match(checkReleaseWorkflow(good.replace('--status success', '')).join(), /CI passed/);
+    assert.match(checkReleaseWorkflow(good.replace('img:latest', '')).join(), /latest/);
+    assert.match(checkReleaseWorkflow(good + '\n    branches: [main]').join(), /branches/);
+  });
+});
+
+describe('checkPublishWorkflow', () => {
+  const good = [
+    "push: ${{ github.event_name != 'pull_request' }}",
+    'build-args: |\n  VERSION=${{ steps.version.outputs.version }}',
+    'tags: |\n  img:edge\n  img:sha-${{ github.sha }}',
+  ].join('\n');
+
+  it('passes edge and the commit tag, and ignores a comment about latest', () => {
+    assert.deepEqual(checkPublishWorkflow(good + '\n# "latest" is for releases'), []);
+  });
+
+  it('rejects latest, a missing tag, and pushing from a pull request', () => {
+    assert.match(checkPublishWorkflow(good + '\n  img:latest').join(), /not push latest/);
+    assert.match(checkPublishWorkflow(good.replace('img:edge', '')).join(), /push edge/);
+    assert.match(checkPublishWorkflow(good.replace('img:sha-', 'img:')).join(), /commit tag/);
+    assert.match(checkPublishWorkflow(good.replace("push: ${{ github.event_name != 'pull_request' }}", 'push: true')).join(), /pull request/);
   });
 });

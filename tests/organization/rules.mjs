@@ -371,6 +371,44 @@ export function checkAssetTable(specMarkdown, assetFiles) {
   return problems;
 }
 
+/**
+ * The release workflow runs only for a version tag, refuses a commit that is off main or has no
+ * passing CI run, and pushes the version and "latest", with the version passed to the build.
+ */
+export function checkReleaseWorkflow(yaml) {
+  const required = [
+    [/tags:\s*\["v\*\.\*\.\*"\]/, 'must run only for tags that match v*.*.*'],
+    [/merge-base --is-ancestor/, 'must check that the tagged commit is on main'],
+    [/gh run list[\s\S]*--workflow CI[\s\S]*--status success/, 'must check that CI passed on the tagged commit'],
+    [/:\$\{\{ steps\.version\.outputs\.version \}\}/, 'must push the version tag'],
+    [/:latest/, 'must push latest'],
+    [/VERSION=\$\{\{ steps\.version\.outputs\.version \}\}/, 'must pass the version to the build'],
+  ];
+  const problems = required.filter(([pattern]) => !pattern.test(yaml)).map(([, text]) => text);
+  if (/branches:/.test(yaml)) problems.push('must not run for branches');
+  return problems;
+}
+
+/**
+ * The main-branch publish workflow pushes "edge" and the commit tag, never "latest", and builds
+ * without pushing on a pull request.
+ */
+export function checkPublishWorkflow(yaml) {
+  const problems = [];
+  if (!/:edge\b/.test(yaml)) problems.push('must push edge');
+  if (!/:sha-/.test(yaml)) problems.push('must push the commit tag');
+  if (!/VERSION=\$\{\{ steps\.version\.outputs\.version \}\}/.test(yaml)) {
+    problems.push('must pass the version to the build');
+  }
+  if (!/push: \$\{\{ github\.event_name != 'pull_request' \}\}/.test(yaml)) {
+    problems.push('must build without pushing on a pull request');
+  }
+  if (/:latest\b/.test(yaml.replace(/^\s*#.*$/gm, ''))) {
+    problems.push('must not push latest, which is for releases only');
+  }
+  return problems;
+}
+
 /** Returns the width and height of a PNG from its header, or null for a file that isn't a PNG. */
 export function pngSize(bytes) {
   const signature = [0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a];
