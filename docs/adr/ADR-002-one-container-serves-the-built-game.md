@@ -33,3 +33,6 @@ The Vite build writes only to `apps/web/dist`. It never writes into the server's
 - The game and the API share one origin, so the game needs no CORS settings.
 - The image is about the size of the ASP.NET Core runtime plus the game's assets.
 - `docker/compose.yml` runs the image locally with the settings in `.env`.
+- Docker checks the container's health every 30 s ([#37](https://github.com/bradreimer/floppy-schnauzer/issues/37)). The runtime image has no `curl`
+  or `wget`, so `dotnet FloppySchnauzer.Api.dll healthcheck` requests `/api/health` from inside
+  the container and exits 0 or 1. `docker ps` shows `healthy` or `unhealthy`.
