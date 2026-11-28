@@ -45,7 +45,10 @@ and best, so that the game looks finished and I always know what to do next.
   phase and the game state) into one of three screen descriptions: ready, playing, or game over.
 - `GameUI` in `apps/web/src/platform/ui.ts` draws the description on the `<canvas id="ui">`, at the
   400 × 700 virtual resolution, once per frame.
-- The `#overlay` element shows only the "WebGPU not supported on this device/browser." message.
+- The `#overlay` element shows only a start-up failure ([#39](https://github.com/bradreimer/floppy-schnauzer/issues/39)): "WebGPU not supported on
+  this device/browser." when the browser has no WebGPU, adapter, or WebGPU canvas context
+  (`WebGPUUnavailableError`), and "The game couldn't load. Reload to try again." for anything else.
+- The page title is "Floppy Schnauzer", with a description and `icon.png` as its icon.
 
 ### Ready
 
@@ -85,6 +88,8 @@ Each criterion is covered by a test in `apps/web/src/platform/screens.test.ts` o
   round beat the best it started with.
 - Each screen draws its text, and the playing screen draws the score once.
 - The game-over screen offers a restart only once the restart delay has passed.
+- A start-up failure shows the WebGPU message only when WebGPU is the problem
+  (`apps/web/src/platform/startup.test.ts`).
 
 The look of each screen is checked with a screenshot from headless Chromium, where the 2D canvas
 renders.

@@ -1,3 +1,14 @@
+/**
+ * Thrown when this browser or device can't run WebGPU: no navigator.gpu, no adapter, or no WebGPU
+ * canvas context. main.ts tells the player so, instead of a generic loading error.
+ */
+export class WebGPUUnavailableError extends Error {
+  constructor(reason: string) {
+    super(reason);
+    this.name = "WebGPUUnavailableError";
+  }
+}
+
 export interface WebGPUInitResult {
   device: GPUDevice;
   context: GPUCanvasContext;
@@ -10,15 +21,15 @@ export interface WebGPUInitResult {
  */
 export async function initWebGPU(canvas: HTMLCanvasElement): Promise<WebGPUInitResult> {
   if (!("gpu" in navigator)) {
-    throw new Error("WebGPU not supported");
+    throw new WebGPUUnavailableError("WebGPU not supported");
   }
 
   const adapter = await navigator.gpu.requestAdapter();
-  if (!adapter) throw new Error("Failed to get GPU adapter");
+  if (!adapter) throw new WebGPUUnavailableError("Failed to get GPU adapter");
 
   const device = await adapter.requestDevice();
   const context = canvas.getContext("webgpu");
-  if (!context) throw new Error("Failed to get a WebGPU canvas context");
+  if (!context) throw new WebGPUUnavailableError("Failed to get a WebGPU canvas context");
   const format = navigator.gpu.getPreferredCanvasFormat();
 
   context.configure({ device, format, alphaMode: "premultiplied" });
