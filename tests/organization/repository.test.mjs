@@ -28,6 +28,7 @@ import {
   checkImageName,
   checkIndex,
   checkIssueTemplate,
+  checkLicense,
   checkKnowledgeName,
   checkMentions,
   checkReadme,
@@ -65,6 +66,15 @@ describe('apps folder', () => {
     assertNoProblems(
       checkTestProjects(foldersIn('apps/server/src'), foldersIn('apps/server/tests')),
     );
+  });
+});
+
+describe('license', () => {
+  it('LICENSE is the MIT License, and every package.json says MIT', () => {
+    const packages = Object.fromEntries(
+      files.filter((file) => file.endsWith('package.json')).map((file) => [file, read(file)]),
+    );
+    assertNoProblems(checkLicense(read('LICENSE'), packages));
   });
 });
 

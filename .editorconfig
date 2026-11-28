@@ -12,7 +12,7 @@ indent_size = 2
 indent_size = 4
 
 # Use a simple, non-XML header format.
-file_header_template = Copyright (c) 2026 Brad Reimer. All rights reserved.
+file_header_template = Copyright (c) 2026 Brad Reimer. Licensed under the MIT License.
 
 # Disable the XML header validation rules.
 dotnet_diagnostic.SA1633.severity = none

@@ -87,3 +87,8 @@ docs(adr): record the virtual resolution decision
 
 Include what you expected, what happened instead, the steps involved, your browser and its
 version, and the commit you ran.
+
+## License
+
+The project is under the MIT License. By contributing, you agree that your contributions are
+licensed under the same license. See [LICENSE](LICENSE).

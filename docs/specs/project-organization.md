@@ -42,9 +42,9 @@ that the repository stays organized without me policing it.
 ### Repository root
 
 - Required: `.editorconfig`, `.env.example`, `.github/`, `.gitignore`, `.nvmrc`, `CLAUDE.md`,
-  `CONTRIBUTING.md`, `README.md`, `apps/`, `docker/`, `docs/`, `package.json`, `scripts/`, and
-  `tests/`.
-- Allowed when needed: `.dockerignore`, `LICENSE`, and `package-lock.json`.
+  `CONTRIBUTING.md`, `LICENSE`, `README.md`, `apps/`, `docker/`, `docs/`, `package.json`,
+  `scripts/`, and `tests/`.
+- Allowed when needed: `.dockerignore` and `package-lock.json`.
 - Nothing else is tracked at the root.
 - `apps/` holds exactly `server` (the .NET solution) and `web` (the game).
 
@@ -57,6 +57,15 @@ that the repository stays organized without me policing it.
   the PNG decoder that checks numbers in the code against the art.
 - Every file in `apps/web/src/assets/` is listed in the
   [art and audio assets spec](art-and-audio-assets.md), and every file listed there exists.
+
+### License
+
+- The project is under the MIT License, which the maintainer chose on 2026-11-28
+  ([#26](https://github.com/bradreimer/floppy-schnauzer/issues/26)).
+- `LICENSE` holds the MIT License text, starting with `MIT License` and a
+  `Copyright (c) YEAR NAME` line.
+- Every `package.json` has `"license": "MIT"`, and the C# file header, set by
+  `file_header_template` in `.editorconfig`, says "Licensed under the MIT License."
 
 ### Secrets
 
@@ -135,10 +144,11 @@ that the repository stays organized without me policing it.
 - An ADR or spec with a missing section, a wrong name, or a missing index entry fails a test that
   names the document and the problem.
 - A broken relative link in any Markdown file fails a test.
+- A missing `LICENSE`, a license text other than MIT, or a `package.json` without
+  `"license": "MIT"` fails a test.
 - An asset that isn't in the asset table, or a table row with no file, fails a test that names it.
 - CI runs the same tests on every push and pull request.
 
 ## Open questions
 
-- Should the project have a license? Without a `LICENSE` file, the code is all rights reserved,
-  which matches the copyright header in the C# files. The maintainer decides.
+None.

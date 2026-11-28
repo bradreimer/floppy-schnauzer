@@ -3,6 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "description": "A caped, goofy schnauzer WebGPU game.",
+  "license": "MIT",
   "type": "module",
   "engines": {
     "node": ">=22"
